@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <script type="text/javascript" src="%PUBLIC_URL%/logger.js"></script>
+    <title>React App</title>
+    <style>
+      /* noto-sans-300 - latin-ext_latin_cyrillic-ext_cyrillic */
+      @font-face {
+        font-family: 'Noto Sans';
+        font-style: normal;
+        font-weight: 300;
+        src: local(''),
+          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff2') format('woff2'),
+          /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+      /* noto-sans-regular - latin-ext_latin_cyrillic-ext_cyrillic */
+      @font-face {
+        font-family: 'Noto Sans';
+        font-style: normal;
+        font-weight: 400;
+        src: local(''),
+          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff2') format('woff2'),
+          /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+      /* noto-sans-600 - latin-ext_latin_cyrillic-ext_cyrillic */
+      @font-face {
+        font-family: 'Noto Sans';
+        font-style: normal;
+        font-weight: 600;
+        src: local(''),
+          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff2') format('woff2'),
+          /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+      }
+
+      :root {
+        font-size: 62.5%;
+        font-family: 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      #root {
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+
+      ::-webkit-scrollbar {
+        width: 0; /* Remove scrollbar space */
+        background: transparent; /* Optional: just make scrollbar invisible */
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>

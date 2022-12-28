@@ -1,0 +1,2 @@
+ignores: ["@testing-library/react","@testing-library/user-event","@types/jest", "@types/node", "babel-plugin-named-asset-import", "browserslist", "buffer", "eslint-config-react-app", "eslint-plugin-node", "identity-obj-proxy", "jest-resolve", "postcss-flexbugs-fixes", "postcss-normalize", "postcss-preset-env", "prompts", "sass", "sass-loader"]
+skip-missing: true
