@@ -80,7 +80,6 @@
     "semver": "7.3.5",
     "source-map-loader": "3.0.0",
     "style-loader": "3.3.1",
-    "tailwindcss": "3.0.2",
     "tdweb": "^1.8.0",
     "terser-webpack-plugin": "5.2.5",
     "ts-jest": "^29.0.3",
@@ -96,7 +95,9 @@
     "start": "NODE_ENV=development node scripts/start.js",
     "build": "NODE_ENV=production node scripts/build.js",
     "test": "NODE_ENV=test node scripts/test.js",
-    "postinstall": "cp node_modules/@mv-d/toolbelt/dist/logger.js public/logger.js",
+    "install-logger": "cp node_modules/@mv-d/toolbelt/dist/logger.js public/logger.js",
+    "install-tdweb":"cp -r node_modules/.pnpm/tdweb@1.8.0/node_modules/tdweb/dist/. ./public",
+    "postinstall": "pnpm install-logger && pnpm install-tdweb",
     "lint": "eslint",
     "test:dependencies": "depcheck"
   },

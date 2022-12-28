@@ -5,8 +5,8 @@ export const CONFIG = {
     noVersion: true,
   }),
   api: {
-    id: env('REACT_APP_TELEGRAM_API_ID').value,
-    hash: env('REACT_APP_TELEGRAM_API_HASH').value,
+    id: env('REACT_APP_TELEGRAM_API_ID').expect(),
+    hash: env('REACT_APP_TELEGRAM_API_HASH').expect(),
   },
   app: {
     optimizationsFirstStart: true,
@@ -20,6 +20,8 @@ export const CONFIG = {
     verbosityMin: 0,
   },
   storage: {
+    storageAuthKey: 'auth',
+    storageAuthTestKey: 'test_auth',
     registerKey: 'register',
     registerTestKey: 'test_register',
   },

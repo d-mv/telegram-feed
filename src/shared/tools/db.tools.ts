@@ -1,15 +1,21 @@
-export function databaseExists(dbname: string, callback: (existed: boolean) => void) {
-  const req = indexedDB.open(dbname);
+/* eslint-disable promise/avoid-new */
+export async function databaseExists(dbname: string) {
+  return new Promise<boolean>((resolve, reject) => {
+    const req = indexedDB.open(dbname);
 
-  let existed = true;
-  req.onsuccess = function () {
-    req.result.close();
+    let existed = true;
+    req.onsuccess = function () {
+      req.result.close();
 
-    if (!existed) indexedDB.deleteDatabase(dbname);
+      if (!existed) indexedDB.deleteDatabase(dbname);
 
-    callback(existed);
-  };
-  req.onupgradeneeded = function () {
-    existed = false;
-  };
+      resolve(existed);
+    };
+    req.onerror = function (err) {
+      reject(err);
+    };
+    req.onupgradeneeded = function () {
+      existed = false;
+    };
+  });
 }

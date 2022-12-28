@@ -19,6 +19,10 @@ export enum LoadingItems {
 
 export interface State {
   isLoading: Record<LoadingItems, boolean>;
+  app: { authorizationState: boolean; tdlibDatabaseExists: boolean };
+  authorization: {
+    step: number;
+  };
 }
 
 export type MappedReducerFns = Map<StateActions, (state: State, action: Action) => State>;
