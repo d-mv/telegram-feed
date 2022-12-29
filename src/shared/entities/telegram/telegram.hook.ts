@@ -1,12 +1,11 @@
 import { useContextSelector } from 'use-context-selector';
 import QRCodeStyling from 'qr-code-styling';
-import { as, generateId, logger, R } from '@mv-d/toolbelt';
+import { logger, R } from '@mv-d/toolbelt';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
 import { addNotification, useDispatch } from '../../store';
 import { TelegramContext } from './telegram.context';
-import { TError } from './types';
 import { makeTErrorNotification } from './telegram.tools';
 
 export function useTelegram() {

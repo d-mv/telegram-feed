@@ -93,6 +93,11 @@ export interface TUpdateNewMessage extends TUpdate {
   message: TMessage;
 }
 
+export interface TUpdateDeleteMessages extends TUpdate {
+  '@type': 'updateDeleteMessages';
+  // TODO: missing items
+}
+
 export interface TUpdateMessageInteractionInfo extends TUpdate {
   '@type': 'updateMessageInteractionInfo';
   chat_id: number;

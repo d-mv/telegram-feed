@@ -100,7 +100,7 @@
     "install-logger": "cp node_modules/@mv-d/toolbelt/dist/logger.js public/logger.js",
     "install-tdweb": "cp -r node_modules/.pnpm/tdweb@1.8.0/node_modules/tdweb/dist/. ./public",
     "postinstall": "pnpm install-logger && pnpm install-tdweb",
-    "lint": "eslint",
+    "lint": "eslint src/**/*.{ts,tsx}",
     "test:dependencies": "depcheck"
   },
   "browserslist": {

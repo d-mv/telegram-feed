@@ -17,7 +17,7 @@ import {
   TUpdateVideoChat,
 } from './chat.types';
 import { TUpdateChatThemes } from './chatTheme.types';
-import { TUpdateMessageInteractionInfo, TUpdateNewMessage } from './message.types';
+import { TUpdateDeleteMessages, TUpdateMessageInteractionInfo, TUpdateNewMessage } from './message.types';
 import {
   TUpdateHavePendingNotifications,
   TUpdateNotificationSettingsScopeChannelChats,
@@ -29,6 +29,7 @@ import { TUpdateSupergroup, TUpdateSupergroupFullInfo } from './supergroup.types
 import { TUpdateUser } from './user.types';
 
 export type TUpdates =
+  | TUpdateDeleteMessages
   | TUpdateWaitPassword
   | TUpdateWaitEncryptionKey
   | TUpdateWaitPhoneNumber

@@ -1,4 +1,5 @@
 import TdClient from 'tdweb';
+
 import { TUpdates } from './types';
 
 export class TelegramService {

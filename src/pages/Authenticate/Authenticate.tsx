@@ -1,9 +1,9 @@
-import { ifTrue, Optional } from '@mv-d/toolbelt';
-import { FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
+import { ifTrue } from '@mv-d/toolbelt';
+import { clsx } from 'clsx';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useContextSelector } from 'use-context-selector';
-import { BiShow, BiHide } from 'react-icons/bi';
-import clsx from 'clsx';
-import { authorizationState, MaybeNull, TelegramContext, TelegramEvent, useTelegram } from '../../shared';
+
+import { authorizationState, Icon, MaybeNull, TelegramContext, useTelegram } from '../../shared';
 import classes from './Authenticate.module.scss';
 
 export default function Authenticate() {
@@ -37,12 +37,6 @@ export default function Authenticate() {
     setShow(state => !state);
   }
 
-  function renderIcon() {
-    if (show) return <BiHide />;
-
-    return <BiShow />;
-  }
-
   function renderPasscode() {
     return (
       <div className={classes.form}>
@@ -59,7 +53,7 @@ export default function Authenticate() {
             onChange={e => setPassword(e.target.value)}
           />
           <button className={clsx(classes['show-button'], { [classes['hide-color']]: show })} onClick={handleShowHide}>
-            {renderIcon()}
+            <Icon icon={show ? 'hide' : 'show'} />
           </button>
         </div>
         <button disabled={!password.length} className={classes['submit-button']} type='submit' onClick={handleSubmit}>

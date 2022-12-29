@@ -1,5 +1,5 @@
 import { makeMatch, Optional, R } from '@mv-d/toolbelt';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useCallback, useEffect } from 'react';
 
 import { Icon, removeNotification, useDispatch } from '../../../shared';

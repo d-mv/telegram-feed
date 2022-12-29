@@ -1,10 +1,8 @@
-import { logger, Optional } from '@mv-d/toolbelt';
-import { useEffect } from 'react';
 import { useContextSelector } from 'use-context-selector';
-import { Notifications } from '../domains';
 
+import { Notifications } from '../domains';
 import { Authenticate, Main } from '../pages';
-import { connectionState, LazyLoad, Loader, TelegramContext, TelegramEvent, useTelegram } from '../shared';
+import { LazyLoad, Loader, TelegramContext } from '../shared';
 
 export function App() {
   const [event] = useContextSelector(TelegramContext, c => [c.event, c.options]);

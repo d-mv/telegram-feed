@@ -1,7 +1,7 @@
 import { as, generateId, Optional } from '@mv-d/toolbelt';
+
 import { TError, TUpdates } from '..';
 import { Message, MessageTypes } from '../../../domains';
-import { Notification } from '../../store';
 
 export function connectionState(event: Optional<TUpdates>) {
   if (!event || event['@type'] !== 'updateConnectionState') return undefined;

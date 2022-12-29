@@ -1,14 +1,13 @@
-import { AnyValue, Optional, RecordObject, R, as, logger } from '@mv-d/toolbelt';
+import { AnyValue, Optional, R, as, logger } from '@mv-d/toolbelt';
 import { useCallback, useEffect, useState } from 'react';
 import TdClient from 'tdweb';
 import { createContext } from 'use-context-selector';
+
 import { CONFIG } from '../../config';
 import { TelegramService } from './telegram.service';
 import { TOptions, TUpdateOption, TUpdates, TUpdateSelectedBackground } from './types';
 
 const { id, hash } = CONFIG.api;
-
-export type TelegramEvent = RecordObject<AnyValue>;
 
 export interface TelegramContextType {
   event: Optional<TUpdates>;
@@ -25,8 +24,6 @@ export function TelegramProvider(props: AnyValue) {
   const [event, setEvent] = useState<TUpdates>();
 
   const [options, setOptions] = useState<TOptions>({} as TOptions);
-
-  const [prevOptions, setPrevOptions] = useState(JSON.stringify(options));
 
   const [authPasswordHint, setAuthPasswordHint] = useState<string>('');
 
@@ -73,11 +70,9 @@ export function TelegramProvider(props: AnyValue) {
       if (event.authorization_state['@type'] === 'authorizationStateWaitPassword') {
         setAuthPasswordHint(event['authorization_state'].password_hint);
       }
-    }
-    // else if (event['@type'] === 'updateNewMessage' || event['@type'] === 'updateDeleteMessages') {
-    //   handleMessages(event);
-    // }
-    else if (event['@type'] === 'updateOption') {
+    } else if (event['@type'] === 'updateNewMessage' || event['@type'] === 'updateDeleteMessages') {
+      handleMessages(event);
+    } else if (event['@type'] === 'updateOption') {
       handleOptions(event);
     } else if (event['@type'] === 'updateSelectedBackground') {
       handleBackground(event);

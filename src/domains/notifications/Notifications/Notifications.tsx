@@ -1,7 +1,7 @@
 import { getMessages, useSelector } from '../../../shared';
 import { Message } from '../message.types';
-import classes from './Notifications.module.scss';
 import { Toast } from '../Toast';
+import classes from './Notifications.module.scss';
 
 export function Notifications() {
   const messages = useSelector(getMessages);
