@@ -1,0 +1,105 @@
+.container {
+	display: flex;
+	position: relative;
+	margin-block-end: 1rem;
+	max-height: 67rem;
+	max-width: 30rem;
+	min-height: 3rem;
+	height: fit-content;
+	background-color: var(--color-white);
+	box-shadow: var(--shadow);
+
+	.side {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: .4rem;
+	}
+
+	.side-error {
+		background-color: var(--color-error-1);
+	}
+
+	.side-success {
+		background-color: var(--color-info-1);
+	}
+
+	.side-warning {
+		background-color: var(--color-warn-1);
+	}
+
+	.side-info {
+		background-color: var(--color-primary-1);
+	}
+
+	.icon {
+		position: absolute;
+		left: .7rem;
+		top: .7rem;
+
+		svg {
+			width: 2rem;
+			height: 2rem;
+		}
+	}
+
+	.icon-error {
+		svg {
+			fill: var(--color-error-1);
+		}
+	}
+
+	.icon-warning {
+		svg {
+			fill: var(--color-warn-1);
+		}
+	}
+
+	.icon-success {
+		svg {
+			fill: var(--color-info-1);
+		}
+	}
+
+	.icon-info {
+		svg {
+			fill: var(--color-primary-1);
+		}
+	}
+
+	.message {
+		margin-inline-start: 3rem;
+		margin-inline-end: 2.7rem;
+		margin-block-start: .8rem;
+		margin-block-end: .8rem;
+		width: 100%;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+	}
+
+	.close-button {
+		position: absolute;
+		right: 0rem;
+		top: .5rem;
+		padding: .3rem;
+		cursor: pointer;
+
+		svg {
+			width: 2rem;
+			height: 2rem;
+			fill: var(--color-secondary-1);
+			transition: var(--transition_2ms);
+		}
+
+		&:hover svg {
+			fill: var(--color-accent-1)
+		}
+	}
+}
+
+.text {
+	max-width: 20rem;
+}

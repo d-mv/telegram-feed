@@ -1,12 +1,15 @@
+import { logger, Optional } from '@mv-d/toolbelt';
+import { useEffect } from 'react';
 import { useContextSelector } from 'use-context-selector';
+import { Notifications } from '../domains';
 
-import { Login, Main } from '../pages';
-import { LazyLoad, TelegramContext } from '../shared';
+import { Authenticate, Main } from '../pages';
+import { connectionState, LazyLoad, Loader, TelegramContext, TelegramEvent, useTelegram } from '../shared';
 
 export function App() {
-  const event = useContextSelector(TelegramContext, c => c.event);
+  const [event] = useContextSelector(TelegramContext, c => [c.event, c.options]);
 
-  if (!event || !event['authorization_state']) return <div>loading</div>;
+  if (!event || !('authorization_state' in event)) return <Loader />;
 
   const type = event['authorization_state']['@type'];
 
@@ -15,15 +18,21 @@ export function App() {
       case 'authorizationStateWaitEncryptionKey':
       case 'authorizationStateWaitOtherDeviceConfirmation':
       case 'authorizationStateWaitPhoneNumber':
+      case 'authorizationStateWaitPassword':
       case 'updateAuthorizationState':
       case 'authorizationStateClosed':
-        return <Login />;
+        return <Authenticate />;
       case 'authorizationStateReady':
         return <Main />;
       default:
-        return null;
+        return <Loader />;
     }
   }
 
-  return <LazyLoad>{getPage()}</LazyLoad>;
+  return (
+    <LazyLoad>
+      {getPage()}
+      <Notifications />
+    </LazyLoad>
+  );
 }

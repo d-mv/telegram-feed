@@ -1,3 +1,3 @@
-export * from './Login';
+export * from './Authenticate';
 
 export * from './Main';

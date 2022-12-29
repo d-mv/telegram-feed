@@ -1,0 +1,24 @@
+.container {
+	// position: fixed;
+	// right: 2%;
+	// top: 2%;
+	// bottom: 2%;
+	// max-width: 80%;
+
+	position: fixed;
+	top: 10rem;
+	max-height: calc(100% - 20rem);
+	right: 1rem;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-end;
+	width: auto;
+	max-width: 35%;
+	z-index: 1000;
+	transition: var(--transition);
+}
+
+.item {
+	display: flex;
+	padding: 0.5rem 0.8rem;
+}

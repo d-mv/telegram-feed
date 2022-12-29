@@ -12,4 +12,5 @@ export const INITIAL_STATE: State = {
   authorization: {
     step: 1,
   },
+  notifications: [],
 };

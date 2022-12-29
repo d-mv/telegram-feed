@@ -1,14 +1,15 @@
-import TdClient, { TdObject } from 'tdweb';
+import TdClient from 'tdweb';
+import { TUpdates } from './types';
 
 export class TelegramService {
   client: TdClient;
 
-  constructor(apiId: string, apiHash: string, onUpdate: (update: TdObject) => void) {
+  constructor(apiId: string, apiHash: string, onUpdate: (update: TUpdates) => void) {
     this.client = this.#init(onUpdate);
     this.#setParameters(apiId, apiHash);
   }
 
-  #init(onUpdate: (update: TdObject) => void) {
+  #init(onUpdate: (update: TUpdates) => void) {
     const client = new TdClient({
       // @ts-ignore -- temp
       useTestDC: false,
@@ -18,6 +19,7 @@ export class TelegramService {
       fastUpdating: true,
       useDatabase: false,
       mode: 'wasm',
+      // @ts-ignore -- use more detailed typings
       onUpdate,
     });
 
