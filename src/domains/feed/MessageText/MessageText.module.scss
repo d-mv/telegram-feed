@@ -1,0 +1,11 @@
+.container {
+	margin:.5rem;
+	border-radius: .4rem;
+	width: 30rem;
+	background: linear-gradient(180deg,var(--color-secondary-5), var(--color-secondary-4));
+	border: .1rem solid var(--color-primary-4);
+}
+
+.text {
+	padding: .5rem;
+}

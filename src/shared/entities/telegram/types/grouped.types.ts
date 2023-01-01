@@ -26,9 +26,10 @@ import {
 } from './notifications.types';
 import { TUpdateConnState, TUpdateDiceEmojis, TUpdateOption, TUpdateSelectedBackground } from './settings.types';
 import { TUpdateSupergroup, TUpdateSupergroupFullInfo } from './supergroup.types';
-import { TUpdateUser } from './user.types';
+import { TUpdateUser, TUpdateUserFullInfo } from './user.types';
 
 export type TUpdates =
+  | TUpdateUserFullInfo
   | TUpdateDeleteMessages
   | TUpdateWaitPassword
   | TUpdateWaitEncryptionKey

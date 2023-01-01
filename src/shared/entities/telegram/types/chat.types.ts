@@ -1,4 +1,4 @@
-import { TUpdate } from './event.types';
+import { TExtra, TUpdate } from './event.types';
 import { TMessage } from './message.types';
 import { TChatNotificationSettings } from './notifications.types';
 import { TMiniThumbnail, TPhoto, TPhotoSize } from './photo.types';
@@ -74,7 +74,39 @@ export interface TChatPhoto {
   sizes: TPhotoSize[];
 }
 
+export interface TChats {
+  '@client_id': number;
+  '@extra': TExtra;
+  '@type': 'chats';
+  chat_ids: number[];
+}
+
+export interface TChatListFilter {
+  '@type': 'chatListFilter';
+  chat_filter_id: number;
+}
+
+export interface TChatPosition {
+  '@type': 'chatPosition';
+  is_pinned: boolean;
+  list: TChatListFilter;
+}
+
 // updates
+export interface TUpdateChatTitle extends TUpdate {
+  '@client_id': 1;
+  '@type': 'updateChatTitle';
+  chat_id: number;
+  title: string;
+}
+
+export interface TUpdateChatPosition extends TUpdate {
+  '@type': 'updateChatPosition';
+  chat_id: number;
+  position: TChatPosition;
+  order: string;
+}
+
 export interface TUpdateChatFilters extends TUpdate {
   '@type': 'updateChatFilters';
   chat_filters: TChatFilter[];

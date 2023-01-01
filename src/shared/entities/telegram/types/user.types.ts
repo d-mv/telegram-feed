@@ -5,10 +5,17 @@ export interface TProfilePhoto extends TPhoto {
   '@type': 'profilePhoto';
 }
 
-export interface TUserStatus {
+export interface TUserStatusOffline {
   '@type': 'userStatusOffline';
   was_online: 1672325496;
 }
+
+export interface TUserStatusOnline {
+  '@type': 'userStatusOnline';
+  expires: number;
+}
+
+export type TUserStatus = TUserStatusOffline | TUserStatusOnline;
 
 export interface TUserType {
   '@type': 'userTypeRegular';
@@ -35,8 +42,35 @@ export interface TUser {
   username: string;
 }
 
+export interface TUserFullInfo {
+  '@type': 'userFullInfo';
+  bio: string;
+  can_be_called: boolean;
+  commands: unknown[];
+  description: string;
+  group_in_common_count: number;
+  has_private_calls: boolean;
+  has_private_forwards: boolean;
+  is_blocked: boolean;
+  need_phone_number_privacy_exception: boolean;
+  share_text: string;
+  supports_video_calls: boolean;
+}
+
 // update
 export interface TUpdateUser extends TUpdate {
   '@type': 'updateUser';
   user: TUser;
+}
+
+export interface TUpdateUserFullInfo extends TUpdate {
+  '@type': 'updateUserFullInfo';
+  user_full_info: TUserFullInfo;
+  user_id: number;
+}
+
+export interface TUpdateUserStatus extends TUpdate {
+  '@type': 'updateUserStatus';
+  status: TUserStatus;
+  user_id: number;
 }

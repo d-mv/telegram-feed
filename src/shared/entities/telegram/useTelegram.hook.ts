@@ -1,15 +1,16 @@
 import { useContextSelector } from 'use-context-selector';
 import QRCodeStyling from 'qr-code-styling';
-import { logger, R } from '@mv-d/toolbelt';
+import { AnyValue, as, failure, logger, PromisedResult, R, success } from '@mv-d/toolbelt';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
 import { addNotification, useDispatch } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
+import { TError, TFilePart } from './types';
 
 export function useTelegram() {
-  const [client, event] = useContextSelector(TelegramContext, c => [c.client, c.event]);
+  const [client, event, send] = useContextSelector(TelegramContext, c => [c.client, c.event, c.send]);
 
   const dispatch = useDispatch();
 
@@ -94,5 +95,30 @@ export function useTelegram() {
     });
   };
 
-  return { handleAuthentication, getChats, submitPassword };
+  async function downloadFile(fileId: number): PromisedResult<TFilePart> {
+    // downloading the file
+    await client
+      .send({
+        '@type': 'downloadFile',
+        file_id: fileId,
+        priority: 1,
+        synchronous: true,
+      })
+      .catch(R.compose(dispatch, addNotification, makeTErrorNotification));
+
+    // Read the data from local tdlib to blob
+    try {
+      return success(
+        await send<TFilePart>({
+          type: 'readFile',
+          file_id: fileId,
+        }),
+      );
+    } catch (err) {
+      R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+      return failure(err as Error);
+    }
+  }
+
+  return { handleAuthentication, getChats, submitPassword, downloadFile };
 }

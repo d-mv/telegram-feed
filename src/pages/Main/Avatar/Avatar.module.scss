@@ -1,0 +1,23 @@
+.container {
+	position: absolute;
+	right: 1rem;
+	top: 1rem;
+	display: flex;
+	box-shadow: var(--shadow-1);
+	width: fit-content;
+
+	&:hover {
+		.image {
+			transform: scale(2);
+			box-shadow: var(--shadow-2);
+			translate: -50% 50%;
+		}
+	}
+}
+
+.image {
+	transition: var(--transition-slow);
+	border-radius: .4rem;
+	height: 4rem;
+
+}

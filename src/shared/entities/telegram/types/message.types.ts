@@ -1,7 +1,12 @@
 import { TUpdate } from './event.types';
 import { TMiniThumbnail, TPhotoSize } from './photo.types';
 
-export interface TMessageSenderId {
+export interface TMessageSenderUser {
+  '@type': 'messageSenderUser';
+  user_id: number;
+}
+
+export interface TMessageSenderChat {
   '@type': 'messageSenderChat';
   chat_id: number;
 }
@@ -33,7 +38,7 @@ export interface TMessageTextEntity {
   type: TMessageCaptionEntitiesBold;
 }
 
-export interface TMessageCaption {
+export interface TMessageContentText {
   '@type': 'formattedText';
   entities: TMessageTextEntity[];
   text: string;
@@ -46,9 +51,14 @@ export interface TMessagePhoto {
   sizes: TPhotoSize[];
 }
 
-export interface TMessageContent {
+export interface TMessageText {
+  '@type': 'messageText';
+  text: TMessageContentText;
+}
+
+export interface TMessageContentPhoto {
   '@type': 'messagePhoto';
-  caption: TMessageCaption;
+  caption: TMessageContentText;
   is_secret: false;
   photo: TMessagePhoto;
 }
@@ -67,7 +77,7 @@ export interface TMessage {
   can_get_viewers: boolean;
   chat_id: number;
   contains_unread_mention: boolean;
-  content: TMessageContent;
+  content: TMessageContentPhoto | TMessageContentText | TMessageText;
   date: number;
   edit_date: number;
   has_timestamped_media: boolean;
@@ -81,7 +91,7 @@ export interface TMessage {
   reply_in_chat_id: number;
   reply_to_message_id: number;
   restriction_reason: string;
-  sender_id: TMessageSenderId;
+  sender_id: TMessageSenderUser | TMessageSenderChat;
   ttl: number;
   ttl_expires_in: number;
   via_bot_user_id: number;

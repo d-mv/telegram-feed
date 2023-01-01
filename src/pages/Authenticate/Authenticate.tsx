@@ -3,15 +3,21 @@ import { clsx } from 'clsx';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
-import { authorizationState, Icon, MaybeNull, TelegramContext, useTelegram } from '../../shared';
+import {
+  authorizationState,
+  getAuthPasswordHint,
+  Icon,
+  MaybeNull,
+  TelegramContext,
+  useSelector,
+  useTelegram,
+} from '../../shared';
 import classes from './Authenticate.module.scss';
 
 export default function Authenticate() {
-  const [event, client, authPasswordHint] = useContextSelector(TelegramContext, c => [
-    c.event,
-    c.client,
-    c.authPasswordHint,
-  ]);
+  const [event, client] = useContextSelector(TelegramContext, c => [c.event, c.client]);
+
+  const authPasswordHint = useSelector(getAuthPasswordHint);
 
   const qr = useRef<MaybeNull<HTMLDivElement>>(null);
 

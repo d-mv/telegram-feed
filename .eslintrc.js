@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'react-app',
+    // 'react-app',
     'plugin:eslint-comments/recommended',
     'plugin:import/typescript',
     'plugin:json/recommended',

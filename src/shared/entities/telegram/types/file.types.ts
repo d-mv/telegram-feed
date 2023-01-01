@@ -1,3 +1,5 @@
+import { TExtra } from './event.types';
+
 export interface TFileLocal {
   '@type': 'localFile';
   can_be_deleted: boolean;
@@ -26,4 +28,17 @@ export interface TFile {
   local: TFileLocal;
   remote: TFileRemote;
   size: number;
+}
+
+export interface TFilePart {
+  '@extra': TExtra;
+  '@type': 'filePart';
+  data: Blob;
+  transaction_id: number;
+}
+
+// updates
+export interface TUpdateFile {
+  '@type': 'updateFile';
+  file: TFile;
 }
