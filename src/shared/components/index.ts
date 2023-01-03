@@ -21,3 +21,5 @@ export * from './CardWebPage';
 export * from './CardPhoto';
 
 export * from './Tooltip';
+
+export * from './CardInteractionInfo';

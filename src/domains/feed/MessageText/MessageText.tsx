@@ -1,7 +1,15 @@
-import { ifTrue } from '@mv-d/toolbelt';
 import { useContextSelector } from 'use-context-selector';
 
-import { Card, CardFooter, CardDivider, CardHeader, CardText, CardWebPage, useMessage, Icon } from '../../../shared';
+import {
+  Card,
+  CardFooter,
+  CardDivider,
+  CardHeader,
+  CardText,
+  CardWebPage,
+  useMessage,
+  CardInteractionInfo,
+} from '../../../shared';
 import { FeedContext } from '../feed.context';
 
 export function MessageText() {
@@ -22,34 +30,6 @@ export function MessageText() {
 
   // eslint-disable-next-line no-console
   console.log('###', message.content);
-  // TODO: add interaction_info
-
-  function renderStatistics() {
-    const views = message.interaction_info?.view_count ? (
-      <>
-        <Icon icon='eye' />
-        {message.interaction_info.view_count}
-      </>
-    ) : (
-      <span />
-    );
-
-    const forward_count = message.interaction_info?.forward_count ? (
-      <>
-        <Icon icon='forward' />
-        {message.interaction_info.forward_count}
-      </>
-    ) : (
-      <span />
-    );
-
-    return (
-      <div style={{ display: 'flex' }}>
-        {views}
-        {forward_count}
-      </div>
-    );
-  }
 
   return (
     <Card id={`message-text-${message.id}`}>
@@ -59,7 +39,7 @@ export function MessageText() {
       <CardFooter>
         {getRelativeMessageDate()}
         <CardDivider />
-        {renderStatistics()}
+        <CardInteractionInfo interactionInfo={message.interaction_info} />
       </CardFooter>
     </Card>
   );

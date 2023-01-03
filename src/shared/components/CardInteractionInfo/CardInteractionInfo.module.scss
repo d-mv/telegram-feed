@@ -1,0 +1,23 @@
+.container {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: baseline;
+
+	* {
+		height: auto;
+	}
+
+	*+* {
+		margin-inline-start: 0.5rem;
+	}
+
+}
+
+.set {
+	display: flex;
+	align-items: center;
+
+	svg {
+		margin-inline-end: 0.5rem;
+	}
+}
