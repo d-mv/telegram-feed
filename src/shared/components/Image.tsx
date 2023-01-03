@@ -1,16 +1,17 @@
 import { AnyValue } from '@mv-d/toolbelt';
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 
 import { useTelegram } from '../entities';
 
 interface PhotoProps {
   photoId: number;
   className?: string;
+  style?: CSSProperties;
   alt: string;
   asBackground?: boolean;
 }
 
-export function Image({ photoId, className, alt, asBackground }: PhotoProps) {
+export function Image({ photoId, className, alt, style, asBackground }: PhotoProps) {
   const [id, setId] = useState<number>(0);
 
   const { downloadFile } = useTelegram();
@@ -32,7 +33,8 @@ export function Image({ photoId, className, alt, asBackground }: PhotoProps) {
 
   if (!image) return null;
 
-  if (asBackground) return <div id={alt} className={className} style={{ backgroundImage: `url(${image})` }} />;
+  if (asBackground)
+    return <div id={alt} className={className} style={{ backgroundImage: `url(${image})`, ...style }} />;
 
-  return <img src={image} className={className} alt={alt} />;
+  return <img src={image} className={className} alt={alt} style={style} />;
 }

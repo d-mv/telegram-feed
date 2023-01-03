@@ -1,7 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import './theme.css';
+import './shared/theme/basic.css';
+import './shared/theme/tooltip.css';
 import { App } from './app';
 import reportWebVitals from './reportWebVitals';
 import { StateProvider, TelegramProvider } from './shared';

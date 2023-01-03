@@ -61,6 +61,10 @@
   display: none;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
@@ -106,11 +110,6 @@ h6 {
 .p1 {
   font-size: 1.8rem;
   font-weight: 400;
-}
-
-p {
-  margin-block-start: 0;
-  margin-block-end: 0;
 }
 
 button {

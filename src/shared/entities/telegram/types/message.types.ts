@@ -23,9 +23,9 @@ export interface TMessageReplyInfo {
 
 export interface TMessageInteractionInfo {
   '@type': 'messageInteractionInfo';
-  forward_count: number;
-  reply_info: TMessageReplyInfo;
-  view_count: number;
+  forward_count?: number;
+  reply_info?: TMessageReplyInfo;
+  view_count?: number;
 }
 
 export interface TTextEntityTypeBold {
@@ -77,7 +77,7 @@ export interface TWebPage {
 export interface TMessageText {
   '@type': 'messageText';
   text: TFormattedText;
-  web_page: TWebPage;
+  web_page?: TWebPage;
 }
 
 export interface TMessageContentPhoto {

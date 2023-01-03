@@ -1,4 +1,5 @@
-import { TChat, TMessage, TUser } from '../entities';
+import { Optional } from '@mv-d/toolbelt';
+import { TChat, TMessage, TMessagePhoto, TPhotoSize, TUser } from '../entities';
 
 export function getSenderFromMessage(
   message: TMessage,
@@ -22,4 +23,36 @@ export function getSenderFromMessage(
   }
 
   return getChat(s.chat_id)?.title;
+}
+
+export function getPhotoSize(photo: TMessagePhoto, size = 'x') {
+  const { sizes } = photo;
+
+  return sizes.find(p => p.type === size);
+}
+
+export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, width = 40) {
+  if (!photo) return {};
+
+  const ratio = (photo.height || 1) / (photo.width || 1);
+
+  const isVertical = ratio > 1;
+
+  const r = photo.width / (width * 10);
+
+  const widthArg = `${width}rem`;
+
+  if (isVertical) return { width: widthArg, height: photo.height / r };
+
+  return { width: widthArg, height: `${width * ratio}rem` };
+}
+
+export function processUrl(url: string): string {
+  if (!url) return '';
+
+  return url.slice(0, 4) === 'http' ? url : `https://${url}`;
+}
+
+export function shouldRenderLinkTooltip(tooltip: string) {
+  return tooltip.length > 240;
 }

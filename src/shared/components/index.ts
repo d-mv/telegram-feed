@@ -12,8 +12,12 @@ export * from './CardHeader';
 
 export * from './CardFooter';
 
-export * from './CardFooterDivider';
+export * from './CardDivider';
 
 export * from './CardText';
 
+export * from './CardWebPage';
+
 export * from './CardPhoto';
+
+export * from './Tooltip';

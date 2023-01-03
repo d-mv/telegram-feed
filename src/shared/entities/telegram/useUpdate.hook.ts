@@ -92,7 +92,7 @@ export function useUpdate({
         R.compose(dispatch, updateUsersFullInfo)({ ...event.user_full_info, user_id: event.user_id }),
       updateChatLastMessage: (event: TUpdateChatLastMessage) => {
         // eslint-disable-next-line no-console
-        console.log('updateChatLastMessage', event.last_message.content);
+        if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);
 
         const sender = getSenderFromMessage(event.last_message, getChat, getUser);
 

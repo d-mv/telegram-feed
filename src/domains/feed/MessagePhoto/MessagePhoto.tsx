@@ -1,6 +1,6 @@
 import { useContextSelector } from 'use-context-selector';
 
-import { Card, CardFooter, CardFooterDivider, CardHeader, CardPhoto, CardText, useMessage } from '../../../shared';
+import { Card, CardFooter, CardDivider, CardHeader, CardPhoto, CardText, useMessage } from '../../../shared';
 import { FeedContext } from '../feed.context';
 
 export function MessagePhoto() {
@@ -10,9 +10,6 @@ export function MessagePhoto() {
 
   if (message.content['@type'] !== 'messagePhoto') return null;
 
-  // eslint-disable-next-line no-console
-  console.log('### photo', message);
-
   return (
     <Card id={`message-photo-${message.id}`}>
       <CardPhoto photo={message.content.photo} />
@@ -20,7 +17,7 @@ export function MessagePhoto() {
       <CardText>{message.content.caption.text}</CardText>
       <CardFooter>
         {getRelativeMessageDate()}
-        <CardFooterDivider />
+        <CardDivider />
         <div />
       </CardFooter>
     </Card>
