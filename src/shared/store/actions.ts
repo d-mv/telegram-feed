@@ -1,4 +1,3 @@
-import { Optional } from '@mv-d/toolbelt';
 import { Message } from '../../domains';
 import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUser, TUserFullInfo } from '../entities';
 import { Action, StateActions } from './types';

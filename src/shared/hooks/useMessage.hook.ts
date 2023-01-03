@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 import { TMessage } from '../entities';
 import { useSelector, getChatById, getUserById } from '../store';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs, { extend } from 'dayjs';
+import { getSenderFromMessage } from '../tools';
+
+extend(relativeTime);
 
 export function useMessage(message: TMessage) {
   const getChat = useSelector(getChatById);
@@ -9,23 +14,9 @@ export function useMessage(message: TMessage) {
 
   const messageDate = useMemo(() => message.date * 1000, [message]);
 
-  function getSender() {
-    const s = message.sender_id;
+  const sender = getSenderFromMessage(message, getChat, getUser);
 
-    const chat = getChat(message.chat_id);
+  const getRelativeMessageDate = () => dayjs(messageDate).fromNow();
 
-    if (s['@type'] === 'messageSenderUser') {
-      const user = getUser(s.user_id);
-
-      const senderName = `${user?.first_name} ${user?.last_name}`;
-
-      if (senderName === chat?.title) return senderName;
-
-      return `${chat?.title} (${senderName})`;
-    }
-
-    return getChat(s.chat_id)?.title;
-  }
-
-  return { messageDate, sender: getSender() };
+  return { messageDate, sender, getRelativeMessageDate };
 }

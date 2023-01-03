@@ -1,11 +1,13 @@
-import { makeMatch, RecordObject, R, generateId } from '@mv-d/toolbelt';
-import { useEffect, useState } from 'react';
+import { makeMatch } from '@mv-d/toolbelt';
+import { useCallback, useEffect, useState } from 'react';
+
 import { getMessages, TMessage, useSelector, useTelegram } from '../../../shared';
 import { FeedContext } from '../feed.context';
+import { MessagePhoto } from '../MessagePhoto';
 import { MessageText } from '../MessageText';
 import classes from './Feed.module.scss';
 
-const MATCH_RENDERERS = makeMatch({ messageText: MessageText }, () => <div />);
+const MATCH_RENDERERS = makeMatch({ messageText: MessageText, messagePhoto: MessagePhoto }, () => <div />);
 
 export function Feed() {
   const { getChats } = useTelegram();
@@ -15,6 +17,16 @@ export function Feed() {
   useEffect(() => {
     getChats();
   }, []);
+
+  const [displayMessages, setDisplayMessages] = useState<TMessage[]>([]);
+
+  const updateFeedDisplay = useCallback(() => {
+    setDisplayMessages(_ => messages.filter(m => m.message_thread_id === 0));
+  }, [messages]);
+
+  useEffect(() => {
+    updateFeedDisplay();
+  }, [messages, updateFeedDisplay]);
 
   function renderMessage(message: TMessage) {
     const type = message.content['@type'];
@@ -30,7 +42,7 @@ export function Feed() {
 
   return (
     <div className={classes.container}>
-      <div className={classes.feed}>{messages.map(renderMessage)}</div>
+      <div className={classes.feed}>{displayMessages.map(renderMessage)}</div>
     </div>
   );
 }

@@ -8,14 +8,15 @@
   --color-secondary-1: #d9d9d9;
   --color-secondary-2: #dedede;
   --color-secondary-3: #ececec;
-  --color-secondary-2-trans: rgba(217, 217, 217, 0.75);
   --color-secondary-4: #f7f7f7;
   --color-secondary-5: #fdfdfd;
   --color-primary-1: #686868;
   --color-primary-2: #8e8e8e;
   --color-primary-3: #b3b3b3;
   --color-primary-4: #e1e1e1;
+  --color-primary-5: #f7f7f7;
   --color-accent-1: #6fb632;
+  --color-accent-2: #94c76a;
   --color-accent-4: #e2f0d7;
   --color-error-1: #ea5558;
   --color-warn-1: #f7cd37;
@@ -37,6 +38,8 @@
   /*
 
   /* Shadow levels */
+  --shadow-accent-2: 0 .1rem 1rem 0 #94c76a44;
+  --shadow-primary-4: 0 .1rem 1rem 0 #e1e1e144;
   --shadow-1: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.08);
   --shadow-2: 0 0.4rem 1rem rgba(0, 0, 0, 0.2);
   /* --top-shadow: 0 -.4px .8rem rgba(0, 0, 0, .08); */
@@ -46,8 +49,12 @@
   /* --shadow-4: 0 .2.4rem 3.2rem rgba(0, 0, 0, .12); */
 
   --font-family-sans: 'Noto Sans', Helvetica, SegoeUI, sans-serif;
+  --font-family-serif: 'PT Serif', serif;
   /* --font-regular: 400 1.6rem var(--font-family-sans); */
   /* --font-smaller: 300 1.4rem var(--font-family-sans); */
+  --border-primary-4: 0.1rem solid var(--color-primary-4);
+  --border-accent-2: 0.1rem solid var(--color-accent-2);
+  --divider-primary-3: 0.1rem solid var(--color-primary-3)
 }
 
 *::-webkit-scrollbar {
@@ -125,6 +132,10 @@ button {
   margin: 0;
   margin-block-start: 0;
   margin-block-end: 0;
+}
+
+.serif {
+  font-family: var(--font-family-serif)
 }
 
 /* @import './tooltip.css'; */

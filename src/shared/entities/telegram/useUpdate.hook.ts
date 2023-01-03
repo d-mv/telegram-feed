@@ -1,5 +1,6 @@
-import { AnyValue, logger, makeMatch, R } from '@mv-d/toolbelt';
+import { AnyValue, generateId, logger, makeMatch, R } from '@mv-d/toolbelt';
 import { Dispatch, SetStateAction } from 'react';
+import { MessageTypes } from '../../../domains';
 
 import { CONFIG } from '../../config';
 import {
@@ -9,7 +10,12 @@ import {
   updateUsersFullInfo,
   addMessage,
   addChat,
+  addNotification,
+  getChatById,
+  getUserById,
+  useSelector,
 } from '../../store';
+import { getSenderFromMessage } from '../../tools';
 import {
   TOptions,
   TUpdates,
@@ -32,9 +38,13 @@ export function useUpdate({
 }) {
   const dispatch = useDispatch();
 
+  const getChat = useSelector(getChatById);
+
+  const getUser = useSelector(getUserById);
+
   function handleMessages(update: AnyValue) {
     // eslint-disable-next-line no-console
-    console.log(update);
+    console.log('handleMessages', update);
   }
 
   function handleOptions(event: TUpdateOption) {
@@ -80,7 +90,22 @@ export function useUpdate({
       updateUser: (event: TUpdateUser) => R.compose(dispatch, updateUsers)(event.user),
       updateUserFullInfo: (event: TUpdateUserFullInfo) =>
         R.compose(dispatch, updateUsersFullInfo)({ ...event.user_full_info, user_id: event.user_id }),
-      updateChatLastMessage: (event: TUpdateChatLastMessage) => R.compose(dispatch, addMessage)(event.last_message),
+      updateChatLastMessage: (event: TUpdateChatLastMessage) => {
+        // eslint-disable-next-line no-console
+        console.log('updateChatLastMessage', event.last_message.content);
+
+        const sender = getSenderFromMessage(event.last_message, getChat, getUser);
+
+        R.compose(
+          dispatch,
+          addNotification,
+        )({
+          id: generateId(),
+          text: `New message${sender ? ` from ${sender}` : ''}`,
+          type: MessageTypes.INFO,
+        });
+        R.compose(dispatch, addMessage)(event.last_message);
+      },
       updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),
     },
     (event: TUpdates) => logger.error(`Unmatched event: ${event['@type']}`),

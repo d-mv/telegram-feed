@@ -1,4 +1,3 @@
-import { TMessage } from '../entities';
 import { State } from './types';
 
 export const getNotifications = (state: State) => state.notifications;
