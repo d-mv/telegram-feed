@@ -1,0 +1,29 @@
+.container {
+	background: linear-gradient(var(--color-primary-2), var(--color-primary-1));
+	color: var(--color-white);
+	border-bottom-color: var(--color-primary-1);
+
+	&:hover {
+		border-bottom-color: var(--color-accent-1);
+	}
+
+	&:active {
+		background: linear-gradient(var(--color-primary-1), var(--color-primary-1));
+	}
+
+	&:disabled {
+		background: linear-gradient(var(--color-primary-3), var(--color-primary-3));
+		border-bottom-color: var(--color-primary-3);
+		color: var(--color-primary-2);
+	}
+
+	&:disabled:hover {
+		box-shadow: none;
+	}
+}
+
+.busy {
+	background: var(--color-primary-1);
+	border-color: var(--color-primary-1);
+	cursor: not-allowed
+}

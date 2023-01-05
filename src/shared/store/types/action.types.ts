@@ -1,0 +1,16 @@
+export enum StateActions {
+  CLEAR_STATE = 'clearState',
+  ADD_NOTIFICATION = 'addNotification',
+  REMOVE_NOTIFICATION = 'removeNotification',
+  UPDATE_USERS = 'updateUsers',
+  UPDATE_SUPERGROUP = 'updateSuperGroup',
+  UPDATE_USERS_FULL_INFO = 'updateUsersFullInfo',
+  UPDATE_SUPERGROUP_FULL_INFO = 'updateSuperGroupFullInfo',
+  ADD_MESSAGE = 'addMessage',
+  ADD_CHAT = 'addChat',
+  UPDATE_CHAT = 'updateChat',
+  UPDATE_AUTH_PASSWORD_HINT = 'updateAuthPasswordHint',
+  CLEAR_FILTERS = 'clearFilters',
+  UPDATE_FILTER = 'updateFilter',
+  SET_SELECTED_CHAT_ID = 'setSelectedChatId',
+}

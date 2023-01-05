@@ -41,7 +41,15 @@ export function CardWebPage({ className, webPage }: CardProps) {
 
   function renderDescriptionContents() {
     return (
-      <a href={processUrl(url)} target='_blank' rel='noopener noreferrer' className={classes.display_url}>
+      <a
+        id='web-page-link'
+        href={processUrl(url)}
+        target='_blank'
+        rel='noopener noreferrer'
+        className={classes.display_url}
+        // no need to trigger additional events, like click on card
+        onClick={e => e.stopPropagation()}
+      >
         <p className={clsx('p4', classes.description)}>{description}</p>
       </a>
     );

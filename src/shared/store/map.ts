@@ -1,4 +1,4 @@
-import { Optional, R } from '@mv-d/toolbelt';
+import { R } from '@mv-d/toolbelt';
 
 import { Message } from '../../domains';
 import { TChat, TMessage, TSupergroup, TUser, TUserFullInfo } from '../entities';
@@ -75,4 +75,10 @@ MAP.set(StateActions.UPDATE_AUTH_PASSWORD_HINT, (state, action: Action<TChat>) =
   if (!action.payload) return R.dissoc('authPasswordHint', state);
 
   return R.assoc('authPasswordHint', action.payload, state);
+});
+
+MAP.set(StateActions.SET_SELECTED_CHAT_ID, (state, action: Action<number>) => {
+  if (!action.payload) return R.dissoc('selectedChatId', state);
+
+  return R.assoc('selectedChatId', action.payload, state);
 });

@@ -1,5 +1,13 @@
 .container {
 	padding: 0 .8rem;
+	overflow: hidden;
+	width: 100%;
+	display: block;
+}
+
+.text {
 	font-size: 1.6rem;
 	font-weight: 400;
+	width: 100%;
+	overflow: hidden;
 }

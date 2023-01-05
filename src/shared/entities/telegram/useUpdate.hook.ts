@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { MessageTypes } from '../../../domains';
 
 import { CONFIG } from '../../config';
+import { useUser } from '../../hooks';
 import {
   useDispatch,
   updateAuthPasswordHint,
@@ -14,6 +15,7 @@ import {
   getChatById,
   getUserById,
   useSelector,
+  getUsers,
 } from '../../store';
 import { getSenderFromMessage } from '../../tools';
 import {
@@ -37,6 +39,8 @@ export function useUpdate({
   setEvent: Dispatch<SetStateAction<TUpdates | undefined>>;
 }) {
   const dispatch = useDispatch();
+
+  const { myself } = useUser();
 
   const getChat = useSelector(getChatById);
 
@@ -94,16 +98,19 @@ export function useUpdate({
         // eslint-disable-next-line no-console
         if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);
 
-        const sender = getSenderFromMessage(event.last_message, getChat, getUser);
+        const sender = getSenderFromMessage(event.last_message, getChat, getUser, myself);
 
-        R.compose(
-          dispatch,
-          addNotification,
-        )({
-          id: generateId(),
-          text: `New message${sender ? ` from ${sender}` : ''}`,
-          type: MessageTypes.INFO,
-        });
+        if (sender) {
+          R.compose(
+            dispatch,
+            addNotification,
+          )({
+            id: generateId(),
+            text: `New message${sender ? ` from ${sender}` : ''}`,
+            type: MessageTypes.INFO,
+          });
+        }
+
         R.compose(dispatch, addMessage)(event.last_message);
       },
       updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),

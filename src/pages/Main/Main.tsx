@@ -1,11 +1,23 @@
-import { Feed } from '../../domains';
+import { ifTrue } from '@mv-d/toolbelt';
+import { Chat, Feed } from '../../domains';
+import { getSelectedChatTitle, LazyLoad, useSelector } from '../../shared';
+import { Container } from './Container';
 import { Header } from './Header';
 
 export default function Main() {
+  const chatTitle = useSelector(getSelectedChatTitle);
+
   return (
-    <main>
+    <Container>
       <Header />
-      <Feed />
-    </main>
+      {ifTrue(chatTitle, () => (
+        <LazyLoad>
+          <Chat />
+        </LazyLoad>
+      ))}
+      {ifTrue(!chatTitle, () => (
+        <Feed />
+      ))}
+    </Container>
   );
 }

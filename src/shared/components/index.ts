@@ -12,6 +12,8 @@ export * from './CardHeader';
 
 export * from './CardFooter';
 
+export * from './Buttons';
+
 export * from './CardDivider';
 
 export * from './CardText';

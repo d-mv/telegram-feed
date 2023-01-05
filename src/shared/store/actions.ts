@@ -1,6 +1,6 @@
 import { Message } from '../../domains';
 import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUser, TUserFullInfo } from '../entities';
-import { Action, StateActions } from './types';
+import { Action, FeedFilters, StateActions } from './types';
 
 export const clearState = (): Action<string> => ({
   type: StateActions.CLEAR_STATE,
@@ -39,5 +39,29 @@ export const addChat = (payload: TChat): Action<TChat> => ({ type: StateActions.
 
 export const updateAuthPasswordHint = (payload: string): Action<string> => ({
   type: StateActions.UPDATE_AUTH_PASSWORD_HINT,
+  payload,
+});
+
+export const clearFilters = (): Action<string> => ({
+  type: StateActions.CLEAR_FILTERS,
+});
+
+interface Filter {
+  id: FeedFilters;
+  value: string;
+}
+
+export const updateFilter = (payload: Filter): Action<Filter> => ({
+  type: StateActions.UPDATE_FILTER,
+  payload,
+});
+
+export const removeFilter = (id: FeedFilters): Action<Filter> => ({
+  type: StateActions.UPDATE_FILTER,
+  payload: { id, value: '' },
+});
+
+export const setSelectedChatId = (payload: number): Action<number> => ({
+  type: StateActions.SET_SELECTED_CHAT_ID,
   payload,
 });

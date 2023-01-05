@@ -1,0 +1,21 @@
+.container {
+	width: 40rem;
+	position: absolute;
+	left: calc(50% - 20rem);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--font-family-sans);
+}
+
+.button {
+	display: flex;
+
+	p {
+		margin-inline-start: 1rem;
+	}
+}
+
+.text {
+	margin-inline-start: .3rem;
+}

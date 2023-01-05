@@ -7,4 +7,5 @@ export const INITIAL_STATE: State = {
   usersFullInfo: [],
   messages: [],
   chats: [],
+  filters: [],
 };

@@ -5,7 +5,7 @@ import { Authenticate, Main } from '../pages';
 import { LazyLoad, Loader, TelegramContext } from '../shared';
 
 export function App() {
-  const [event] = useContextSelector(TelegramContext, c => [c.event, c.options]);
+  const event = useContextSelector(TelegramContext, c => c.authEvent);
 
   if (!event || !('authorization_state' in event)) return <Loader />;
 

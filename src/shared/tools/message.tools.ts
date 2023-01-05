@@ -5,6 +5,7 @@ export function getSenderFromMessage(
   message: TMessage,
   getChat: (id: number) => TChat | undefined,
   getUser: (id: number) => TUser | undefined,
+  myself: Optional<TUser>,
 ) {
   const s = message.sender_id;
 
@@ -15,9 +16,14 @@ export function getSenderFromMessage(
 
     if (!user) return '';
 
+    const itsMe = user.id === myself?.id;
+
+    // eslint-disable-next-line no-console
     const senderName = `${user?.first_name} ${user?.last_name}`;
 
     if (senderName === chat?.title) return senderName;
+
+    if (itsMe) return chat?.title;
 
     return `${chat?.title} (${senderName})`;
   }
@@ -31,7 +37,7 @@ export function getPhotoSize(photo: TMessagePhoto, size = 'x') {
   return sizes.find(p => p.type === size);
 }
 
-export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, width = 40) {
+export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, width = 39.8) {
   if (!photo) return {};
 
   const ratio = (photo.height || 1) / (photo.width || 1);

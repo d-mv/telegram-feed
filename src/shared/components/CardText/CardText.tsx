@@ -8,5 +8,9 @@ interface CardProps {
 }
 
 export function CardText({ children, className }: PropsWithChildren<CardProps>) {
-  return <p className={clsx('p4 serif', classes.container, className)}>{children}</p>;
+  return (
+    <div className={classes.container}>
+      <p className={clsx('p4 serif', classes.text, className)}>{children}</p>
+    </div>
+  );
 }

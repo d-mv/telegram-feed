@@ -14,6 +14,7 @@ export interface TelegramContextType {
   event: Optional<TUpdates>;
   client: TdClient;
   options: TOptions;
+  authEvent: Optional<TUpdates>;
   send: <R>(args: { type: string; [key: string]: unknown }) => Promise<R>;
 }
 
@@ -24,12 +25,16 @@ TelegramContext.displayName = 'TelegramContext';
 export function TelegramProvider(props: AnyValue) {
   const [event, setEvent] = useState<TUpdates>();
 
+  const [authEvent, setAuthEvent] = useState<TUpdates>();
+
   const [options, setOptions] = useState<TOptions>({} as TOptions);
 
   const { matchUpdate } = useUpdate({ setEvent, options, setOptions });
 
   const onUpdate = useCallback((event: TUpdates) => {
     matchUpdate[event['@type']](event);
+
+    if ('authorization_state' in event) setAuthEvent(event);
   }, []);
 
   const [client, setClient] = useState<AnyValue>();
@@ -43,5 +48,9 @@ export function TelegramProvider(props: AnyValue) {
     return client.send({ '@type': type, ...args }) as Promise<R>;
   }
 
-  return <TelegramContext.Provider value={{ event, client, options, send }}>{props.children}</TelegramContext.Provider>;
+  return (
+    <TelegramContext.Provider value={{ event, client, options, send, authEvent }}>
+      {props.children}
+    </TelegramContext.Provider>
+  );
 }

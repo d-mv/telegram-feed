@@ -1,6 +1,15 @@
 import { useContextSelector } from 'use-context-selector';
 
-import { Card, CardFooter, CardDivider, CardHeader, CardPhoto, CardText, useMessage } from '../../../shared';
+import {
+  Card,
+  CardFooter,
+  CardDivider,
+  CardHeader,
+  CardPhoto,
+  CardText,
+  useMessage,
+  CardInteractionInfo,
+} from '../../../shared';
 import { FeedContext } from '../feed.context';
 
 export function MessagePhoto() {
@@ -11,14 +20,14 @@ export function MessagePhoto() {
   if (message.content['@type'] !== 'messagePhoto') return null;
 
   return (
-    <Card id={`message-photo-${message.id}`}>
+    <Card id={`message-photo-${message.id}`} chatId={message.chat_id}>
       <CardPhoto photo={message.content.photo} />
       <CardHeader>{sender}</CardHeader>
       <CardText>{message.content.caption.text}</CardText>
       <CardFooter>
         {getRelativeMessageDate()}
         <CardDivider />
-        <div />
+        <CardInteractionInfo interactionInfo={message.interaction_info} />
       </CardFooter>
     </Card>
   );

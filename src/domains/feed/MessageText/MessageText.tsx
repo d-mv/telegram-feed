@@ -28,11 +28,8 @@ export function MessageText() {
     return <CardWebPage webPage={message.content.web_page} />;
   }
 
-  // eslint-disable-next-line no-console
-  console.log('###', message.content);
-
   return (
-    <Card id={`message-text-${message.id}`}>
+    <Card id={`message-text-${message.id}`} chatId={message.chat_id}>
       <CardHeader>{sender}</CardHeader>
       <CardText>{message.content.text.text}</CardText>
       {renderWebPage()}

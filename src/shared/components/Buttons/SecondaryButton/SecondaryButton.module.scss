@@ -1,0 +1,15 @@
+.container {
+	background-color: transparent;
+	color: var(--color-text);
+	border: .1rem solid var(--color-primary-1);
+
+	&:hover {
+		border-color: var(--color-accent-1)
+	}
+
+	&:active {
+		background-color: var(--color-primary-1);
+		color: var(--color-white);
+		border-color: var(--color-accent-1)
+	}
+}
