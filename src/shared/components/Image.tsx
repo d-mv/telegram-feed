@@ -1,7 +1,8 @@
-import { AnyValue } from '@mv-d/toolbelt';
-import { CSSProperties, useEffect, useState } from 'react';
+import { AnyValue, as, Optional } from '@mv-d/toolbelt';
+import { CSSProperties, MutableRefObject, useEffect, useState } from 'react';
 
 import { useTelegram } from '../entities';
+import { MaybeNull } from '../types';
 
 interface PhotoProps {
   photoId: number;

@@ -2,9 +2,10 @@
 	left: 0;
 	right: 0;
 	position: absolute;
-	top: 4rem;
+	top: 3rem;
 	bottom: .2rem;
 	overflow-y: scroll;
+	padding: 1rem;
 }
 
 .feed {
@@ -14,4 +15,11 @@
 	justify-content: center;
 	width: 100%;
 	margin: 0 auto;
+}
+
+.message-divider {
+	display:flex;
+	svg {
+		fill: var(--color-primary-3)
+	}
 }

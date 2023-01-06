@@ -37,20 +37,31 @@ export function getPhotoSize(photo: TMessagePhoto, size = 'x') {
   return sizes.find(p => p.type === size);
 }
 
-export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, width = 39.8) {
+interface GetPhotoContainerStyleOptions {
+  width: number;
+  maxHeight: number;
+}
+
+export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, options?: Partial<GetPhotoContainerStyleOptions>) {
   if (!photo) return {};
+
+  if (!options?.width)
+    return {
+      width: options?.width,
+      height: options?.maxHeight && photo.height > options?.maxHeight ? options.maxHeight : '50vw',
+    };
 
   const ratio = (photo.height || 1) / (photo.width || 1);
 
   const isVertical = ratio > 1;
 
-  const r = photo.width / (width * 10);
+  const r = photo.width / (options.width * 10);
 
-  const widthArg = `${width}rem`;
+  const widthArg = `${options.width}rem`;
 
   if (isVertical) return { width: widthArg, height: photo.height / r };
 
-  return { width: widthArg, height: `${width * ratio}rem` };
+  return { width: widthArg, height: `${options.width * ratio}rem` };
 }
 
 export function processUrl(url: string): string {

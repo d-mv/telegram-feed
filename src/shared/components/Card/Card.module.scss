@@ -1,8 +1,8 @@
 .container {
 	transition: var(--transition);
-	margin: 1rem;
 	border-radius: 1rem;
-	width: 40rem;
+	width: 100%;
+	margin:1rem auto;
 	background: var(--color-secondary-4);
 	border: var(--border-primary-4);
 	box-shadow: var(--shadow-primary-4);

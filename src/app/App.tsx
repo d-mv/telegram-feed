@@ -28,9 +28,9 @@ export function App() {
   }
 
   return (
-    <LazyLoad>
-      {getPage()}
+    <>
+      <LazyLoad>{getPage()}</LazyLoad>
       <Notifications />
-    </LazyLoad>
+    </>
   );
 }

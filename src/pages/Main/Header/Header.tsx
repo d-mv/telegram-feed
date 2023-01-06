@@ -1,6 +1,6 @@
 import { R } from '@mv-d/toolbelt';
 import { getSelectedChatTitle, Icon, setSelectedChatId, useDispatch, useSelector, useUser } from '../../../shared';
-import { Avatar } from '../Avatar';
+// import { Avatar } from '../Avatar';
 // import { FilterPanel } from '../FilterPanel';
 import classes from './Header.module.scss';
 
@@ -41,7 +41,7 @@ export function Header() {
       <>
         {makeHeaderTitle()}
         {/* <FilterPanel /> */}
-        <Avatar user={myself} />
+        {/* <Avatar user={myself} /> */}
       </>
     );
   }

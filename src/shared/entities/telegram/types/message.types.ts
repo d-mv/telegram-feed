@@ -1,6 +1,6 @@
 import { TUpdate } from './event.types';
 import { TFile } from './file.types';
-import { TMiniThumbnail, TPhotoSize } from './photo.types';
+import { TMiniThumbnail, TPhotoSize, TThumbnail } from './photo.types';
 
 export interface TMessageSenderUser {
   '@type': 'messageSenderUser';
@@ -28,19 +28,57 @@ export interface TMessageInteractionInfo {
   view_count?: number;
 }
 
+export interface TTextEntityTypeMention {
+  '@type': 'textEntityTypeMention';
+}
+
 export interface TTextEntityTypeBold {
   '@type': 'textEntityTypeBold';
+}
+
+export interface TTextEntityHashtag {
+  '@type': 'textEntityTypeHashtag';
+}
+
+export interface TTextEntityTypeItalic {
+  '@type': 'textEntityTypeItalic';
+}
+
+export interface TTextEntityTypeTextUrl {
+  '@type': 'textEntityTypeTextUrl';
+  url: string;
 }
 
 export interface TTextEntityTypeUrl {
   '@type': 'textEntityTypeUrl';
 }
 
+export interface TTextEntityTypeBotCommand {
+  '@type': 'textEntityTypeBotCommand';
+}
+
+export interface TTextEntityTypeCode {
+  '@type': 'textEntityTypeCode';
+}
+
+export interface TTextEntityEmailAddress {
+  '@type': 'textEntityTypeEmailAddress';
+}
+
 export interface TMessageTextEntity {
   '@type': 'textEntity';
   length: number;
   offset: number;
-  type: TTextEntityTypeBold | TTextEntityTypeUrl;
+  type:
+    | TTextEntityEmailAddress
+    | TTextEntityTypeItalic
+    | TTextEntityHashtag
+    | TTextEntityTypeTextUrl
+    | TTextEntityTypeBold
+    | TTextEntityTypeUrl
+    | TTextEntityTypeBotCommand
+    | TTextEntityTypeCode
+    | TTextEntityTypeMention;
 }
 
 export interface TFormattedText {
@@ -87,6 +125,27 @@ export interface TMessageContentPhoto {
   photo: TMessagePhoto;
 }
 
+export interface TVideo {
+  '@type': 'video';
+  duration: number;
+  file_name: string;
+  has_stickers: boolean;
+  height: number;
+  mime_type: 'video/mp4';
+  minithumbnail: TMiniThumbnail;
+  supports_streaming: boolean;
+  thumbnail: TThumbnail;
+  video: TFile;
+  width: number;
+}
+
+export interface TMessageVideo {
+  '@type': 'messageVideo';
+  caption: TFormattedText;
+  is_secret: boolean;
+  video: TVideo;
+}
+
 export interface TMessage {
   '@type': 'message';
   author_signature: string;
@@ -101,7 +160,7 @@ export interface TMessage {
   can_get_viewers: boolean;
   chat_id: number;
   contains_unread_mention: boolean;
-  content: TMessageContentPhoto | TFormattedText | TMessageText;
+  content: TMessageContentPhoto | TFormattedText | TMessageText | TMessageVideo;
   date: number;
   edit_date: number;
   has_timestamped_media: boolean;
@@ -119,29 +178,6 @@ export interface TMessage {
   ttl: number;
   ttl_expires_in: number;
   via_bot_user_id: number;
-}
-
-export interface TVideo {
-  '@type': 'video';
-  duration: number;
-  file_name: string;
-  has_stickers: boolean;
-  height: number;
-  mime_type: 'video/mp4';
-  minithumbnail: TMiniThumbnail;
-  supports_streaming: boolean;
-  // thumbnail
-  // :
-  // {@type: 'thumbnail', format: {…}, width: 320, height: 180, file: {…}}
-  video: TFile;
-  width: number;
-}
-
-export interface TMessageVideo {
-  '@type': 'messageVideo';
-  caption: TFormattedText;
-  is_secret: boolean;
-  video: TVideo;
 }
 
 // updates

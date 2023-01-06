@@ -4,10 +4,11 @@ import { FaUser } from 'react-icons/fa';
 import { TiInfoLarge, TiThMenu } from 'react-icons/ti';
 import { IoClose, IoWarning, IoReturnUpBack } from 'react-icons/io5';
 import { BsFillHandThumbsUpFill } from 'react-icons/bs';
-import { BiShow, BiHide } from 'react-icons/bi';
+import { BiShow, BiHide, BiRadioCircle } from 'react-icons/bi';
 import { FiEye } from 'react-icons/fi';
 import { TfiControlForward } from 'react-icons/tfi';
 import { TbFilterOff } from 'react-icons/tb';
+import { RxDividerHorizontal } from 'react-icons/rx';
 import { makeMatch } from '@mv-d/toolbelt';
 
 export const Icons = makeMatch(
@@ -26,6 +27,8 @@ export const Icons = makeMatch(
     forward: TfiControlForward,
     cancelFilter: TbFilterOff,
     return: IoReturnUpBack,
+    dividerH: RxDividerHorizontal,
+    radioCircle: BiRadioCircle,
   },
   () => <div />,
 );

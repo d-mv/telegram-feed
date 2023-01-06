@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
 import {
@@ -9,6 +10,7 @@ import {
   CardWebPage,
   useMessage,
   CardInteractionInfo,
+  useTextProcessor,
 } from '../../../shared';
 import { FeedContext } from '../feed.context';
 
@@ -17,7 +19,13 @@ export function MessageText() {
 
   const { sender, getRelativeMessageDate } = useMessage(message);
 
-  if (message.content['@type'] !== 'messageText') return null;
+  const text = useTextProcessor(message.content);
+
+  if (message.content['@type'] !== 'messageText') {
+    // eslint-disable-next-line no-console
+    console.log('missing incorrect', message);
+    return null;
+  }
 
   const hasWebPage = message.content.web_page;
 
@@ -31,7 +39,13 @@ export function MessageText() {
   return (
     <Card id={`message-text-${message.id}`} chatId={message.chat_id}>
       <CardHeader>{sender}</CardHeader>
-      <CardText>{message.content.text.text}</CardText>
+      <CardText>
+        <span
+          dangerouslySetInnerHTML={{
+            __html: text,
+          }}
+        />
+      </CardText>
       {renderWebPage()}
       <CardFooter>
         {getRelativeMessageDate()}

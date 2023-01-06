@@ -34,7 +34,7 @@ export function CardWebPage({ className, webPage }: CardProps) {
         photoId={photo.photo.id}
         className={classes.photo}
         alt='Web page photo'
-        style={getPhotoContainerStyle(photo, 38)}
+        style={getPhotoContainerStyle(photo)}
       />
     );
   }
