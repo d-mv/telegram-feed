@@ -10,3 +10,5 @@ public/*.mem
 public/*.wasm
 public/tdweb.js
 public/logger.js
+# Local Netlify folder
+.netlify
