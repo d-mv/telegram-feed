@@ -10,7 +10,7 @@ import classes from './Feed.module.scss';
 // "messageAnimatedEmoji", "messageUnsupported", "messageVideo"
 const MATCH_RENDERERS = makeMatch({ messageText: MessageText, messagePhoto: MessagePhoto }, null);
 
-export function Feed() {
+export default function Feed() {
   const { getChats } = useTelegram();
 
   const { byMyself } = useUser();

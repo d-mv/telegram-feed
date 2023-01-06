@@ -16,6 +16,7 @@ import {
   getUserById,
   useSelector,
   getUsers,
+  setCurrentUserId,
 } from '../../store';
 import { getSenderFromMessage } from '../../tools';
 import {
@@ -63,6 +64,10 @@ export function useUpdate({
     }
 
     setOptions(state => ({ ...state, [name]: event.value }));
+
+    if (name === 'my_id') {
+      R.compose(dispatch, setCurrentUserId)(parseInt(event.value.value as string));
+    }
 
     if (!CONFIG.isDev) return;
 

@@ -58,11 +58,33 @@ MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => 
 MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
   if (!action.payload) return state;
 
-  const newListOfMessages = [...state.messages.filter(m => m.id !== action.payload?.id), action.payload].sort(
-    (a, b) => b.date - a.date,
-  );
+  const chatId = action.payload.chat_id;
 
-  return R.assoc('messages', newListOfMessages, state);
+  const threadId = action.payload.message_thread_id;
+
+  if (threadId === 0) {
+    const messages = state.chatMessages.get(chatId) || [];
+
+    if (messages.find(m => m.id === action.payload?.id)) return state;
+
+    const newMessages = [...messages, action.payload];
+
+    return R.assoc('chatMessages', state.chatMessages.set(chatId, newMessages), state);
+  } else {
+    const messages = state.threadMessages.get(threadId) || [];
+
+    if (messages.find(m => m.id === action.payload?.id)) return state;
+
+    const newMessages = [...messages, action.payload];
+
+    return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
+  }
+});
+
+MAP.set(StateActions.SET_CURRENT_USER_ID, (state, action: Action<number>) => {
+  if (!action.payload) return R.assoc('currentUserId', 0, state);
+
+  return R.assoc('currentUserId', action.payload, state);
 });
 
 MAP.set(StateActions.ADD_CHAT, (state, action: Action<TChat>) => {

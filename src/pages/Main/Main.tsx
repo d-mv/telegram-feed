@@ -1,23 +1,35 @@
-import { ifTrue } from '@mv-d/toolbelt';
+import { LazyExoticComponent } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import { Chat, Feed } from '../../domains';
-import { getSelectedChatTitle, LazyLoad, useSelector } from '../../shared';
+import { LazyLoad } from '../../shared';
 import { Container } from './Container';
 import { Header } from './Header';
 
+function renderLazy(Component: LazyExoticComponent<() => JSX.Element>) {
+  return (
+    <LazyLoad>
+      <Component />
+    </LazyLoad>
+  );
+}
+
 export default function Main() {
-  const chatTitle = useSelector(getSelectedChatTitle);
+  function reRoute() {
+    window.history.pushState({}, '', `/feed`);
+    return <div />;
+  }
 
   return (
     <Container>
       <Header />
-      {ifTrue(chatTitle, () => (
-        <LazyLoad>
-          <Chat />
-        </LazyLoad>
-      ))}
-      {ifTrue(!chatTitle, () => (
-        <Feed />
-      ))}
+      <BrowserRouter>
+        <Routes>
+          <Route path='/chat/:chatId' element={renderLazy(Chat)} />
+          <Route path='/feed' element={renderLazy(Feed)} />
+          <Route path='*' element={reRoute()} />
+        </Routes>
+      </BrowserRouter>
     </Container>
   );
 }

@@ -9,12 +9,13 @@ export interface State {
   notifications: Message[];
   users: TUser[];
   usersFullInfo: (TUserFullInfo & { user_id: number })[];
+  currentUserId: number;
   superGroups: TSupergroup[];
   messages: TMessage[];
   chats: TChat[];
   authPasswordHint?: string;
   filters: FeedFilters[];
   selectedChatId?: number;
-  chatMessages: Record<number, TMessage[]>;
-  threadMessages: Record<number, TMessage[]>;
+  chatMessages: Map<number, TMessage[]>;
+  threadMessages: Map<number, TMessage[]>;
 }

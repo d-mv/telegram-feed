@@ -1,9 +1,8 @@
 import { clsx } from 'clsx';
-import { R } from '@mv-d/toolbelt';
+import { useNavigate } from 'react-router-dom';
 import { MutableRefObject, PropsWithChildren } from 'react';
 
 import classes from './Card.module.scss';
-import { setSelectedChatId, useDispatch } from '../../store';
 import { MaybeNull } from '../../types';
 
 interface CardProps {
@@ -14,10 +13,10 @@ interface CardProps {
 }
 
 export function Card({ children, id, chatId, className, containerRef }: PropsWithChildren<CardProps>) {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleClick() {
-    R.compose(dispatch, setSelectedChatId)(chatId);
+    navigate(`/chat/${chatId}`);
   }
 
   return (
