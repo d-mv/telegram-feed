@@ -8,4 +8,6 @@ export const INITIAL_STATE: State = {
   messages: [],
   chats: [],
   filters: [],
+  chatMessages: {},
+  threadMessages: {},
 };

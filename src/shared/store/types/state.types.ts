@@ -15,4 +15,6 @@ export interface State {
   authPasswordHint?: string;
   filters: FeedFilters[];
   selectedChatId?: number;
+  chatMessages: Record<number, TMessage[]>;
+  threadMessages: Record<number, TMessage[]>;
 }
