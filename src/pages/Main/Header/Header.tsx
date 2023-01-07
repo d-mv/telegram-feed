@@ -1,7 +1,4 @@
-import { R } from '@mv-d/toolbelt';
-import { getSelectedChatTitle, Icon, setSelectedChatId, useDispatch, useSelector, useUser } from '../../../shared';
-// import { Avatar } from '../Avatar';
-// import { FilterPanel } from '../FilterPanel';
+import { clearSelectedChatId, getSelectedChatId, Icon, useDispatch, useSelector, useUser } from '../../../shared';
 import classes from './Header.module.scss';
 
 export function Header() {
@@ -9,10 +6,10 @@ export function Header() {
 
   const dispatch = useDispatch();
 
-  const chatTitle = useSelector(getSelectedChatTitle);
+  const chatId = useSelector(getSelectedChatId);
 
   function handleReturn() {
-    R.compose(dispatch, setSelectedChatId)(-1);
+    dispatch(clearSelectedChatId());
   }
 
   function makeH2(s: string) {
@@ -20,16 +17,20 @@ export function Header() {
   }
 
   function makeHeaderTitle() {
-    if (!myself && !chatTitle) return 'Feed';
+    if (!myself && !chatId) return 'Feed';
 
-    if (!chatTitle) return makeH2(`Feed for ${myself!.first_name} ${myself!.last_name}`);
+    if (!chatId && myself) return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
 
+    if (!chatId) return null;
+
+    // chat might not be loaded, but we know it's being selected
     return (
       <div className={classes['chat-title']}>
         <button onClick={handleReturn} className={classes['chat-title-button']}>
           <Icon icon='return' className={classes['chat-title-icon']} />
         </button>
-        {makeH2(chatTitle)}
+
+        {makeH2(chatId.title || '')}
       </div>
     );
   }

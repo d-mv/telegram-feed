@@ -1,7 +1,10 @@
 import { logger, makeMatch } from '@mv-d/toolbelt';
 import { useMemo } from 'react';
 
+import { CONFIG } from '../config';
+
 import { TFormattedText, TMessageContentPhoto, TMessageText, TMessageTextEntity, TMessageVideo } from '../entities';
+import { isDebugLogging } from '../tools';
 
 const GET_CONTENT_AND_ENTITIES = makeMatch(
   {
@@ -55,7 +58,7 @@ export function useTextProcessor(content: TMessageContentPhoto | TMessageText | 
 
       const result = PROCESS_TEXT[type['@type']](text, 'url' in type ? type.url : '');
 
-      if (!result) logger.warn(`useTextProcessor] missing process ${type}`);
+      if (!result && isDebugLogging(CONFIG)) logger.warn(`useTextProcessor] missing process ${type}`);
 
       if (!processedText) {
         processedText = originalText.slice(0, offset) + result;

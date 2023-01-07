@@ -1,5 +1,6 @@
 import { Message } from '../../../domains';
 import { TUser, TUserFullInfo, TSupergroup, TMessage, TChat } from '../../entities';
+import { SelectedChatId } from './data.types';
 
 export enum FeedFilters {
   NO_COMMENTS = 'noComments',
@@ -15,7 +16,7 @@ export interface State {
   chats: TChat[];
   authPasswordHint?: string;
   filters: FeedFilters[];
-  selectedChatId?: number;
+  selectedChat?: SelectedChatId;
   chatMessages: Map<number, TMessage[]>;
   threadMessages: Map<number, TMessage[]>;
 }

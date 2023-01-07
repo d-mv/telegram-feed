@@ -14,4 +14,5 @@ export enum StateActions {
   UPDATE_FILTER = 'updateFilter',
   SET_SELECTED_CHAT_ID = 'setSelectedChatId',
   SET_CURRENT_USER_ID = 'setCurrentUserId',
+  RESTORE_STATE = 'restoreState',
 }

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
 import {
@@ -21,11 +20,7 @@ export function MessageText() {
 
   const text = useTextProcessor(message.content);
 
-  if (message.content['@type'] !== 'messageText') {
-    // eslint-disable-next-line no-console
-    console.log('missing incorrect', message);
-    return null;
-  }
+  if (message.content['@type'] !== 'messageText') return null;
 
   const hasWebPage = message.content.web_page;
 

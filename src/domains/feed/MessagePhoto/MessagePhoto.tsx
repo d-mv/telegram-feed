@@ -1,5 +1,4 @@
-import { Optional } from '@mv-d/toolbelt';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
 import {
@@ -29,11 +28,7 @@ export function MessagePhoto() {
 
   const text = useTextProcessor(message.content);
 
-  if (message.content['@type'] !== 'messagePhoto') {
-    // eslint-disable-next-line no-console
-    console.log('missing incorrect photo', message);
-    return null;
-  }
+  if (message.content['@type'] !== 'messagePhoto') return null;
 
   return (
     <Card containerRef={containerRef} id={`message-photo-${message.id}`} onClick={onClick}>

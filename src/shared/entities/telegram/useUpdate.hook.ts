@@ -1,7 +1,7 @@
 import { AnyValue, generateId, logger, makeMatch, R } from '@mv-d/toolbelt';
 import { Dispatch, SetStateAction } from 'react';
-import { MessageTypes } from '../../../domains';
 
+import { MessageTypes } from '../../../domains';
 import { CONFIG } from '../../config';
 import { useUser } from '../../hooks';
 import {
@@ -15,10 +15,9 @@ import {
   getChatById,
   getUserById,
   useSelector,
-  getUsers,
   setCurrentUserId,
 } from '../../store';
-import { getSenderFromMessage } from '../../tools';
+import { getSenderFromMessage, isDebugLogging } from '../../tools';
 import {
   TOptions,
   TUpdates,
@@ -69,7 +68,7 @@ export function useUpdate({
       R.compose(dispatch, setCurrentUserId)(parseInt(event.value.value as string));
     }
 
-    if (!CONFIG.isDev) return;
+    if (!CONFIG.isDev || !isDebugLogging(CONFIG)) return;
 
     logger.info('TelegramContext', `options changed: ${name}`, JSON.stringify(event.value));
   }
@@ -120,7 +119,7 @@ export function useUpdate({
       },
       updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),
     },
-    (event: TUpdates) => logger.error(`Unmatched event: ${event['@type']}`),
+    (event: TUpdates) => isDebugLogging(CONFIG) && logger.error(`Unmatched event: ${event['@type']}`),
   );
 
   return { matchUpdate };

@@ -1,8 +1,18 @@
-import { logger, makeMatch } from '@mv-d/toolbelt';
-import { MouseEvent, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { logger, makeMatch, R } from '@mv-d/toolbelt';
+import { MouseEvent, useMemo } from 'react';
 
-import { getMessages, Icon, TMessage, useSelector, useTelegram, useUser } from '../../../shared';
+import {
+  CONFIG,
+  getChatById,
+  getMessages,
+  Icon,
+  isDebugLogging,
+  setSelectedChatId,
+  TMessage,
+  useDispatch,
+  useSelector,
+  useUser,
+} from '../../../shared';
 import { FeedContext } from '../feed.context';
 import { MessagePhoto } from '../MessagePhoto';
 import { MessageText } from '../MessageText';
@@ -12,17 +22,13 @@ import classes from './Feed.module.scss';
 const MATCH_RENDERERS = makeMatch({ messageText: MessageText, messagePhoto: MessagePhoto }, null);
 
 export default function Feed() {
-  const { getChats } = useTelegram();
-
   const { byMyself } = useUser();
+
+  const dispatch = useDispatch();
 
   const messages = useSelector(getMessages);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getChats();
-  }, []);
+  const getChat = useSelector(getChatById);
 
   const displayMessages = useMemo(
     () =>
@@ -46,22 +52,25 @@ export default function Feed() {
 
         if (outsideLink) {
           e.stopPropagation();
-          logger.info('Outside link clicked');
-          return;
+
+          if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
         }
       }
 
-      navigate(`/chat/${chatId}`);
+      R.compose(dispatch, setSelectedChatId)({ id: String(chatId), title: getChat(chatId)?.title || '' });
     };
   }
 
   function renderMessage(message: TMessage) {
     const type = message.content['@type'];
 
+    // No direct input from user, so no need to be careful
+    // eslint-disable-next-line security/detect-object-injection
     const Component = MATCH_RENDERERS[type];
 
     if (!Component) {
-      logger.warn(`Missing renderer for ${type}`);
+      if (isDebugLogging(CONFIG)) logger.warn(`Missing renderer for ${type}`);
+
       return null;
     }
 

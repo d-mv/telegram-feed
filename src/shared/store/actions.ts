@@ -1,10 +1,12 @@
 import { Message } from '../../domains';
 import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUser, TUserFullInfo } from '../entities';
-import { Action, FeedFilters, StateActions } from './types';
+import { Action, FeedFilters, SelectedChatId, StateActions } from './types';
 
-export const clearState = (): Action<string> => ({
+export const clearState = (): Action => ({
   type: StateActions.CLEAR_STATE,
 });
+
+export const restoreState = (): Action => ({ type: StateActions.RESTORE_STATE });
 
 export const addNotification = (payload: Message): Action<Message> => ({
   type: StateActions.ADD_NOTIFICATION,
@@ -61,9 +63,14 @@ export const removeFilter = (id: FeedFilters): Action<Filter> => ({
   payload: { id, value: '' },
 });
 
-export const setSelectedChatId = (payload: number): Action<number> => ({
+export const setSelectedChatId = (payload: SelectedChatId): Action<SelectedChatId> => ({
   type: StateActions.SET_SELECTED_CHAT_ID,
   payload,
+});
+
+export const clearSelectedChatId = (): Action<SelectedChatId> => ({
+  type: StateActions.SET_SELECTED_CHAT_ID,
+  payload: { id: '', title: '' },
 });
 
 export const setCurrentUserId = (payload: number): Action<number> => ({

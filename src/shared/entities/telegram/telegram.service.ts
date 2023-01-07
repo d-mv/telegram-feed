@@ -1,16 +1,25 @@
-import TdClient from 'tdweb';
+import { AnyValue } from '@mv-d/toolbelt';
+import TdClient, { TdOptions } from 'tdweb';
 
-import { TUpdates } from './types';
+export type JsLogVerbosityLevel = 'error' | 'warning' | 'info' | 'log' | 'debug' | undefined;
+
+export interface TelegramServiceArgs extends TdOptions {
+  apiId: string;
+  apiHash: string;
+  onUpdate: (update: AnyValue) => void;
+  logVerbosityLevel?: number | undefined;
+  jsLogVerbosityLevel?: JsLogVerbosityLevel;
+}
 
 export class TelegramService {
   client: TdClient;
 
-  constructor(apiId: string, apiHash: string, onUpdate: (update: TUpdates) => void) {
-    this.client = this.#init(onUpdate);
-    this.#setParameters(apiId, apiHash);
+  constructor(args: TelegramServiceArgs) {
+    this.client = this.#init(args);
+    this.#setParameters(args.apiId, args.apiHash);
   }
 
-  #init(onUpdate: (update: TUpdates) => void) {
+  #init({ onUpdate, logVerbosityLevel, jsLogVerbosityLevel }: TelegramServiceArgs) {
     const client = new TdClient({
       // @ts-ignore -- temp
       useTestDC: false,
@@ -20,6 +29,8 @@ export class TelegramService {
       fastUpdating: true,
       useDatabase: false,
       mode: 'wasm',
+      logVerbosityLevel,
+      jsLogVerbosityLevel,
       // @ts-ignore -- use more detailed typings
       onUpdate,
     });

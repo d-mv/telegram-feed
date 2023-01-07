@@ -1,75 +1,31 @@
 import { ifTrue } from '@mv-d/toolbelt';
-import { clsx } from 'clsx';
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
-import {
-  authorizationState,
-  getAuthPasswordHint,
-  Icon,
-  MaybeNull,
-  TelegramContext,
-  useSelector,
-  useTelegram,
-} from '../../shared';
-import classes from './Authenticate.module.scss';
+import { authorizationState, getCurrentUser, MaybeNull, TelegramContext, useSelector, useTelegram } from '../../shared';
+import { Container } from './Container';
+import { Passcode } from './Passcode';
 
 export default function Authenticate() {
   const [event, client] = useContextSelector(TelegramContext, c => [c.event, c.client]);
 
-  const authPasswordHint = useSelector(getAuthPasswordHint);
+  const state = authorizationState(event);
+
+  const currentUser = useSelector(getCurrentUser);
 
   const qr = useRef<MaybeNull<HTMLDivElement>>(null);
 
-  const [password, setPassword] = useState('');
-
-  const { handleAuthentication, submitPassword } = useTelegram();
+  const { handleAuthentication } = useTelegram();
 
   const authenticate = handleAuthentication(qr.current);
 
   useEffect(() => {
-    if (client && event && 'authorization_state' in event) authenticate();
+    if (client && event && 'authorization_state' in event) {
+      authenticate();
+    }
   }, [authenticate, client, event]);
 
-  function handleSubmit(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    submitPassword(password);
-  }
-
-  const [show, setShow] = useState(false);
-
-  function handleShowHide(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setShow(state => !state);
-  }
-
-  function renderPasscode() {
-    return (
-      <div className={classes.form}>
-        <label htmlFor='password'>Password</label>
-        <div className={classes['input-container']}>
-          <input
-            type={show ? 'text' : 'password'}
-            name='password'
-            required
-            autoComplete='off'
-            autoFocus
-            placeholder={authPasswordHint ?? 'Enter your password'}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-          <button className={clsx(classes['show-button'], { [classes['hide-color']]: show })} onClick={handleShowHide}>
-            <Icon icon={show ? 'hide' : 'show'} />
-          </button>
-        </div>
-        <button disabled={!password.length} className={classes['submit-button']} type='submit' onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
-    );
-  }
-
-  function q() {
+  function renderQr() {
     return (
       <>
         <h2>Login with your device</h2>
@@ -78,14 +34,14 @@ export default function Authenticate() {
     );
   }
 
-  const state = authorizationState(event);
+  if (currentUser) return null;
 
-  // eslint-disable-next-line no-console
-  console.log(state);
   return (
-    <div className={classes.container}>
-      {ifTrue(state === 'authorizationStateWaitOtherDeviceConfirmation', q)}
-      {ifTrue(state === 'authorizationStateWaitPassword', renderPasscode)}
-    </div>
+    <Container>
+      {ifTrue(state === 'authorizationStateWaitOtherDeviceConfirmation', renderQr)}
+      {ifTrue(state === 'authorizationStateWaitPassword', () => (
+        <Passcode />
+      ))}
+    </Container>
   );
 }

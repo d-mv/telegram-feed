@@ -1,9 +1,9 @@
 import { R } from '@mv-d/toolbelt';
 
 import { Message } from '../../domains';
-import { TChat, TMessage, TSupergroup, TUser, TUserFullInfo } from '../entities';
+import { StorageService, TChat, TMessage, TSupergroup, TUser, TUserFullInfo } from '../entities';
 import { INITIAL_STATE } from './initial';
-import { Action, MappedReducerFns, StateActions } from './types';
+import { Action, MappedReducerFns, StateActions, SelectedChatId } from './types';
 
 export const MAP: MappedReducerFns = new Map();
 
@@ -65,17 +65,17 @@ MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
   if (threadId === 0) {
     const messages = state.chatMessages.get(chatId) || [];
 
-    if (messages.find(m => m.id === action.payload?.id)) return state;
+    const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
 
-    const newMessages = [...messages, action.payload];
+    const newMessages = [...filteredMessages, action.payload];
 
     return R.assoc('chatMessages', state.chatMessages.set(chatId, newMessages), state);
   } else {
     const messages = state.threadMessages.get(threadId) || [];
 
-    if (messages.find(m => m.id === action.payload?.id)) return state;
+    const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
 
-    const newMessages = [...messages, action.payload];
+    const newMessages = [...filteredMessages, action.payload];
 
     return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
   }
@@ -99,8 +99,16 @@ MAP.set(StateActions.UPDATE_AUTH_PASSWORD_HINT, (state, action: Action<TChat>) =
   return R.assoc('authPasswordHint', action.payload, state);
 });
 
-MAP.set(StateActions.SET_SELECTED_CHAT_ID, (state, action: Action<number>) => {
-  if (!action.payload) return R.dissoc('selectedChatId', state);
+MAP.set(StateActions.SET_SELECTED_CHAT_ID, (state, action: Action<SelectedChatId>) => {
+  if (action.payload?.id === '') {
+    StorageService.remove('selectedChat');
+    return R.dissoc('selectedChat', state);
+  }
 
-  return R.assoc('selectedChatId', action.payload, state);
+  StorageService.set('selectedChat', action.payload);
+  return R.assoc('selectedChat', action.payload, state);
+});
+
+MAP.set(StateActions.RESTORE_STATE, state => {
+  return { ...state, ...StorageService.state };
 });

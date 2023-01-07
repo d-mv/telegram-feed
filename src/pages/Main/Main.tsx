@@ -1,35 +1,36 @@
-import { LazyExoticComponent } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ifTrue } from '@mv-d/toolbelt';
+import { useEffect } from 'react';
 
 import { Chat, Feed } from '../../domains';
-import { LazyLoad } from '../../shared';
+import { getSelectedChatId, LazyLoad, restoreState, useDispatch, useSelector, useTelegram } from '../../shared';
 import { Container } from './Container';
 import { Header } from './Header';
 
-function renderLazy(Component: LazyExoticComponent<() => JSX.Element>) {
-  return (
-    <LazyLoad>
-      <Component />
-    </LazyLoad>
-  );
-}
-
 export default function Main() {
-  function reRoute() {
-    window.history.pushState({}, '', `/feed`);
-    return <div />;
-  }
+  const { getChats } = useTelegram();
+
+  const chatId = useSelector(getSelectedChatId);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getChats();
+    dispatch(restoreState());
+    // getChats is not memoized, so we need to disable exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const renderChat = () => <Chat />;
+
+  const renderFeed = () => <Feed />;
 
   return (
     <Container>
       <Header />
-      <BrowserRouter>
-        <Routes>
-          <Route path='/chat/:chatId' element={renderLazy(Chat)} />
-          <Route path='/feed' element={renderLazy(Feed)} />
-          <Route path='*' element={reRoute()} />
-        </Routes>
-      </BrowserRouter>
+      <LazyLoad>
+        {ifTrue(chatId, renderChat)}
+        {ifTrue(!chatId, renderFeed)}
+      </LazyLoad>
     </Container>
   );
 }

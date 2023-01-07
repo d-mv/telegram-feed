@@ -1,13 +1,15 @@
 import { useContextSelector } from 'use-context-selector';
 import QRCodeStyling from 'qr-code-styling';
-import { AnyValue, as, failure, logger, PromisedResult, R, success } from '@mv-d/toolbelt';
+import { failure, logger, PromisedResult, R, success } from '@mv-d/toolbelt';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
 import { addNotification, useDispatch } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
-import { TError, TFilePart } from './types';
+import { TFilePart } from './types';
+import { isDebugLogging } from '../../tools';
+import { CONFIG } from '../../config';
 
 export function useTelegram() {
   const [client, event, send] = useContextSelector(TelegramContext, c => [c.client, c.event, c.send]);
@@ -20,26 +22,31 @@ export function useTelegram() {
         '@type': 'checkAuthenticationPassword',
         password,
       })
-      .catch(R.compose(dispatch, addNotification, makeTErrorNotification));
+      .catch((err: unknown) => {
+        if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+      });
   }
 
   function handleAuthentication(container: MaybeNull<HTMLDivElement>) {
     return async function call() {
-      if (!event || !('authorization_state' in event)) return;
+      if (!event) return;
 
-      const type = event!.authorization_state['@type'];
+      if (!('authorization_state' in event)) return;
+
+      const type = event.authorization_state['@type'];
 
       switch (type) {
         // case 'authorizationStateClosed':
-        //   await client.send({ '@type': 'destroy' });
-        //   window.location.reload(); // a kind of a 'hack' but it works...
+
         //   break;
         case 'authorizationStateWaitEncryptionKey':
           client
             .send({
               '@type': 'checkDatabaseEncryptionKey',
             })
-            .catch(R.compose(dispatch, addNotification, makeTErrorNotification));
+            .catch((err: unknown) => {
+              if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+            });
 
           break;
         case 'authorizationStateWaitPhoneNumber':
@@ -50,7 +57,8 @@ export function useTelegram() {
           break;
         case 'authorizationStateWaitOtherDeviceConfirmation':
           if (!container) {
-            logger.error('Container is not defined');
+            if (isDebugLogging(CONFIG)) logger.error('Container is not defined');
+
             return;
           }
 
@@ -58,7 +66,7 @@ export function useTelegram() {
           const qrCode = new QRCodeStyling({
             width: 200,
             height: 200,
-            data: event!.authorization_state.link,
+            data: event.authorization_state.link,
             dotsOptions: {
               color: '#1132b6',
               type: 'square',
@@ -84,8 +92,6 @@ export function useTelegram() {
   }
 
   const getChats = async (offset_order = '9223372036854775807', offset_chat_id = 0, limit = 20) => {
-    // eslint-disable-next-line no-console
-    console.log('getChats');
     return client.send({
       '@type': 'getChats',
       chat_list: { '@type': 'chatListMain' },
@@ -104,19 +110,21 @@ export function useTelegram() {
         priority: 1,
         synchronous: true,
       })
-      .catch(R.compose(dispatch, addNotification, makeTErrorNotification));
+      .catch((err: unknown) => {
+        if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+      });
 
     // Read the data from local tdlib to blob
-    try {
-      return success(
-        await send<TFilePart>({
-          type: 'readFile',
-          file_id: fileId,
-        }),
-      );
-    } catch (err) {
-      R.compose(dispatch, addNotification, makeTErrorNotification)(err);
-      return failure(err as Error);
+    const maybeFile = await send<TFilePart>({
+      type: 'readFile',
+      file_id: fileId,
+    });
+
+    if (maybeFile.isSome) return success(maybeFile.payload);
+    else {
+      if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(maybeFile.error);
+
+      return failure(maybeFile.error);
     }
   }
 

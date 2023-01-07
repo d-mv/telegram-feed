@@ -1,11 +1,12 @@
 import { deepEqual, logger } from '@mv-d/toolbelt';
 
 import { State, Action } from './types';
-import { CONFIG } from '../config';
 import { MAP } from './map';
+import { CONFIG } from '../config';
+import { isDebugLogging } from '../tools';
 
 function stateLogger(state: State, action: Action, nextState: State) {
-  if (!CONFIG.isDev) return;
+  if (!CONFIG.isDev || !isDebugLogging(CONFIG)) return;
 
   logger.dir(['state updated', state, action, nextState]);
 }
