@@ -1,5 +1,6 @@
 import { logger, makeMatch } from '@mv-d/toolbelt';
-import { useEffect, useMemo } from 'react';
+import { MouseEvent, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { getMessages, Icon, TMessage, useSelector, useTelegram, useUser } from '../../../shared';
 import { FeedContext } from '../feed.context';
@@ -16,6 +17,8 @@ export default function Feed() {
   const { byMyself } = useUser();
 
   const messages = useSelector(getMessages);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getChats();
@@ -34,6 +37,24 @@ export default function Feed() {
     [byMyself, messages],
   );
 
+  function handleClick(chatId: number) {
+    return function click(e: MouseEvent<HTMLDivElement>) {
+      if ('path' in e.nativeEvent) {
+        const path = e.nativeEvent.path as HTMLElement[];
+
+        const outsideLink = path.find(el => el.id === 'outside-link');
+
+        if (outsideLink) {
+          e.stopPropagation();
+          logger.info('Outside link clicked');
+          return;
+        }
+      }
+
+      navigate(`/chat/${chatId}`);
+    };
+  }
+
   function renderMessage(message: TMessage) {
     const type = message.content['@type'];
 
@@ -45,7 +66,7 @@ export default function Feed() {
     }
 
     return (
-      <FeedContext.Provider key={message.id} value={{ message }}>
+      <FeedContext.Provider key={message.id} value={{ message, onCardClick: handleClick(message.chat_id) }}>
         <Component />
         <div id={`divider-${message.id}`} className={classes['message-divider']}>
           <Icon icon='radioCircle' />

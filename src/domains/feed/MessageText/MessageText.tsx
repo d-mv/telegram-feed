@@ -15,7 +15,7 @@ import {
 import { FeedContext } from '../feed.context';
 
 export function MessageText() {
-  const message = useContextSelector(FeedContext, c => c.message);
+  const [message, onClick] = useContextSelector(FeedContext, c => [c.message, c.onCardClick]);
 
   const { sender, getRelativeMessageDate } = useMessage(message);
 
@@ -37,7 +37,7 @@ export function MessageText() {
   }
 
   return (
-    <Card id={`message-text-${message.id}`} chatId={message.chat_id}>
+    <Card id={`message-text-${message.id}`} onClick={onClick}>
       <CardHeader>{sender}</CardHeader>
       <CardText>
         <span

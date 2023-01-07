@@ -1,22 +1,24 @@
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router-dom';
-import { MutableRefObject, PropsWithChildren } from 'react';
+import { MutableRefObject, PropsWithChildren, MouseEvent } from 'react';
 
 import classes from './Card.module.scss';
 import { MaybeNull } from '../../types';
 
 interface CardProps {
   id: string;
-  chatId: number;
+
   className?: string;
   containerRef?: MutableRefObject<MaybeNull<HTMLElement>>;
+  onClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
-export function Card({ children, id, chatId, className, containerRef }: PropsWithChildren<CardProps>) {
-  const navigate = useNavigate();
-
-  function handleClick() {
-    navigate(`/chat/${chatId}`);
+export function Card({ children, id, className, containerRef, onClick }: PropsWithChildren<CardProps>) {
+  function handleClick(e: MouseEvent<HTMLDivElement>) {
+    if (onClick) {
+      e.persist();
+      onClick(e);
+    }
   }
 
   return (

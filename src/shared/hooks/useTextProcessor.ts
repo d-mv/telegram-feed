@@ -17,19 +17,20 @@ const GET_CONTENT_AND_ENTITIES = makeMatch(
 const PROCESS_TEXT = makeMatch(
   {
     textEntityTypeBold: (text: string) => `<strong>${text}</strong>`,
-    textEntityTypeUrl: (text: string) => `<a href="${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
+    textEntityTypeUrl: (text: string) =>
+      `<a id="outside-link" href="${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
     textEntityTypeBotCommand: (text: string) =>
-      `<a href="https://t.me/${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
+      `<a id="outside-link" href="${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
     textEntityTypeCode: (text: string) => `<code>${text}</code>`,
     textEntityTypeTextUrl: (text: string, url: string) =>
-      `<a href="https://t.me/${url}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
+      `<a id="outside-link" href="${url}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
     textEntityTypeMention: (text: string) =>
-      `<a href="https://t.me/${text.slice(1, text.length)}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
+      `<a id="outside-link" href="${text.slice(1, text.length)}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
     textEntityTypeHashtag: (text: string) =>
-      `<a href="https://t.me/#${text}" target='_blank' rel='noopener noreferrer'><em>${text}</em></a>`,
+      `<a id="outside-link" href="https://t.me/${text}" target='_blank' rel='noopener noreferrer'><em>${text}</em></a>`,
     textEntityTypeItalic: (text: string) => `<em>${text}</em>`,
     textEntityTypeEmailAddress: (text: string) =>
-      `<a href="mailto:${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
+      `<a id="outside-link" href="mailto:${text}" target='_blank' rel='noopener noreferrer'>${text}</a>`,
   },
   () => '',
 );
