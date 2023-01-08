@@ -1,4 +1,4 @@
-import { TUpdate } from './event.types';
+import { TExtra, TUpdate } from './event.types';
 import { TFile } from './file.types';
 import { TMiniThumbnail, TPhotoSize, TThumbnail } from './photo.types';
 
@@ -178,6 +178,14 @@ export interface TMessage {
   ttl: number;
   ttl_expires_in: number;
   via_bot_user_id: number;
+}
+
+export interface TMessages {
+  '@client_id': number;
+  '@extra': TExtra;
+  '@type': 'messages';
+  messages: TMessage[];
+  total_count: number;
 }
 
 // updates

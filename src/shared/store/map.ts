@@ -63,7 +63,7 @@ MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
   const threadId = action.payload.message_thread_id;
 
   if (threadId === 0) {
-    const messages = state.chatMessages.get(chatId) || [];
+    const messages = state.chatMessages.get(chatId) || ([] as TMessage[]);
 
     const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
 

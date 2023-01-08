@@ -79,6 +79,7 @@ export interface TChats {
   '@extra': TExtra;
   '@type': 'chats';
   chat_ids: number[];
+  total_count: number;
 }
 
 export interface TChatListFilter {

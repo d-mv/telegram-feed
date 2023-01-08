@@ -44,4 +44,8 @@ export const getSelectedChat = (state: State) => state.chats.find(chat => String
 export const getSelectedChatTitle = (state: State) =>
   state.chats.find(chat => String(chat.id) === state.selectedChat?.id)?.title;
 
-export const getSelectedChatId = (state: State) => state.selectedChat;
+export const getSelectedChatId = (state: State) => {
+  // eslint-disable-next-line no-console
+  // console.log(state);
+  return state.selectedChat;
+};

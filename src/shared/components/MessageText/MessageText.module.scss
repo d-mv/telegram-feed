@@ -1,0 +1,16 @@
+.container {
+	max-width: 90%;
+}
+
+.owner {
+	margin-inline: 0;
+	width: fit-content;
+	align-self: flex-start;
+}
+
+.myself {
+	margin-inline: 0;
+	width: fit-content;
+	align-self: flex-end;
+	background: var(--color-accent-4);
+}

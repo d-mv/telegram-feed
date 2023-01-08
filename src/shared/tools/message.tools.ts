@@ -1,12 +1,15 @@
 import { Optional } from '@mv-d/toolbelt';
 import { TChat, TMessage, TMessagePhoto, TPhotoSize, TUser } from '../entities';
 
-export function getSenderFromMessage(
-  message: TMessage,
-  getChat: (id: number) => TChat | undefined,
-  getUser: (id: number) => TUser | undefined,
-  myself: Optional<TUser>,
-) {
+interface GetSendFromMessageProps {
+  isChat?: boolean;
+  message: TMessage;
+  getChat: (id: number) => TChat | undefined;
+  getUser: (id: number) => TUser | undefined;
+  myself: Optional<TUser>;
+}
+
+export function getSenderFromMessage({ isChat, message, getChat, getUser, myself }: GetSendFromMessageProps) {
   const s = message.sender_id;
 
   const chat = getChat(message.chat_id);
@@ -22,6 +25,8 @@ export function getSenderFromMessage(
     const senderName = `${user?.first_name} ${user?.last_name}`;
 
     if (senderName === chat?.title) return senderName;
+
+    if (isChat) return senderName;
 
     if (itsMe) return chat?.title;
 

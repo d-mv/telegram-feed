@@ -4,6 +4,8 @@ import { createContext } from 'use-context-selector';
 import { TMessage } from '../../shared';
 
 export interface FeedContextType {
+  isLast?: boolean;
+  isChat?: boolean;
   message: TMessage;
   onCardClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }

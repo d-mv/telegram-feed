@@ -27,6 +27,8 @@ import {
   TUpdateUserFullInfo,
   TUpdateChatLastMessage,
   TUpdateNewChat,
+  TMessage,
+  TUpdateNewMessage,
 } from './types';
 
 export function useUpdate({
@@ -46,9 +48,12 @@ export function useUpdate({
 
   const getUser = useSelector(getUserById);
 
-  function handleMessages(update: AnyValue) {
+  function handleMessages(update: TUpdateNewMessage) {
+    if (update['@type'] === 'updateNewMessage') {
+      R.compose(dispatch, addMessage)(update.message);
+    }
     // eslint-disable-next-line no-console
-    console.log('handleMessages', update);
+    else console.log('handleMessages', update);
   }
 
   function handleOptions(event: TUpdateOption) {
@@ -102,7 +107,7 @@ export function useUpdate({
         // eslint-disable-next-line no-console
         if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);
 
-        const sender = getSenderFromMessage(event.last_message, getChat, getUser, myself);
+        const sender = getSenderFromMessage({ message: event.last_message, getChat, getUser, myself });
 
         if (sender) {
           R.compose(

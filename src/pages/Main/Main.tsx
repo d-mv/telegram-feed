@@ -18,7 +18,7 @@ export default function Main() {
     dispatch(restoreState());
     // getChats is not memoized, so we need to disable exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const renderChat = () => <Chat />;
 

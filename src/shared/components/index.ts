@@ -14,6 +14,8 @@ export * from './CardFooter';
 
 export * from './Buttons';
 
+export * from './MainSection';
+
 export * from './CardDivider';
 
 export * from './CardText';
@@ -25,3 +27,11 @@ export * from './CardPhoto';
 export * from './Tooltip';
 
 export * from './CardInteractionInfo';
+
+export * from './MainCenter';
+
+export * from './MessageText';
+
+export * from './MessageDivider';
+
+export * from './CardFooterSection';

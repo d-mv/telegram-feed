@@ -1,10 +1,11 @@
 .container {
 	width: 30%;
-	margin: 0 auto;
+	min-width: 3rem;
+	margin-inline: 1rem;
 	height: .2rem;
 	border-bottom: var(--divider-primary-3);
 	margin-block-end: .1rem;
-	position: absolute;
-	left: 35%;
-	top: calc(50% - 0.1rem);
+	// position: absolute;
+	// left: 35%;
+	// top: calc(50% - 0.1rem);
 }

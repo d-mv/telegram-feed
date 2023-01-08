@@ -1,4 +1,4 @@
-import { logger, makeMatch, R } from '@mv-d/toolbelt';
+import { logger, R } from '@mv-d/toolbelt';
 import { MouseEvent, useMemo } from 'react';
 
 import {
@@ -7,6 +7,10 @@ import {
   getMessages,
   Icon,
   isDebugLogging,
+  MainCenter,
+  MainSection,
+  MATCH_MESSAGE_RENDERERS,
+  MessageDivider,
   setSelectedChatId,
   TMessage,
   useDispatch,
@@ -14,12 +18,6 @@ import {
   useUser,
 } from '../../../shared';
 import { FeedContext } from '../feed.context';
-import { MessagePhoto } from '../MessagePhoto';
-import { MessageText } from '../MessageText';
-import classes from './Feed.module.scss';
-
-// "messageAnimatedEmoji", "messageUnsupported", "messageVideo"
-const MATCH_RENDERERS = makeMatch({ messageText: MessageText, messagePhoto: MessagePhoto }, null);
 
 export default function Feed() {
   const { byMyself } = useUser();
@@ -45,15 +43,23 @@ export default function Feed() {
 
   function handleClick(chatId: number) {
     return function click(e: MouseEvent<HTMLDivElement>) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+
       if ('path' in e.nativeEvent) {
         const path = e.nativeEvent.path as HTMLElement[];
 
         const outsideLink = path.find(el => el.id === 'outside-link');
 
+        // eslint-disable-next-line no-console
+        console.log(outsideLink);
+
         if (outsideLink) {
           e.stopPropagation();
 
           if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
+
+          return;
         }
       }
 
@@ -66,7 +72,7 @@ export default function Feed() {
 
     // No direct input from user, so no need to be careful
     // eslint-disable-next-line security/detect-object-injection
-    const Component = MATCH_RENDERERS[type];
+    const Component = MATCH_MESSAGE_RENDERERS[type];
 
     if (!Component) {
       if (isDebugLogging(CONFIG)) logger.warn(`Missing renderer for ${type}`);
@@ -77,16 +83,14 @@ export default function Feed() {
     return (
       <FeedContext.Provider key={message.id} value={{ message, onCardClick: handleClick(message.chat_id) }}>
         <Component />
-        <div id={`divider-${message.id}`} className={classes['message-divider']}>
-          <Icon icon='radioCircle' />
-        </div>
+        <MessageDivider id={message.id} />
       </FeedContext.Provider>
     );
   }
 
   return (
-    <section className={classes.container}>
-      <div className={classes.feed}>{displayMessages.map(renderMessage)}</div>
-    </section>
+    <MainSection>
+      <MainCenter>{displayMessages.map(renderMessage)}</MainCenter>
+    </MainSection>
   );
 }
