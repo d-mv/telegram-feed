@@ -59,18 +59,13 @@ MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => 
 MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
   if (!action.payload) return state;
 
-  // const chatId = action.payload.chat_id;
-
   const threadId = action.payload.message_thread_id;
 
   if (threadId === 0) {
-    // const messages = state.chatMessages.get(chatId) || ([] as TMessage[]);
-
     const messages = state.chatMessages;
 
     const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
 
-    // const newMessages = [...filteredMessages, action.payload];
     filteredMessages.push(action.payload);
 
     return R.assoc('chatMessages', filteredMessages, state);
@@ -92,9 +87,11 @@ MAP.set(StateActions.SET_CURRENT_USER_ID, (state, action: Action<number>) => {
 });
 
 MAP.set(StateActions.ADD_CHAT, (state, action: Action<TChat>) => {
-  if (!action.payload) return state;
+  const { payload } = action;
 
-  return R.assoc('chats', [...state.chats, action.payload], state);
+  if (!payload) return state;
+
+  return R.assoc('chats', [...state.chats.filter(chat => chat.id !== payload.id), payload], state);
 });
 
 MAP.set(StateActions.UPDATE_AUTH_PASSWORD_HINT, (state, action: Action<TChat>) => {
