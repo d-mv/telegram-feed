@@ -7,6 +7,7 @@ export enum StateActions {
   UPDATE_USERS_FULL_INFO = 'updateUsersFullInfo',
   UPDATE_SUPERGROUP_FULL_INFO = 'updateSuperGroupFullInfo',
   ADD_MESSAGE = 'addMessage',
+  ADD_MESSAGES = 'addMessages',
   ADD_CHAT = 'addChat',
   UPDATE_CHAT = 'updateChat',
   UPDATE_AUTH_PASSWORD_HINT = 'updateAuthPasswordHint',

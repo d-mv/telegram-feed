@@ -32,17 +32,20 @@ MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
 
   if (existingUser) return state;
 
+  if (state.users.length > 100) return state;
+
   return R.assoc('users', [...state.users, action.payload], state);
 });
 
 MAP.set(
   StateActions.UPDATE_USERS_FULL_INFO,
   (state, action: Action<Omit<TUserFullInfo, '@type'> & { user_id: number }>) => {
-    if (!action.payload) return state;
+    // if (!action.payload) return state;
 
-    const mapperFn = (user: StateUser) => (user.id === action.payload?.user_id ? { ...user, ...action.payload } : user);
+    // const mapperFn = (user: StateUser) => (user.id === action.payload?.user_id ? { ...user, ...action.payload } : user);
 
-    return R.assoc('users', state.users.map(mapperFn), state);
+    // return R.assoc('users', state.users.map(mapperFn), state);
+    return state;
   },
 );
 
@@ -78,6 +81,39 @@ MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
 
     return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
   }
+});
+
+MAP.set(StateActions.ADD_MESSAGES, (state, action: Action<TMessage[]>) => {
+  if (!action.payload) return state;
+
+  const noThreadMessages = action.payload.filter(m => m.message_thread_id === 0);
+
+  const ids = noThreadMessages.map(m => m.id);
+
+  const filteredMessages = state.chatMessages.filter(message => !ids.includes(message.id));
+
+  filteredMessages.push(...noThreadMessages);
+
+  return R.assoc('chatMessages', filteredMessages, state);
+  // const threadId = action.payload.message_thread_id;
+
+  // if (threadId === 0) {
+  //   const messages = state.chatMessages;
+
+  //   const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
+
+  //   filteredMessages.push(action.payload);
+
+  //   return R.assoc('chatMessages', filteredMessages, state);
+  // } else {
+  // const messages = state.threadMessages.get(threadId) || [];
+
+  // const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
+
+  // const newMessages = [...filteredMessages, action.payload];
+
+  // return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
+  // }
 });
 
 MAP.set(StateActions.SET_CURRENT_USER_ID, (state, action: Action<number>) => {

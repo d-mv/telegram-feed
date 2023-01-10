@@ -20,7 +20,9 @@ export const removeNotification = (payload: string): Action<string> => ({
 
 export const updateUsers = (payload: TUser): Action<TUser> => ({ type: StateActions.UPDATE_USERS, payload });
 
-export const updateUsersFullInfo = (payload: TUserFullInfo & { user_id: number }): Action<TUserFullInfo> => ({
+export const updateUsersFullInfo = (
+  payload: Omit<TUserFullInfo, '@type'> & { user_id: number },
+): Action<Omit<TUserFullInfo, '@type'> & { user_id: number }> => ({
   type: StateActions.UPDATE_USERS_FULL_INFO,
   payload,
 });
@@ -36,6 +38,8 @@ export const updateSuperGroupFullInfo = (payload: TSupergroupFullInfo): Action<T
 });
 
 export const addMessage = (payload: TMessage): Action<TMessage> => ({ type: StateActions.ADD_MESSAGE, payload });
+
+export const addMessages = (payload: TMessage[]): Action<TMessage[]> => ({ type: StateActions.ADD_MESSAGES, payload });
 
 export const addChat = (payload: TChat): Action<TChat> => ({ type: StateActions.ADD_CHAT, payload });
 

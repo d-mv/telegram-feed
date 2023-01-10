@@ -102,7 +102,10 @@ export function useUpdate({
       updateSelectedBackground: handleBackground,
       updateUser: (event: TUpdateUser) => R.compose(dispatch, updateUsers)(event.user),
       updateUserFullInfo: (event: TUpdateUserFullInfo) =>
-        R.compose(dispatch, updateUsersFullInfo)({ ...event.user_full_info, user_id: event.user_id }),
+        R.compose(
+          dispatch,
+          updateUsersFullInfo,
+        )(R.omit(['@type'], { ...event.user_full_info, user_id: event.user_id })),
       updateChatLastMessage: (event: TUpdateChatLastMessage) => {
         // eslint-disable-next-line no-console
         if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);

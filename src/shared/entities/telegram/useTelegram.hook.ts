@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
-import { addChat, addMessage, addNotification, useDispatch } from '../../store';
+import { addChat, addMessage, addMessages, addNotification, useDispatch } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
 import { TChat, TChats, TFilePart, TMessage, TMessages } from './types';
@@ -188,8 +188,11 @@ export function useTelegram() {
 
         if (maybeMessages.payload.total_count === 0) break;
 
+        // eslint-disable-next-line no-console
+        console.log(chat_id, maybeMessages.payload.messages.length);
         messages.push(...maybeMessages.payload.messages);
-        maybeMessages.payload.messages.forEach(R.compose(dispatch, addMessage));
+        // maybeMessages.payload.messages.forEach(R.compose(dispatch, addMessage));
+        R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
         // if (maybeMessages.payload.total_count <= messages.length) i = -1;
 
         // if (maybeMessages.payload.total_count - messages.length < 20)
@@ -216,7 +219,7 @@ export function useTelegram() {
 
     fetchChats(chatIds);
 
-    fetchMessagesForChats([chatIds[0]]);
+    fetchMessagesForChats(chatIds);
   }, [fetchChatIds, fetchChats, fetchMessagesForChats]);
 
   const getChats = useDebounce(getChatsOriginal);
