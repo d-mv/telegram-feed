@@ -1,4 +1,4 @@
-import { clearSelectedChatId, getSelectedChatId, Icon, useDispatch, useSelector, useUser } from '../../../shared';
+import { clearSelectedChatId, getSelectedChatTitle, Icon, useDispatch, useSelector, useUser } from '../../../shared';
 import classes from './Header.module.scss';
 
 export function Header() {
@@ -6,7 +6,7 @@ export function Header() {
 
   const dispatch = useDispatch();
 
-  const chatId = useSelector(getSelectedChatId);
+  const chatTitle = useSelector(getSelectedChatTitle);
 
   function handleReturn() {
     dispatch(clearSelectedChatId());
@@ -17,11 +17,11 @@ export function Header() {
   }
 
   function makeHeaderTitle() {
-    if (!myself && !chatId) return 'Feed';
+    if (!myself && !chatTitle) return 'Feed';
 
-    if (!chatId && myself) return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
+    if (!chatTitle && myself) return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
 
-    if (!chatId) return null;
+    if (!chatTitle) return null;
 
     // chat might not be loaded, but we know it's being selected
     return (
@@ -30,7 +30,7 @@ export function Header() {
           <Icon icon='return' className={classes['chat-title-icon']} />
         </button>
 
-        {makeH2(chatId.title || '')}
+        {makeH2(chatTitle || '')}
       </div>
     );
   }

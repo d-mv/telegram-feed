@@ -1,6 +1,6 @@
 import { Message } from '../../../domains';
-import { TUser, TUserFullInfo, TSupergroup, TMessage, TChat } from '../../entities';
-import { SelectedChatId } from './data.types';
+import { TSupergroup, TMessage, TChat } from '../../entities';
+import { SelectedChatId, StateUser } from './data.types';
 
 export enum FeedFilters {
   NO_COMMENTS = 'noComments',
@@ -8,8 +8,7 @@ export enum FeedFilters {
 
 export interface State {
   notifications: Message[];
-  users: TUser[];
-  usersFullInfo: (TUserFullInfo & { user_id: number })[];
+  users: StateUser[];
   currentUserId: number;
   superGroups: TSupergroup[];
   messages: TMessage[];
@@ -17,6 +16,6 @@ export interface State {
   authPasswordHint?: string;
   filters: FeedFilters[];
   selectedChat?: SelectedChatId;
-  chatMessages: Map<number, TMessage[]>;
+  chatMessages: TMessage[];
   threadMessages: Map<number, TMessage[]>;
 }

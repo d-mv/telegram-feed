@@ -40,7 +40,12 @@ class Storage {
   #decrypt(data: MaybeNull<string>): RecordObject<string> {
     if (!data) return {};
 
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+
+    Object.keys(parsed).forEach(key => {
+      if (key === 'id') parsed[key] = parseInt(parsed[key]) ?? 0;
+    });
+    return parsed;
   }
 
   #updateLocalStorage() {

@@ -70,7 +70,6 @@ export const setSelectedChatId = (payload: SelectedChatId): Action<SelectedChatI
 
 export const clearSelectedChatId = (): Action<SelectedChatId> => ({
   type: StateActions.SET_SELECTED_CHAT_ID,
-  payload: { id: '', title: '' },
 });
 
 export const setCurrentUserId = (payload: number): Action<number> => ({

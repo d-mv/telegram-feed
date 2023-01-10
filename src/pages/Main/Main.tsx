@@ -2,14 +2,14 @@ import { ifTrue } from '@mv-d/toolbelt';
 import { useEffect } from 'react';
 
 import { Chat, Feed } from '../../domains';
-import { getSelectedChatId, LazyLoad, restoreState, useDispatch, useSelector, useTelegram } from '../../shared';
+import { getSelectedChat, LazyLoad, restoreState, useDispatch, useSelector, useTelegram } from '../../shared';
 import { Container } from './Container';
 import { Header } from './Header';
 
 export default function Main() {
   const { getChats } = useTelegram();
 
-  const chatId = useSelector(getSelectedChatId);
+  const selectedChat = useSelector(getSelectedChat);
 
   const dispatch = useDispatch();
 
@@ -28,8 +28,8 @@ export default function Main() {
     <Container>
       <Header />
       <LazyLoad>
-        {ifTrue(chatId, renderChat)}
-        {ifTrue(!chatId, renderFeed)}
+        {ifTrue(selectedChat?.id, renderChat)}
+        {ifTrue(!selectedChat?.id, renderFeed)}
       </LazyLoad>
     </Container>
   );

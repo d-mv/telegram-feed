@@ -3,7 +3,7 @@ import { R } from '@mv-d/toolbelt';
 import { Message } from '../../domains';
 import { StorageService, TChat, TMessage, TSupergroup, TUser, TUserFullInfo } from '../entities';
 import { INITIAL_STATE } from './initial';
-import { Action, MappedReducerFns, StateActions, SelectedChatId } from './types';
+import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser } from './types';
 
 export const MAP: MappedReducerFns = new Map();
 
@@ -35,15 +35,16 @@ MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
   return R.assoc('users', [...state.users, action.payload], state);
 });
 
-MAP.set(StateActions.UPDATE_USERS_FULL_INFO, (state, action: Action<TUserFullInfo & { user_id: number }>) => {
-  if (!action.payload) return state;
+MAP.set(
+  StateActions.UPDATE_USERS_FULL_INFO,
+  (state, action: Action<Omit<TUserFullInfo, '@type'> & { user_id: number }>) => {
+    if (!action.payload) return state;
 
-  const existingUser = state.usersFullInfo.find(u => u.user_id === action.payload?.user_id);
+    const mapperFn = (user: StateUser) => (user.id === action.payload?.user_id ? { ...user, ...action.payload } : user);
 
-  if (existingUser) return state;
-
-  return R.assoc('usersFullInfo', [...state.usersFullInfo, action.payload], state);
-});
+    return R.assoc('users', state.users.map(mapperFn), state);
+  },
+);
 
 MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => {
   if (!action.payload) return state;
@@ -58,18 +59,21 @@ MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => 
 MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
   if (!action.payload) return state;
 
-  const chatId = action.payload.chat_id;
+  // const chatId = action.payload.chat_id;
 
   const threadId = action.payload.message_thread_id;
 
   if (threadId === 0) {
-    const messages = state.chatMessages.get(chatId) || ([] as TMessage[]);
+    // const messages = state.chatMessages.get(chatId) || ([] as TMessage[]);
 
-    const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
+    const messages = state.chatMessages;
 
-    const newMessages = [...filteredMessages, action.payload];
+    const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
 
-    return R.assoc('chatMessages', state.chatMessages.set(chatId, newMessages), state);
+    // const newMessages = [...filteredMessages, action.payload];
+    filteredMessages.push(action.payload);
+
+    return R.assoc('chatMessages', filteredMessages, state);
   } else {
     const messages = state.threadMessages.get(threadId) || [];
 
@@ -100,7 +104,7 @@ MAP.set(StateActions.UPDATE_AUTH_PASSWORD_HINT, (state, action: Action<TChat>) =
 });
 
 MAP.set(StateActions.SET_SELECTED_CHAT_ID, (state, action: Action<SelectedChatId>) => {
-  if (action.payload?.id === '') {
+  if (!action.payload) {
     StorageService.remove('selectedChat');
     return R.dissoc('selectedChat', state);
   }

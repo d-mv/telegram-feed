@@ -5,11 +5,10 @@ export const INITIAL_STATE: State = {
   notifications: [],
   users: [],
   superGroups: [],
-  usersFullInfo: [],
   messages: [],
   chats: [],
   filters: [],
-  chatMessages: new Map<number, TMessage[]>(),
+  chatMessages: [],
   threadMessages: new Map<number, TMessage[]>(),
   currentUserId: 0,
 };

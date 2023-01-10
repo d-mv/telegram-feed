@@ -63,7 +63,7 @@ export default function Feed() {
         }
       }
 
-      R.compose(dispatch, setSelectedChatId)({ id: String(chatId), title: getChat(chatId)?.title || '' });
+      R.compose(dispatch, setSelectedChatId)({ id: chatId, title: getChat(chatId)?.title || '' });
     };
   }
 
