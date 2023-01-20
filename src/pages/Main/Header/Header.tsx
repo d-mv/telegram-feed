@@ -1,8 +1,8 @@
-import { clearSelectedChatId, getSelectedChatTitle, Icon, useDispatch, useSelector, useUser } from '../../../shared';
+import { clearSelectedChatId, getMyself, getSelectedChatTitle, Icon, useDispatch, useSelector } from '../../../shared';
 import classes from './Header.module.scss';
 
 export function Header() {
-  const { myself } = useUser();
+  const myself = useSelector(getMyself);
 
   const dispatch = useDispatch();
 

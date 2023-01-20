@@ -27,7 +27,7 @@
   --transition-slow: all 0.2s ease-in-out;
 
   /* typography */
-  --font-family-sans: Inter, Helvetica, SegoeUI, sans-serif;
+  /* --font-family-sans: Inter, Helvetica, SegoeUI, sans-serif; */
 
   --headerHeight: 5rem;
   --footerHeight: 3rem;
@@ -48,8 +48,7 @@
   /* --shadow-3: 0 1.6rem 2.4rem rgba(0, 0, 0, .12); */
   /* --shadow-4: 0 .2.4rem 3.2rem rgba(0, 0, 0, .12); */
 
-  --font-family-sans: 'Noto Sans', Helvetica, SegoeUI, sans-serif;
-  --font-family-serif: 'PT Serif', serif;
+
   /* --font-regular: 400 1.6rem var(--font-family-sans); */
   /* --font-smaller: 300 1.4rem var(--font-family-sans); */
   --border-primary-4: 0.1rem solid var(--color-primary-4);
@@ -58,24 +57,10 @@
 }
 
 *::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
-* {
-  box-sizing: border-box;
-}
 
-html {
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-family-sans);
-  background-color: var(--color-back);
-  color: var(--color-text);
-}
 
 h4 {
   font-weight: 600;

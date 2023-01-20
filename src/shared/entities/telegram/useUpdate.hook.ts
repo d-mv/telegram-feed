@@ -1,51 +1,25 @@
-import { AnyValue, generateId, logger, makeMatch, R } from '@mv-d/toolbelt';
+import { logger, makeMatch, R } from '@mv-d/toolbelt';
 import { Dispatch, SetStateAction } from 'react';
 
-import { MessageTypes } from '../../../domains';
 import { CONFIG } from '../../config';
-import { useUser } from '../../hooks';
-import {
-  useDispatch,
-  updateAuthPasswordHint,
-  updateUsers,
-  updateUsersFullInfo,
-  addMessage,
-  addChat,
-  addNotification,
-  getChatById,
-  getUserById,
-  useSelector,
-  setCurrentUserId,
-  setOption,
-} from '../../store';
-import { getSenderFromMessage, isDebugLogging } from '../../tools';
-import {
-  TOptions,
-  TUpdates,
-  TUpdateOption,
-  TUpdateSelectedBackground,
-  TUpdateUser,
-  TUpdateUserFullInfo,
-  TUpdateChatLastMessage,
-  TUpdateNewChat,
-  TMessage,
-  TUpdateNewMessage,
-} from './types';
+import { useDispatch, updateAuthPasswordHint, setOption } from '../../store';
+import { isDebugLogging } from '../../tools';
+import { TUpdates, TUpdateSelectedBackground } from './types';
 
 export function useUpdate({ setEvent }: { setEvent: Dispatch<SetStateAction<TUpdates | undefined>> }) {
   const dispatch = useDispatch();
 
-  const getChat = useSelector(getChatById);
+  // const getChat = useSelector(getChatById);
 
-  const getUser = useSelector(getUserById);
+  // const getUser = useSelector(getUserById);
 
-  function handleMessages(update: TUpdateNewMessage) {
-    if (update['@type'] === 'updateNewMessage') {
-      R.compose(dispatch, addMessage)(update.message);
-    }
-    // eslint-disable-next-line no-console
-    else console.log('handleMessages', update);
-  }
+  // function handleMessages(update: TUpdateNewMessage) {
+  //   if (update['@type'] === 'updateNewMessage') {
+  //     R.compose(dispatch, addMessage)(update.message);
+  //   }
+  //   // eslint-disable-next-line no-console
+  //   else console.log('handleMessages', update);
+  // }
 
   function handleBackground(update: TUpdateSelectedBackground) {
     R.compose(

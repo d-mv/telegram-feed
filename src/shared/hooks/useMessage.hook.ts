@@ -1,18 +1,15 @@
 import { useMemo } from 'react';
 import { R } from '@mv-d/toolbelt';
 import { TMessage } from '../entities';
-import { useSelector, getChatById, getUserById } from '../store';
+import { useSelector, getChatById, getUserById, getMyself } from '../store';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs, { extend } from 'dayjs';
 import { getSenderFromMessage } from '../tools';
-import { useUser } from './useUser.hook';
-import { useContextSelector } from 'use-context-selector';
-import { FeedContext } from '../../domains/feed/feed.context';
 
 extend(relativeTime);
 
 export function useMessage(message: TMessage, isChat = false) {
-  const { myself } = useUser();
+  const myself = useSelector(getMyself);
 
   const getChat = useSelector(getChatById);
 

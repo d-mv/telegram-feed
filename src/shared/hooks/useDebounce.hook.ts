@@ -2,7 +2,7 @@ import { AnyValue, Optional } from '@mv-d/toolbelt';
 import { useCallback, useEffect, useRef } from 'react';
 import { MaybeNull } from '../types';
 
-export function useDebounce(fn: (...arg: unknown[]) => void, delay = 1000) {
+export function useDebounce<T>(fn: (...arg: T[]) => void, delay = 1000) {
   const timeoutRef = useRef<Optional<NodeJS.Timeout>>();
 
   function clear() {
@@ -15,7 +15,7 @@ export function useDebounce(fn: (...arg: unknown[]) => void, delay = 1000) {
   useEffect(() => clear, []);
 
   return useCallback(
-    (...arg: unknown[]) => {
+    (...arg: T[]) => {
       clear();
       timeoutRef.current = setTimeout(() => fn(...arg), delay);
     },

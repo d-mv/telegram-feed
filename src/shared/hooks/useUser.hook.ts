@@ -1,7 +1,7 @@
 import { Optional } from '@mv-d/toolbelt';
 import { useContextSelector } from 'use-context-selector';
 
-import { TelegramContext, TUser } from '../entities';
+import { TelegramContext } from '../entities';
 import { getUserById, useSelector } from '../store';
 
 export function useUser() {

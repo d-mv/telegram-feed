@@ -3,32 +3,30 @@ import { MouseEvent, useMemo } from 'react';
 
 import {
   CONFIG,
+  getByMyself,
   getChatById,
   getLoadMessage,
   getMessages,
   isDebugLogging,
   List,
-  MainCenter,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
   MessageDivider,
-  RenderList,
   setSelectedChatId,
-  TMessage,
   useDispatch,
   useSelector,
-  useUser,
 } from '../../../shared';
 import { FeedContext } from '../feed.context';
+import classes from './Feed.module.scss';
 
 export default function Feed() {
-  const { byMyself } = useUser();
-
   const dispatch = useDispatch();
 
   const messages = useSelector(getMessages);
 
   const getChat = useSelector(getChatById);
+
+  const byMyself = useSelector(getByMyself);
 
   const loadMessage = useSelector(getLoadMessage);
 
@@ -65,7 +63,11 @@ export default function Feed() {
     };
   }
 
-  function renderMessage(message: TMessage) {
+  function renderMessageByIndex(index: number) {
+    const message = displayMessages[index];
+
+    if (!message) return null;
+
     const type = message.content['@type'];
 
     // No direct input from user, so no need to be careful
@@ -75,32 +77,28 @@ export default function Feed() {
     if (!Component) {
       if (isDebugLogging(CONFIG)) logger.warn(`Missing renderer for ${type}`);
 
-      return <div />;
+      return null;
     }
 
     return (
       <FeedContext.Provider key={message.id} value={{ message, onCardClick: handleClick(message.chat_id) }}>
-        <MainCenter>
-          <Component />
-          <MessageDivider id={message.id} />
-        </MainCenter>
+        <Component />
+        <MessageDivider id={message.id} />
       </FeedContext.Provider>
     );
   }
 
-  const renderFeed = () => (
-    <List
-      messages={displayMessages.filter(m => m.content['@type'] in MATCH_MESSAGE_RENDERERS)}
-      render={renderMessage}
-    />
-  );
+  const renderFeed = () => <List renderItem={renderMessageByIndex} />;
 
   return (
     <MainSection>
-      <MainCenter>
-        {ifTrue(loadMessage, <p>{loadMessage}</p>)}
-        {ifTrue(!loadMessage, renderFeed)}
-      </MainCenter>
+      {ifTrue(
+        loadMessage,
+        <div className={classes.loading}>
+          <p className='p4'>{loadMessage}</p>
+        </div>,
+      )}
+      {ifTrue(!loadMessage, renderFeed)}
     </MainSection>
   );
 }

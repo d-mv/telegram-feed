@@ -4,6 +4,8 @@ export const getNotifications = (state: State) => state.notifications;
 
 export const getMyself = (state: State) => state.myself;
 
+export const getByMyself = (state: State) => (id: number) => state.myself && state.myself.id === id;
+
 export const getMyId = (state: State) => {
   if (!state.options.my_id) return 0;
 
