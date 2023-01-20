@@ -11,4 +11,7 @@ export const INITIAL_STATE: State = {
   chatMessages: [],
   threadMessages: new Map<number, TMessage[]>(),
   currentUserId: 0,
+  myself: undefined,
+  options: {},
+  loadMessage: 'Loading...',
 };

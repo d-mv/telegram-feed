@@ -1,5 +1,5 @@
 import { Message } from '../../domains';
-import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUser, TUserFullInfo } from '../entities';
+import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUpdateOption, TUser, TUserFullInfo } from '../entities';
 import { Action, FeedFilters, SelectedChatId, StateActions } from './types';
 
 export const clearState = (): Action => ({
@@ -17,6 +17,16 @@ export const removeNotification = (payload: string): Action<string> => ({
   type: StateActions.REMOVE_NOTIFICATION,
   payload,
 });
+
+export const setMyself = (payload: TUser): Action<TUser> => ({ type: StateActions.SET_MYSELF, payload });
+
+export const setOption = (payload: TUpdateOption): Action<TUpdateOption> => ({
+  type: StateActions.SET_OPTION,
+  payload,
+});
+
+export const setLoadMessage = (payload: string) => ({ type: StateActions.SET_LOAD_MESSAGE, payload });
+// review
 
 export const updateUsers = (payload: TUser): Action<TUser> => ({ type: StateActions.UPDATE_USERS, payload });
 

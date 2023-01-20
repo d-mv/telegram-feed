@@ -3,7 +3,7 @@ import { useContextSelector } from 'use-context-selector';
 
 import { Notifications } from '../domains';
 import { Authenticate, Main } from '../pages';
-import { getCurrentUser, LazyLoad, Loader, TelegramContext, useSelector } from '../shared';
+import { getMyself, LazyLoad, Loader, TelegramContext, useSelector } from '../shared';
 
 const VALID_TYPES = [
   'authorizationStateWaitEncryptionKey',
@@ -18,7 +18,7 @@ const VALID_TYPES = [
 export function App() {
   const event = useContextSelector(TelegramContext, c => c.authEvent);
 
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(getMyself);
 
   if (!event || !('authorization_state' in event)) return <Loader />;
 

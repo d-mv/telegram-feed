@@ -16,6 +16,7 @@ import {
   getUserById,
   useSelector,
   setCurrentUserId,
+  setOption,
 } from '../../store';
 import { getSenderFromMessage, isDebugLogging } from '../../tools';
 import {
@@ -31,18 +32,8 @@ import {
   TUpdateNewMessage,
 } from './types';
 
-export function useUpdate({
-  options,
-  setOptions,
-  setEvent,
-}: {
-  options: TOptions;
-  setOptions: Dispatch<SetStateAction<TOptions>>;
-  setEvent: Dispatch<SetStateAction<TUpdates | undefined>>;
-}) {
+export function useUpdate({ setEvent }: { setEvent: Dispatch<SetStateAction<TUpdates | undefined>> }) {
   const dispatch = useDispatch();
-
-  const { myself } = useUser();
 
   const getChat = useSelector(getChatById);
 
@@ -56,33 +47,18 @@ export function useUpdate({
     else console.log('handleMessages', update);
   }
 
-  function handleOptions(event: TUpdateOption) {
-    const name = event.name;
-
-    if (name in options) {
-      const currentValue = JSON.stringify(R.path([name], options));
-
-      const newValue = JSON.stringify(event.value);
-
-      if (currentValue === newValue) return;
-    }
-
-    setOptions(state => ({ ...state, [name]: event.value }));
-
-    if (name === 'my_id') {
-      R.compose(dispatch, setCurrentUserId)(parseInt(event.value.value as string));
-    }
-
-    if (!CONFIG.isDev || !isDebugLogging(CONFIG)) return;
-
-    logger.info('TelegramContext', `options changed: ${name}`, JSON.stringify(event.value));
-  }
-
   function handleBackground(update: TUpdateSelectedBackground) {
-    setOptions(state => ({
-      ...state,
-      for_dark_theme: { '@type': 'optionValueBoolean', value: update['for_dark_theme'] },
-    }));
+    R.compose(
+      dispatch,
+      setOption,
+    )({
+      ...update,
+      name: 'for_dark_theme',
+      value: {
+        '@type': 'optionValueBoolean',
+        value: update['for_dark_theme'],
+      },
+    });
   }
 
   function handleAuthState(event: TUpdates) {
@@ -96,36 +72,36 @@ export function useUpdate({
   const matchUpdate = makeMatch(
     {
       updateAuthorizationState: handleAuthState,
-      updateNewMessage: handleMessages,
-      updateDeleteMessages: handleMessages,
-      updateOption: handleOptions,
+      // updateNewMessage: handleMessages,
+      // updateDeleteMessages: handleMessages,
+      updateOption: R.compose(dispatch, setOption),
       updateSelectedBackground: handleBackground,
-      updateUser: (event: TUpdateUser) => R.compose(dispatch, updateUsers)(event.user),
-      updateUserFullInfo: (event: TUpdateUserFullInfo) =>
-        R.compose(
-          dispatch,
-          updateUsersFullInfo,
-        )(R.omit(['@type'], { ...event.user_full_info, user_id: event.user_id })),
-      updateChatLastMessage: (event: TUpdateChatLastMessage) => {
-        // eslint-disable-next-line no-console
-        if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);
+      // updateUser: (event: TUpdateUser) => R.compose(dispatch, updateUsers)(event.user),
+      // updateUserFullInfo: (event: TUpdateUserFullInfo) =>
+      // R.compose(
+      //   dispatch,
+      //   updateUsersFullInfo,
+      // )(R.omit(['@type'], { ...event.user_full_info, user_id: event.user_id })),
+      // updateChatLastMessage: (event: TUpdateChatLastMessage) => {
+      //   // eslint-disable-next-line no-console
+      //   if (event.chat_id === -1001091699222) console.log('updateChatLastMessage', event.last_message.content);
 
-        const sender = getSenderFromMessage({ message: event.last_message, getChat, getUser, myself });
+      //   const sender = getSenderFromMessage({ message: event.last_message, getChat, getUser, myself });
 
-        if (sender) {
-          R.compose(
-            dispatch,
-            addNotification,
-          )({
-            id: generateId(),
-            text: `New message${sender ? ` from ${sender}` : ''}`,
-            type: MessageTypes.INFO,
-          });
-        }
+      //   if (sender) {
+      //     R.compose(
+      //       dispatch,
+      //       addNotification,
+      //     )({
+      //       id: generateId(),
+      //       text: `New message${sender ? ` from ${sender}` : ''}`,
+      //       type: MessageTypes.INFO,
+      //     });
+      //   }
 
-        R.compose(dispatch, addMessage)(event.last_message);
-      },
-      updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),
+      //   R.compose(dispatch, addMessage)(event.last_message);
+      // },
+      // updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),
     },
     (event: TUpdates) => isDebugLogging(CONFIG) && logger.error(`Unmatched event: ${event['@type']}`),
   );

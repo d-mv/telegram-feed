@@ -1,8 +1,8 @@
-import { AnyValue, as, Optional } from '@mv-d/toolbelt';
-import { CSSProperties, MutableRefObject, useEffect, useState } from 'react';
+import { AnyValue } from '@mv-d/toolbelt';
+import { CSSProperties, useEffect, useState } from 'react';
 
 import { useTelegram } from '../entities';
-import { MaybeNull } from '../types';
+import { Icon } from './Icon';
 
 interface PhotoProps {
   photoId: number;
@@ -32,7 +32,13 @@ export function Image({ photoId, className, alt, style, asBackground }: PhotoPro
     }
   }, [downloadFile, id, photoId]);
 
-  if (!image) return null;
+  if (!image)
+    // TODO: switch to classNames
+    return (
+      <div className={className} style={{ ...style, display: 'grid', placeItems: 'center' }}>
+        <Icon icon='image' style={{ height: '35%', width: '100%', fill: 'var(--color-primary-4)' }} />
+      </div>
+    );
 
   if (asBackground)
     return <div id={alt} className={className} style={{ backgroundImage: `url(${image})`, ...style }} />;

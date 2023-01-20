@@ -1,7 +1,16 @@
 import { R } from '@mv-d/toolbelt';
 
 import { Message } from '../../domains';
-import { StorageService, TChat, TMessage, TSupergroup, TUser, TUserFullInfo } from '../entities';
+import {
+  StorageService,
+  TChat,
+  TMessage,
+  TOptions,
+  TSupergroup,
+  TUpdateOption,
+  TUser,
+  TUserFullInfo,
+} from '../entities';
 import { INITIAL_STATE } from './initial';
 import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser } from './types';
 
@@ -24,6 +33,26 @@ MAP.set(StateActions.REMOVE_NOTIFICATION, (state, action: Action<string>) => {
     state,
   );
 });
+
+MAP.set(StateActions.SET_MYSELF, (state, action: Action<TUser>) => {
+  return R.assoc('myself', action.payload, state);
+});
+
+MAP.set(StateActions.SET_OPTION, (state, action: Action<TUpdateOption>) => {
+  if (!action.payload) return state;
+
+  const { name, value } = action.payload;
+
+  if (state.options && Object.keys(state.options).find(o => o === name)) return state;
+
+  return R.assoc('options', R.assoc(String(name), value, state.options), state);
+});
+
+MAP.set(StateActions.SET_LOAD_MESSAGE, (state, action: Action<string>) => {
+  return R.assoc('loadMessage', action.payload || '', state);
+});
+
+// review
 
 MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
   if (!action.payload) return state;

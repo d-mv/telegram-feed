@@ -7,8 +7,7 @@ import { MAP } from './map';
 
 function stateLogger(state: State, action: Action, nextState: State) {
   // if (!CONFIG.isDev || !isDebugLogging(CONFIG)) return;
-
-  logger.dir(['state updated', state, action, nextState]);
+  // logger.dir(['state updated', state, action, nextState]);
 }
 
 export function reducer(state: State, action: Action) {

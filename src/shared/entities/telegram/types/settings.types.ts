@@ -16,7 +16,8 @@ export interface TOptionString {
   value: string;
 }
 
-export interface TOptions extends Record<string, TOptionBoolean | TOptionInteger | TOptionString> {
+export interface TOptions {
+  // extends Record<string, TOptionBoolean | TOptionInteger | TOptionString>
   animation_search_bot_username: TOptionString;
   archive_and_mute_new_chats_from_unknown_users: TOptionBoolean;
   authorization_date: TOptionInteger;
@@ -56,10 +57,12 @@ export interface TOptions extends Record<string, TOptionBoolean | TOptionInteger
   version: TOptionString;
 }
 
+export type TOption = keyof TOptions;
+
 // updates
 export interface TUpdateOption extends TUpdate {
-  '@type': 'updateOption';
-  name: string;
+  '@type': 'updateOption' | 'updateSelectedBackground';
+  name: TOption;
   value: TOptionBoolean | TOptionInteger | TOptionString;
 }
 

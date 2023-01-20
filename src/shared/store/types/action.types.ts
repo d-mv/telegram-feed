@@ -16,4 +16,7 @@ export enum StateActions {
   SET_SELECTED_CHAT_ID = 'setSelectedChatId',
   SET_CURRENT_USER_ID = 'setCurrentUserId',
   RESTORE_STATE = 'restoreState',
+  SET_MYSELF = 'setMyself',
+  SET_OPTION = 'setOption',
+  SET_LOAD_MESSAGE = 'setLoadMessage',
 }

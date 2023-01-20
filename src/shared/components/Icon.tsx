@@ -1,9 +1,9 @@
-import { PropsWithoutRef } from 'react';
+import { CSSProperties, PropsWithoutRef } from 'react';
 import { MdDeleteOutline, MdOutlineError } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { TiInfoLarge, TiThMenu } from 'react-icons/ti';
 import { IoClose, IoWarning, IoReturnUpBack } from 'react-icons/io5';
-import { BsFillHandThumbsUpFill } from 'react-icons/bs';
+import { BsFillHandThumbsUpFill, BsFileImage } from 'react-icons/bs';
 import { BiShow, BiHide, BiRadioCircle } from 'react-icons/bi';
 import { FiEye } from 'react-icons/fi';
 import { TfiControlForward } from 'react-icons/tfi';
@@ -29,6 +29,7 @@ export const Icons = makeMatch(
     return: IoReturnUpBack,
     dividerH: RxDividerHorizontal,
     radioCircle: BiRadioCircle,
+    image: BsFileImage,
   },
   () => <div />,
 );
@@ -36,10 +37,11 @@ export const Icons = makeMatch(
 export interface IconProps {
   icon: keyof typeof Icons;
   className?: string;
+  style?: CSSProperties;
 }
 
-export function Icon({ icon, className }: PropsWithoutRef<IconProps>) {
+export function Icon({ icon, className, style }: PropsWithoutRef<IconProps>) {
   const Icon = Icons[icon];
 
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 }

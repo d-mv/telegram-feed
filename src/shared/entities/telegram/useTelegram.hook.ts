@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
-import { addChat, addMessage, addMessages, addNotification, useDispatch } from '../../store';
+import { addChat, addMessages, addNotification, setLoadMessage, useDispatch } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
 import { TChat, TChats, TFilePart, TMessage, TMessages } from './types';
@@ -121,6 +121,7 @@ export function useTelegram() {
   }
 
   const fetchChatIds = useCallback(async () => {
+    R.compose(dispatch, setLoadMessage)('Loading chat list...');
     let chatIds: number[] = [];
 
     let limit = 20;
@@ -144,10 +145,12 @@ export function useTelegram() {
       if (maybeChats.payload.total_count - chatIds.length < 20) limit = maybeChats.payload.total_count - chatIds.length;
     }
     return chatIds;
-  }, [send]);
+  }, [dispatch, send]);
 
   const fetchChats = useCallback(
     async (chatIds: number[]) => {
+      R.compose(dispatch, setLoadMessage)('Loading chats...');
+
       const chats: TChat[] = [];
 
       for await (const chat_id of chatIds) {
@@ -173,7 +176,7 @@ export function useTelegram() {
 
       const limit = 20;
 
-      while (messages.length < 50) {
+      while (messages.length < 20) {
         // First call
         const maybeMessages = await send<TMessages>({
           type: 'getChatHistory',
@@ -188,16 +191,9 @@ export function useTelegram() {
 
         if (maybeMessages.payload.total_count === 0) break;
 
-        // eslint-disable-next-line no-console
-        console.log(chat_id, maybeMessages.payload.messages.length);
         messages.push(...maybeMessages.payload.messages);
-        // maybeMessages.payload.messages.forEach(R.compose(dispatch, addMessage));
-        R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
-        // if (maybeMessages.payload.total_count <= messages.length) i = -1;
 
-        // if (maybeMessages.payload.total_count - messages.length < 20)
-        //   limit = maybeMessages.payload.total_count - messages.length;
-        // }
+        R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
       }
     },
     [dispatch, send],
@@ -218,9 +214,10 @@ export function useTelegram() {
     if (chatIds.length === 0) return;
 
     fetchChats(chatIds);
-
-    fetchMessagesForChats(chatIds);
-  }, [fetchChatIds, fetchChats, fetchMessagesForChats]);
+    R.compose(dispatch, setLoadMessage)('Loading messages...');
+    await fetchMessagesForChats(chatIds);
+    R.compose(dispatch, setLoadMessage)('');
+  }, [dispatch, fetchChatIds, fetchChats, fetchMessagesForChats]);
 
   const getChats = useDebounce(getChatsOriginal);
 

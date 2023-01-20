@@ -4,9 +4,10 @@ import TdClient from 'tdweb';
 import { createContext } from 'use-context-selector';
 
 import { CONFIG } from '../../config';
+import { getMyId, getMyself, setMyself, useDispatch, useSelector } from '../../store';
 import { isDebugLogging } from '../../tools';
 import { JsLogVerbosityLevel, TelegramService } from './telegram.service';
-import { TOptions, TUpdates } from './types';
+import { TOptions, TUpdates, TUser, TUserFullInfo } from './types';
 import { useUpdate } from './useUpdate.hook';
 
 const { id, hash } = CONFIG.api;
@@ -35,7 +36,9 @@ export function TelegramProvider(props: AnyValue) {
 
   const [options, setOptions] = useState<TOptions>({} as TOptions);
 
-  const { matchUpdate } = useUpdate({ setEvent, options, setOptions });
+  const { matchUpdate } = useUpdate({ setEvent });
+
+  const dispatch = useDispatch();
 
   const onUpdate = useCallback((event: TUpdates) => {
     matchUpdate[event['@type']](event);
@@ -47,6 +50,11 @@ export function TelegramProvider(props: AnyValue) {
 
   const [client, setClient] = useState<AnyValue>();
 
+  const mySelf = useSelector(getMyself);
+
+  const myId = useSelector(getMyId);
+
+  // setup client
   useEffect(() => {
     let logVerbosityLevel = 0;
 
@@ -80,6 +88,20 @@ export function TelegramProvider(props: AnyValue) {
       return none(err as Error);
     }
   }
+
+  const fetchUser=useCallback(async(user_id: number)=>
+     await send<TUser>({ type: 'getUser', user_id })
+  , [send]);
+
+  const fetchMyself = useCallback(async () => {
+    const result = await fetchUser(myId);
+
+    if (result.isSome) R.compose(dispatch, setMyself)(result.payload);
+  }, [dispatch, fetchUser, myId]);
+
+  useEffect(() => {
+    if (myId !== 0 && !mySelf) fetchMyself();
+  }, [dispatch, fetchMyself, myId, mySelf]);
 
   return (
     <TelegramContext.Provider value={{ event, client, options, send, authEvent }}>

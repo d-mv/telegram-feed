@@ -2,7 +2,15 @@ import { State } from './types';
 
 export const getNotifications = (state: State) => state.notifications;
 
-export const getCurrentUser = (state: State) => state.users.find(user => user.id === state.currentUserId);
+export const getMyself = (state: State) => state.myself;
+
+export const getMyId = (state: State) => {
+  if (!state.options.my_id) return 0;
+
+  return parseInt(state.options.my_id.value);
+};
+
+export const getLoadMessage = (state: State) => state.loadMessage;
 
 export const getMessages = (state: State) => {
   return state.chatMessages

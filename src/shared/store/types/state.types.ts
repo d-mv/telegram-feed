@@ -1,5 +1,6 @@
+import { Optional } from '@mv-d/toolbelt';
 import { Message } from '../../../domains';
-import { TSupergroup, TMessage, TChat } from '../../entities';
+import { TSupergroup, TMessage, TChat, TOptions } from '../../entities';
 import { SelectedChatId, StateUser } from './data.types';
 
 export enum FeedFilters {
@@ -8,6 +9,7 @@ export enum FeedFilters {
 
 export interface State {
   notifications: Message[];
+  loadMessage: string;
   users: StateUser[];
   currentUserId: number;
   superGroups: TSupergroup[];
@@ -18,4 +20,6 @@ export interface State {
   selectedChat?: SelectedChatId;
   chatMessages: TMessage[];
   threadMessages: Map<number, TMessage[]>;
+  myself: Optional<StateUser>;
+  options: Partial<TOptions>;
 }
