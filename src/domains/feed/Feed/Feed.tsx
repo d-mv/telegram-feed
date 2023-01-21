@@ -33,13 +33,14 @@ export default function Feed() {
   const displayMessages = useMemo(
     () =>
       messages
-        .filter(
-          message =>
-            // don't show comments to thread and messages from myself
-            message.message_thread_id === 0 &&
-            message.sender_id['@type'] === 'messageSenderUser' &&
-            !byMyself(message.sender_id.user_id),
-        )
+        .filter(message => {
+          // don't show comments to thread and messages from myself
+          if (message.message_thread_id !== 0) return false;
+
+          if (message.sender_id['@type'] === 'messageSenderUser' && byMyself(message.sender_id.user_id)) return false;
+
+          return true;
+        })
         .sort((a, b) => b.date - a.date),
 
     [byMyself, messages],
