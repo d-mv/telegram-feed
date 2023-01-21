@@ -1,4 +1,4 @@
-import { UIEvent, useRef, useState } from 'react';
+import { UIEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { buildIntArray } from '@mv-d/toolbelt';
 
 import { MaybeNull } from '../../types';
@@ -16,9 +16,26 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
 
   const containerRef = useRef<MaybeNull<HTMLDivElement>>(null);
 
-  const bottomRef = useRef<MaybeNull<HTMLSpanElement>>(null);
+  const bottomRef = useRef<MaybeNull<HTMLButtonElement>>(null);
 
   const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
+
+  const [screenRatio, setScreenRatio] = useState(window.outerWidth / window.outerHeight);
+
+  const updateScreenRatio = useCallback(() => {
+    const ratio = window.outerWidth / window.outerHeight;
+
+    if (screenRatio !== ratio) {
+      setScreenRatio(ratio);
+    }
+  }, [screenRatio]);
+
+  useEffect(() => {
+    window.addEventListener('resize', updateScreenRatio);
+    return () => {
+      window.removeEventListener('resize', updateScreenRatio);
+    };
+  }, [updateScreenRatio]);
 
   function updateItemsDown() {
     const maintain = 10;
@@ -75,11 +92,10 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
 
     const diff = lastPosition - containerHeight;
 
-    // if the gap between bottom element and bottom edge of the viewport is less than 50%
-    // update next items
-    if (diff / containerHeight < 0.5) {
-      updateItemsDown();
-    }
+    const shouldUpdate =
+      (screenRatio < 0.5 && diff / containerHeight < 2.6) || (screenRatio > 0.5 && diff / containerHeight < 3.6);
+
+    if (shouldUpdate) updateItemsDown();
   }
 
   function processGoingUp() {
@@ -93,10 +109,10 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
 
     const diff = -top.getBoundingClientRect().top - containerHeight;
 
-    // if the gap between top element and top edge of the viewport is less than 50%
-    if (diff / containerHeight < 0.5) {
-      updateItemsUp();
-    }
+    const shouldUpdate =
+      (screenRatio < 0.5 && diff / containerHeight < 2.6) || (screenRatio > 0.5 && diff / containerHeight < 3.6);
+
+    if (shouldUpdate) updateItemsUp();
   }
 
   function processScrollEvents() {
@@ -136,10 +152,12 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
 
   return (
     <div ref={containerRef} className={classes.container}>
-      <div className={classes.items} onScrollCapture={processScrollEvents}>
+      <div className={classes.items} onScroll={processScrollEvents}>
         <span ref={topRef} />
         {showItems.map(mapRenderItem)}
-        <span ref={bottomRef} />
+        <button ref={bottomRef} className={classes['load-more-button']} onClick={updateItemsDown}>
+          <p className='p4'>load more?</p>
+        </button>
       </div>
     </div>
   );
