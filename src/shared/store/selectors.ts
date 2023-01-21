@@ -14,6 +14,10 @@ export const getMyId = (state: State) => {
   return parseInt(state.options.my_id.value);
 };
 
+export const getStateRestored = (state: State) => state.isRestored;
+
+export const getIsInitialized = (state: State) => state.isInitialized;
+
 export const getLoadMessage = (state: State) => state.loadMessage;
 
 export const getMessages = (state: State) => {
@@ -35,7 +39,8 @@ export const getMessagesForSelectedChat = (state: State) => {
 
 export const getChatById = (state: State) => (id: number) => state.chats.find(chat => chat.id === id);
 
-export const getUserById = (state: State) => (id: number) => state.users.find(user => user.id === id);
+export const getUserById = (state: State) => (id: number) =>
+  (state.myself && state.myself.id) === id ? state.myself : state.users.find(user => user.id === id);
 
 export const getAuthPasswordHint = (state: State) => state.authPasswordHint;
 

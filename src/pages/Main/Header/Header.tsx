@@ -1,4 +1,12 @@
-import { clearSelectedChatId, getMyself, getSelectedChatTitle, Icon, useDispatch, useSelector } from '../../../shared';
+import {
+  clearSelectedChatId,
+  getMyself,
+  getSelectedChat,
+  getSelectedChatTitle,
+  Icon,
+  useDispatch,
+  useSelector,
+} from '../../../shared';
 import classes from './Header.module.scss';
 
 export function Header() {
@@ -6,7 +14,7 @@ export function Header() {
 
   const dispatch = useDispatch();
 
-  const chatTitle = useSelector(getSelectedChatTitle);
+  const selectedChat = useSelector(getSelectedChat);
 
   function handleReturn() {
     dispatch(clearSelectedChatId());
@@ -17,22 +25,20 @@ export function Header() {
   }
 
   function makeHeaderTitle() {
-    if (!myself && !chatTitle) return 'Feed';
+    if (selectedChat)
+      return (
+        <div className={classes['chat-title']}>
+          <button onClick={handleReturn} className={classes['chat-title-button']}>
+            <Icon icon='return' className={classes['chat-title-icon']} />
+          </button>
 
-    if (!chatTitle && myself) return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
+          {makeH2(selectedChat.title || '')}
+        </div>
+      );
 
-    if (!chatTitle) return null;
+    if (!myself) return 'Feed';
 
-    // chat might not be loaded, but we know it's being selected
-    return (
-      <div className={classes['chat-title']}>
-        <button onClick={handleReturn} className={classes['chat-title-button']}>
-          <Icon icon='return' className={classes['chat-title-icon']} />
-        </button>
-
-        {makeH2(chatTitle || '')}
-      </div>
-    );
+    return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
   }
 
   function renderContent() {

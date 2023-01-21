@@ -15,7 +15,13 @@ export const clearState = (): Action => ({
   type: StateActions.CLEAR_STATE,
 });
 
-export const restoreState = (): Action => ({ type: StateActions.RESTORE_STATE });
+export const restoreState = (): Action => ({
+  type: StateActions.RESTORE_STATE,
+});
+
+export const setIsInitialized = (): Action => ({
+  type: StateActions.SET_IS_INITIALIZED,
+});
 
 export const addNotification = (payload: Message): Action<Message> => ({
   type: StateActions.ADD_NOTIFICATION,
@@ -41,7 +47,9 @@ export const addNewMessage = (payload: TUpdateNewMessage): Action<TUpdateNewMess
   payload,
 });
 
-export const setChatIds = (payload: string[]): Action<string[]> => ({ type: StateActions.SET_CHAT_IDS, payload });
+export const setChatIds = (payload: number[]): Action<number[]> => ({ type: StateActions.SET_CHAT_IDS, payload });
+
+export const addUser = (payload: TUser): Action<TUser> => ({ type: StateActions.ADD_USER, payload });
 
 // review
 

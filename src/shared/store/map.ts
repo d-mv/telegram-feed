@@ -18,8 +18,13 @@ import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser } fro
 export const MAP: MappedReducerFns = new Map();
 
 MAP.set(StateActions.CLEAR_STATE, () => INITIAL_STATE);
+
 MAP.set(StateActions.RESTORE_STATE, state => {
-  return { ...state, ...StorageService.state };
+  return { ...state, ...StorageService.state, isRestored: true };
+});
+
+MAP.set(StateActions.SET_IS_INITIALIZED, state => {
+  return R.assoc('isInitialized', true, state);
 });
 
 MAP.set(StateActions.ADD_NOTIFICATION, (state, action: Action<Message>) => {
@@ -59,34 +64,11 @@ MAP.set(StateActions.SET_LOAD_MESSAGE, (state, action: Action<string>) => {
 MAP.set(StateActions.ADD_NEW_MESSAGE, (state, action: Action<TUpdateNewMessage>) => {
   if (!action.payload) return state;
 
-  // if (action.payload['@type'] !== 'updateNewMessage') return state;
-  // eslint-disable-next-line no-console
-  console.log(action.payload);
-
   if (state.chatIds.includes(action.payload.message.chat_id)) {
     return R.assoc('chatMessages', [...state.chatMessages, action.payload.message], state);
   }
 
   return state;
-  // const threadId = action.payload.message_thread_id;
-
-  // if (threadId === 0) {
-  //   const messages = state.chatMessages;
-
-  //   const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
-
-  //   filteredMessages.push(action.payload);
-
-  //   return R.assoc('chatMessages', filteredMessages, state);
-  // } else {
-  //   const messages = state.threadMessages.get(threadId) || [];
-
-  //   const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
-
-  //   const newMessages = [...filteredMessages, action.payload];
-
-  //   return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
-  // }
 });
 
 MAP.set(StateActions.SET_CHAT_IDS, (state, action: Action<number[]>) => {
@@ -96,6 +78,15 @@ MAP.set(StateActions.SET_CHAT_IDS, (state, action: Action<number[]>) => {
   return R.assoc('chatIds', action.payload, state);
 });
 
+MAP.set(StateActions.ADD_USER, (state, action: Action<TUser>) => {
+  if (!action.payload) return state;
+
+  const existingUser = state.users.find(u => u.id === action.payload?.id);
+
+  if (existingUser) return state;
+
+  return R.assoc('users', [...state.users, action.payload], state);
+});
 // review
 
 MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
@@ -110,17 +101,17 @@ MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
   return R.assoc('users', [...state.users, action.payload], state);
 });
 
-MAP.set(
-  StateActions.UPDATE_USERS_FULL_INFO,
-  (state, action: Action<Omit<TUserFullInfo, '@type'> & { user_id: number }>) => {
-    // if (!action.payload) return state;
+// MAP.set(
+//   StateActions.UPDATE_USERS_FULL_INFO,
+//   (state, action: Action<Omit<TUserFullInfo, '@type'> & { user_id: number }>) => {
+//     // if (!action.payload) return state;
 
-    // const mapperFn = (user: StateUser) => (user.id === action.payload?.user_id ? { ...user, ...action.payload } : user);
+//     // const mapperFn = (user: StateUser) => (user.id === action.payload?.user_id ? { ...user, ...action.payload } : user);
 
-    // return R.assoc('users', state.users.map(mapperFn), state);
-    return state;
-  },
-);
+//     // return R.assoc('users', state.users.map(mapperFn), state);
+//     return state;
+//   },
+// );
 
 MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => {
   if (!action.payload) return state;

@@ -23,4 +23,6 @@ export interface State {
   myself: Optional<StateUser>;
   options: Partial<TOptions>;
   chatIds: number[];
+  isRestored: boolean;
+  isInitialized: boolean;
 }

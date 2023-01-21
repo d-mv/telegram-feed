@@ -93,12 +93,12 @@ export default function Feed() {
   return (
     <MainSection>
       {ifTrue(
-        loadMessage,
+        !displayMessages.length,
         <div className={classes.loading}>
           <p className='p4'>{loadMessage}</p>
         </div>,
       )}
-      {ifTrue(!loadMessage, renderFeed)}
+      {ifTrue(displayMessages.length, renderFeed)}
     </MainSection>
   );
 }

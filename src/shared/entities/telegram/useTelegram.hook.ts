@@ -1,7 +1,7 @@
 import { useContextSelector } from 'use-context-selector';
 import QRCodeStyling from 'qr-code-styling';
 import { failure, logger, PromisedResult, R, success } from '@mv-d/toolbelt';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
@@ -9,14 +9,19 @@ import {
   addChat,
   addMessages,
   addNotification,
-  getChatIds,
+  addUser,
+  getIsInitialized,
+  getLoadMessage,
+  getStateRestored,
+  setChatIds,
+  setIsInitialized,
   setLoadMessage,
   useDispatch,
   useSelector,
 } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
-import { TChat, TChats, TFilePart, TMessage, TMessages } from './types';
+import { TChat, TChats, TFilePart, TMessage, TMessages, TUser } from './types';
 import { isDebugLogging } from '../../tools';
 import { CONFIG } from '../../config';
 import { useDebounce } from '../../hooks';
@@ -24,9 +29,13 @@ import { useDebounce } from '../../hooks';
 export function useTelegram() {
   const [client, event, send] = useContextSelector(TelegramContext, c => [c.client, c.event, c.send]);
 
-  const dispatch = useDispatch();
+  const loadMessage = useSelector(getLoadMessage);
 
-  const chatIds = useSelector(getChatIds);
+  const isRestored = useSelector(getStateRestored);
+
+  const isInitialized = useSelector(getIsInitialized);
+
+  const dispatch = useDispatch();
 
   function submitPassword(password: string) {
     client
@@ -130,8 +139,23 @@ export function useTelegram() {
     }
   }
 
+  const fetchUserById = useCallback(
+    async (user_id: number) => {
+      // fectching user
+      const maybeUser = await send<TUser>({ type: 'getUser', user_id });
+
+      if (maybeUser.isNone) {
+        logger.error(maybeUser.error, `User not found with id: ${user_id}`);
+        return;
+      }
+
+      R.compose(dispatch, addUser)(maybeUser.payload);
+    },
+    [dispatch, send],
+  );
+
   const fetchChatIds = useCallback(async () => {
-    let chatIds: number[] = [];
+    let ids: number[] = [];
 
     let limit = 20;
     let i = 0;
@@ -141,40 +165,33 @@ export function useTelegram() {
         type: 'getChats',
         chat_list: { '@type': 'chatListMain' },
         // offset_order,
-        offset_chat_id: chatIds.length ? R.last(chatIds) : 0,
+        offset_chat_id: ids.length ? R.last(ids) : 0,
         limit,
       });
 
       if (maybeChats.isNone) break;
 
-      chatIds = [...chatIds, ...maybeChats.payload.chat_ids];
+      ids = [...ids, ...maybeChats.payload.chat_ids];
 
-      if (maybeChats.payload.total_count <= chatIds.length) i = -1;
+      if (maybeChats.payload.total_count <= ids.length) i = -1;
 
-      if (maybeChats.payload.total_count - chatIds.length < 20) limit = maybeChats.payload.total_count - chatIds.length;
+      if (maybeChats.payload.total_count - ids.length < 20) limit = maybeChats.payload.total_count - ids.length;
     }
-    return chatIds;
+
+    R.compose(dispatch, setChatIds)(ids);
+    return ids;
   }, [dispatch, send]);
 
-  const fetchChats = useCallback(
-    async (chatIds: number[]) => {
-      R.compose(dispatch, setLoadMessage)('Loading chats...');
+  const fetchChatById = useCallback(
+    async (chat_id: number) => {
+      const maybeChat = await send<TChat>({
+        type: 'getChat',
+        chat_id: String(chat_id),
+      });
 
-      const chats: TChat[] = [];
+      if (maybeChat.isNone) return;
 
-      for await (const chat_id of chatIds) {
-        const maybeChat = await send<TChat>({
-          type: 'getChat',
-          chat_id,
-        });
-
-        if (maybeChat.isNone) return chats;
-
-        chats.push(maybeChat.payload);
-        R.compose(dispatch, addChat)(maybeChat.payload);
-      }
-
-      return chats;
+      R.compose(dispatch, addChat)(maybeChat.payload);
     },
     [dispatch, send],
   );
@@ -184,6 +201,10 @@ export function useTelegram() {
       const messages: TMessage[] = [];
 
       const limit = 20;
+
+      fetchChatById(chat_id);
+
+      if (chat_id > 0) fetchUserById(chat_id);
 
       while (messages.length < 20) {
         // First call
@@ -204,41 +225,51 @@ export function useTelegram() {
 
         R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
       }
+
+      if (loadMessage) R.compose(dispatch, setLoadMessage)('');
     },
-    [dispatch, send],
+    [dispatch, loadMessage, send],
   );
 
   const fetchMessagesForChats = useCallback(
-    async (chatIds: number[]) => {
-      for (const chat_id of chatIds) {
+    (ids: number[]) => {
+      for (const chat_id of ids) {
         fetchMessagesForChatId(chat_id);
       }
     },
     [fetchMessagesForChatId],
   );
 
+  // TODO: update with fetching from cache
   const acquireChatIds = useCallback(async () => {
-    if (chatIds?.length) {
-      fetchChatIds();
-      return chatIds;
-    }
-
     R.compose(dispatch, setLoadMessage)('Loading chat list...');
+
     return await fetchChatIds();
-  }, [chatIds, dispatch, fetchChatIds]);
+  }, [dispatch, fetchChatIds]);
 
-  const getChatsOriginal = useCallback(async () => {
-    const chatIds = await acquireChatIds();
+  const getChats = useCallback(async () => {
+    const ids = await acquireChatIds();
 
-    if (chatIds.length === 0) return;
+    logger.info(`Acquired chat ids, qty: ${ids.length}`);
 
-    fetchChats(chatIds);
+    if (ids.length === 0) return;
+
+    logger.info('Fetching messages...');
     R.compose(dispatch, setLoadMessage)('Loading messages...');
-    await fetchMessagesForChats(chatIds);
-    R.compose(dispatch, setLoadMessage)('');
-  }, [dispatch, fetchChatIds, fetchChats, fetchMessagesForChats]);
+    fetchMessagesForChats(ids);
+  }, [acquireChatIds, dispatch, fetchMessagesForChats]);
 
-  const getChats = useDebounce(getChatsOriginal);
+  const handleInitialization = useCallback(() => {
+    logger.info('State is restored, initializing...');
+    R.compose(dispatch, setIsInitialized)();
+    getChats();
+  }, [dispatch, getChats]);
 
-  return { handleAuthentication, getChats, submitPassword, downloadFile };
+  const handleInitializationDebounced = useDebounce(handleInitialization, 300);
+
+  useEffect(() => {
+    if (isRestored && !isInitialized) handleInitializationDebounced();
+  }, [handleInitializationDebounced, isInitialized, isRestored]);
+
+  return { handleAuthentication, submitPassword, downloadFile };
 }

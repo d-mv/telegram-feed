@@ -1,4 +1,4 @@
-import { ifTrue } from '@mv-d/toolbelt';
+import { ifTrue, R } from '@mv-d/toolbelt';
 import { useEffect } from 'react';
 
 import { Chat, Feed } from '../../domains';
@@ -7,17 +7,14 @@ import { Container } from './Container';
 import { Header } from './Header';
 
 export default function Main() {
-  const { getChats } = useTelegram();
-
   const selectedChat = useSelector(getSelectedChat);
 
   const dispatch = useDispatch();
 
+  useTelegram();
+
   useEffect(() => {
-    getChats();
-    dispatch(restoreState());
-    // getChats is not memoized, so we need to disable exhaustive-deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    R.compose(dispatch, restoreState)();
   }, [dispatch]);
 
   const renderChat = () => <Chat />;

@@ -3,6 +3,7 @@ export enum StateActions {
   ADD_NOTIFICATION = 'addNotification',
   REMOVE_NOTIFICATION = 'removeNotification',
   UPDATE_USERS = 'updateUsers',
+  ADD_USER = 'addUser',
   UPDATE_SUPERGROUP = 'updateSuperGroup',
   UPDATE_USERS_FULL_INFO = 'updateUsersFullInfo',
   UPDATE_SUPERGROUP_FULL_INFO = 'updateSuperGroupFullInfo',
@@ -20,4 +21,5 @@ export enum StateActions {
   SET_OPTION = 'setOption',
   SET_LOAD_MESSAGE = 'setLoadMessage',
   SET_CHAT_IDS = 'setChatIds',
+  SET_IS_INITIALIZED = 'setIsInitialized',
 }

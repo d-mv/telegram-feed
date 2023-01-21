@@ -15,4 +15,6 @@ export const INITIAL_STATE: State = {
   options: {},
   loadMessage: 'Loading...',
   chatIds: [],
+  isRestored: false,
+  isInitialized: false,
 };
