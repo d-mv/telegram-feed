@@ -14,4 +14,5 @@ export const INITIAL_STATE: State = {
   myself: undefined,
   options: {},
   loadMessage: 'Loading...',
+  chatIds: [],
 };

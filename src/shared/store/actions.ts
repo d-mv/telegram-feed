@@ -1,5 +1,14 @@
 import { Message } from '../../domains';
-import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUpdateOption, TUser, TUserFullInfo } from '../entities';
+import {
+  TChat,
+  TMessage,
+  TSupergroup,
+  TSupergroupFullInfo,
+  TUpdateNewMessage,
+  TUpdateOption,
+  TUser,
+  TUserFullInfo,
+} from '../entities';
 import { Action, FeedFilters, SelectedChatId, StateActions } from './types';
 
 export const clearState = (): Action => ({
@@ -26,6 +35,14 @@ export const setOption = (payload: TUpdateOption): Action<TUpdateOption> => ({
 });
 
 export const setLoadMessage = (payload: string) => ({ type: StateActions.SET_LOAD_MESSAGE, payload });
+
+export const addNewMessage = (payload: TUpdateNewMessage): Action<TUpdateNewMessage> => ({
+  type: StateActions.ADD_NEW_MESSAGE,
+  payload,
+});
+
+export const setChatIds = (payload: string[]): Action<string[]> => ({ type: StateActions.SET_CHAT_IDS, payload });
+
 // review
 
 export const updateUsers = (payload: TUser): Action<TUser> => ({ type: StateActions.UPDATE_USERS, payload });
@@ -46,8 +63,6 @@ export const updateSuperGroupFullInfo = (payload: TSupergroupFullInfo): Action<T
   type: StateActions.UPDATE_SUPERGROUP_FULL_INFO,
   payload,
 });
-
-export const addMessage = (payload: TMessage): Action<TMessage> => ({ type: StateActions.ADD_MESSAGE, payload });
 
 export const addMessages = (payload: TMessage[]): Action<TMessage[]> => ({ type: StateActions.ADD_MESSAGES, payload });
 

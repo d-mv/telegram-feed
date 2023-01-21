@@ -22,4 +22,5 @@ export interface State {
   threadMessages: Map<number, TMessage[]>;
   myself: Optional<StateUser>;
   options: Partial<TOptions>;
+  chatIds: number[];
 }

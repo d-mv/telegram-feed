@@ -6,7 +6,7 @@ export enum StateActions {
   UPDATE_SUPERGROUP = 'updateSuperGroup',
   UPDATE_USERS_FULL_INFO = 'updateUsersFullInfo',
   UPDATE_SUPERGROUP_FULL_INFO = 'updateSuperGroupFullInfo',
-  ADD_MESSAGE = 'addMessage',
+  ADD_NEW_MESSAGE = 'addNewMessage',
   ADD_MESSAGES = 'addMessages',
   ADD_CHAT = 'addChat',
   UPDATE_CHAT = 'updateChat',
@@ -19,4 +19,5 @@ export enum StateActions {
   SET_MYSELF = 'setMyself',
   SET_OPTION = 'setOption',
   SET_LOAD_MESSAGE = 'setLoadMessage',
+  SET_CHAT_IDS = 'setChatIds',
 }

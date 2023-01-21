@@ -7,6 +7,7 @@ import {
   TMessage,
   TOptions,
   TSupergroup,
+  TUpdateNewMessage,
   TUpdateOption,
   TUser,
   TUserFullInfo,
@@ -17,6 +18,9 @@ import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser } fro
 export const MAP: MappedReducerFns = new Map();
 
 MAP.set(StateActions.CLEAR_STATE, () => INITIAL_STATE);
+MAP.set(StateActions.RESTORE_STATE, state => {
+  return { ...state, ...StorageService.state };
+});
 
 MAP.set(StateActions.ADD_NOTIFICATION, (state, action: Action<Message>) => {
   if (!action.payload) return state;
@@ -50,6 +54,46 @@ MAP.set(StateActions.SET_OPTION, (state, action: Action<TUpdateOption>) => {
 
 MAP.set(StateActions.SET_LOAD_MESSAGE, (state, action: Action<string>) => {
   return R.assoc('loadMessage', action.payload || '', state);
+});
+
+MAP.set(StateActions.ADD_NEW_MESSAGE, (state, action: Action<TUpdateNewMessage>) => {
+  if (!action.payload) return state;
+
+  // if (action.payload['@type'] !== 'updateNewMessage') return state;
+  // eslint-disable-next-line no-console
+  console.log(action.payload);
+
+  if (state.chatIds.includes(action.payload.message.chat_id)) {
+    return R.assoc('chatMessages', [...state.chatMessages, action.payload.message], state);
+  }
+
+  return state;
+  // const threadId = action.payload.message_thread_id;
+
+  // if (threadId === 0) {
+  //   const messages = state.chatMessages;
+
+  //   const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
+
+  //   filteredMessages.push(action.payload);
+
+  //   return R.assoc('chatMessages', filteredMessages, state);
+  // } else {
+  //   const messages = state.threadMessages.get(threadId) || [];
+
+  //   const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
+
+  //   const newMessages = [...filteredMessages, action.payload];
+
+  //   return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
+  // }
+});
+
+MAP.set(StateActions.SET_CHAT_IDS, (state, action: Action<number[]>) => {
+  if (!action.payload) return state;
+
+  StorageService.set('chatIds', action.payload);
+  return R.assoc('chatIds', action.payload, state);
 });
 
 // review
@@ -86,30 +130,6 @@ MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => 
   if (existingSuperGroup) return state;
 
   return R.assoc('superGroups', [...state.superGroups, action.payload], state);
-});
-
-MAP.set(StateActions.ADD_MESSAGE, (state, action: Action<TMessage>) => {
-  if (!action.payload) return state;
-
-  const threadId = action.payload.message_thread_id;
-
-  if (threadId === 0) {
-    const messages = state.chatMessages;
-
-    const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
-
-    filteredMessages.push(action.payload);
-
-    return R.assoc('chatMessages', filteredMessages, state);
-  } else {
-    const messages = state.threadMessages.get(threadId) || [];
-
-    const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
-
-    const newMessages = [...filteredMessages, action.payload];
-
-    return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
-  }
 });
 
 MAP.set(StateActions.ADD_MESSAGES, (state, action: Action<TMessage[]>) => {
@@ -173,8 +193,4 @@ MAP.set(StateActions.SET_SELECTED_CHAT_ID, (state, action: Action<SelectedChatId
 
   StorageService.set('selectedChat', action.payload);
   return R.assoc('selectedChat', action.payload, state);
-});
-
-MAP.set(StateActions.RESTORE_STATE, state => {
-  return { ...state, ...StorageService.state };
 });

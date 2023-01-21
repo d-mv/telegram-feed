@@ -5,7 +5,15 @@ import { useCallback } from 'react';
 
 import tg_logo from '../../assets/tg_logo.png';
 import { MaybeNull } from '../../types';
-import { addChat, addMessages, addNotification, setLoadMessage, useDispatch } from '../../store';
+import {
+  addChat,
+  addMessages,
+  addNotification,
+  getChatIds,
+  setLoadMessage,
+  useDispatch,
+  useSelector,
+} from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
 import { TChat, TChats, TFilePart, TMessage, TMessages } from './types';
@@ -17,6 +25,8 @@ export function useTelegram() {
   const [client, event, send] = useContextSelector(TelegramContext, c => [c.client, c.event, c.send]);
 
   const dispatch = useDispatch();
+
+  const chatIds = useSelector(getChatIds);
 
   function submitPassword(password: string) {
     client
@@ -121,7 +131,6 @@ export function useTelegram() {
   }
 
   const fetchChatIds = useCallback(async () => {
-    R.compose(dispatch, setLoadMessage)('Loading chat list...');
     let chatIds: number[] = [];
 
     let limit = 20;
@@ -208,8 +217,18 @@ export function useTelegram() {
     [fetchMessagesForChatId],
   );
 
+  const acquireChatIds = useCallback(async () => {
+    if (chatIds?.length) {
+      fetchChatIds();
+      return chatIds;
+    }
+
+    R.compose(dispatch, setLoadMessage)('Loading chat list...');
+    return await fetchChatIds();
+  }, [chatIds, dispatch, fetchChatIds]);
+
   const getChatsOriginal = useCallback(async () => {
-    const chatIds = await fetchChatIds();
+    const chatIds = await acquireChatIds();
 
     if (chatIds.length === 0) return;
 

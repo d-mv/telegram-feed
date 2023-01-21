@@ -6,6 +6,8 @@ export const getMyself = (state: State) => state.myself;
 
 export const getByMyself = (state: State) => (id: number) => state.myself && state.myself.id === id;
 
+export const getChatIds = (state: State) => state.chatIds;
+
 export const getMyId = (state: State) => {
   if (!state.options.my_id) return 0;
 

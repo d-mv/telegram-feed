@@ -2,7 +2,7 @@ import { logger, makeMatch, R } from '@mv-d/toolbelt';
 import { Dispatch, SetStateAction } from 'react';
 
 import { CONFIG } from '../../config';
-import { useDispatch, updateAuthPasswordHint, setOption } from '../../store';
+import { useDispatch, updateAuthPasswordHint, setOption, addNewMessage } from '../../store';
 import { isDebugLogging } from '../../tools';
 import { TUpdates, TUpdateSelectedBackground } from './types';
 
@@ -46,7 +46,7 @@ export function useUpdate({ setEvent }: { setEvent: Dispatch<SetStateAction<TUpd
   const matchUpdate = makeMatch(
     {
       updateAuthorizationState: handleAuthState,
-      // updateNewMessage: handleMessages,
+      updateNewMessage: R.compose(dispatch, addNewMessage),
       // updateDeleteMessages: handleMessages,
       updateOption: R.compose(dispatch, setOption),
       updateSelectedBackground: handleBackground,
