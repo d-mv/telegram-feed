@@ -4,12 +4,15 @@ import {
   TMessage,
   TSupergroup,
   TSupergroupFullInfo,
+  TUpdateDeleteMessages,
   TUpdateNewMessage,
   TUpdateOption,
+  TUpdateUser,
+  TUpdateUserFullInfo,
   TUser,
   TUserFullInfo,
 } from '../entities';
-import { Action, FeedFilters, SelectedChatId, StateActions } from './types';
+import { Action, FeedFilters, SelectedChatId, StateActions, UpdateUserFullInfo } from './types';
 
 export const clearState = (): Action => ({
   type: StateActions.CLEAR_STATE,
@@ -51,17 +54,19 @@ export const setChatIds = (payload: number[]): Action<number[]> => ({ type: Stat
 
 export const addUser = (payload: TUser): Action<TUser> => ({ type: StateActions.ADD_USER, payload });
 
-// review
+export const updateUser = (payload: TUpdateUser): Action<TUpdateUser> => ({ type: StateActions.UPDATE_USER, payload });
 
-export const updateUsers = (payload: TUser): Action<TUser> => ({ type: StateActions.UPDATE_USERS, payload });
-
-export const updateUsersFullInfo = (
-  payload: Omit<TUserFullInfo, '@type'> & { user_id: number },
-): Action<Omit<TUserFullInfo, '@type'> & { user_id: number }> => ({
-  type: StateActions.UPDATE_USERS_FULL_INFO,
+export const addUserFullInfo = (payload: UpdateUserFullInfo): Action<UpdateUserFullInfo> => ({
+  type: StateActions.ADD_USER_FULL_INFO,
   payload,
 });
 
+export const updateUserFullInfo = (payload: TUpdateUserFullInfo): Action<TUpdateUserFullInfo> => ({
+  type: StateActions.UPDATE_USER_FULL_INFO,
+  payload,
+});
+
+// review
 export const updateSupergroup = (payload: TSupergroup): Action<TSupergroup> => ({
   type: StateActions.UPDATE_SUPERGROUP,
   payload,

@@ -20,14 +20,7 @@ export const getIsInitialized = (state: State) => state.isInitialized;
 
 export const getLoadMessage = (state: State) => state.loadMessage;
 
-export const getMessages = (state: State) => {
-  return state.chatMessages
-    .filter(
-      message =>
-        message.sender_id['@type'] !== 'messageSenderUser' || message.sender_id.user_id !== state.currentUserId,
-    )
-    .sort((a, b) => b.date - a.date);
-};
+export const getFeedMessages = (state: State) => state.chatMessages;
 
 export const getMessagesForSelectedChat = (state: State) => {
   if (!state.selectedChat) return [];

@@ -9,11 +9,13 @@ import {
   TSupergroup,
   TUpdateNewMessage,
   TUpdateOption,
+  TUpdateUser,
+  TUpdateUserFullInfo,
   TUser,
   TUserFullInfo,
 } from '../entities';
 import { INITIAL_STATE } from './initial';
-import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser } from './types';
+import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser, UpdateUserFullInfo } from './types';
 
 export const MAP: MappedReducerFns = new Map();
 
@@ -87,19 +89,58 @@ MAP.set(StateActions.ADD_USER, (state, action: Action<TUser>) => {
 
   return R.assoc('users', [...state.users, action.payload], state);
 });
-// review
 
-MAP.set(StateActions.UPDATE_USERS, (state, action: Action<TUser>) => {
+MAP.set(StateActions.ADD_USER_FULL_INFO, (state, action: Action<UpdateUserFullInfo>) => {
   if (!action.payload) return state;
 
   const existingUser = state.users.find(u => u.id === action.payload?.id);
 
-  if (existingUser) return state;
+  if (!existingUser) return state;
 
-  if (state.users.length > 100) return state;
+  function updateUser(user: StateUser): StateUser {
+    if (user.id === action.payload?.id) return R.mergeRight(user, R.omit(['@type'], action.payload?.data));
 
-  return R.assoc('users', [...state.users, action.payload], state);
+    return user;
+  }
+
+  return R.assoc('users', state.users.map(updateUser), state);
 });
+
+MAP.set(StateActions.UPDATE_USER, (state, action: Action<TUpdateUser>) => {
+  if (!action.payload) return state;
+
+  const existingUser = state.users.find(u => u.id === action.payload?.user.id);
+
+  if (!existingUser) return state;
+
+  function updateUser(user: StateUser): StateUser {
+    if (user.id === action.payload?.user.id) return R.mergeRight(user, action.payload?.user);
+
+    return user;
+  }
+
+  return R.assoc('users', state.users.map(updateUser), state);
+});
+
+// TODO: same as ADD_USER_FULL_INFO. Remove?
+MAP.set(StateActions.UPDATE_USER_FULL_INFO, (state, action: Action<TUpdateUserFullInfo>) => {
+  if (!action.payload) return state;
+
+  const existingUser = state.users.find(u => u.id === action.payload?.user_id);
+
+  if (!existingUser) return state;
+
+  function updateUser(user: StateUser): StateUser {
+    if (user.id === action.payload?.user_id)
+      return R.mergeRight(user, R.omit(['@type'], action.payload?.user_full_info));
+
+    return user;
+  }
+
+  return R.assoc('users', state.users.map(updateUser), state);
+});
+
+// review
 
 // MAP.set(
 //   StateActions.UPDATE_USERS_FULL_INFO,

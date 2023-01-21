@@ -5,8 +5,8 @@ import {
   CONFIG,
   getByMyself,
   getChatById,
+  getFeedMessages,
   getLoadMessage,
-  getMessages,
   isDebugLogging,
   List,
   MainSection,
@@ -22,7 +22,7 @@ import classes from './Feed.module.scss';
 export default function Feed() {
   const dispatch = useDispatch();
 
-  const messages = useSelector(getMessages);
+  const messages = useSelector(getFeedMessages);
 
   const getChat = useSelector(getChatById);
 
@@ -32,14 +32,16 @@ export default function Feed() {
 
   const displayMessages = useMemo(
     () =>
-      // don't show comments to thread and messages from myself
-      messages.filter(m => {
-        if (m.message_thread_id !== 0) return false;
+      messages
+        .filter(
+          message =>
+            // don't show comments to thread and messages from myself
+            message.message_thread_id === 0 &&
+            message.sender_id['@type'] === 'messageSenderUser' &&
+            !byMyself(message.sender_id.user_id),
+        )
+        .sort((a, b) => b.date - a.date),
 
-        if (m.sender_id['@type'] === 'messageSenderUser' && byMyself(m.sender_id.user_id)) return false;
-
-        return true;
-      }),
     [byMyself, messages],
   );
 

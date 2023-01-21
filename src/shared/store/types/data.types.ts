@@ -6,3 +6,5 @@ export interface SelectedChatId {
 }
 
 export type StateUser = TUser & Partial<Omit<TUserFullInfo, '@type'>>;
+
+export type UpdateUserFullInfo = { id: number; data: TUserFullInfo };

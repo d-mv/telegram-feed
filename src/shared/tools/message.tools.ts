@@ -1,11 +1,12 @@
 import { Optional } from '@mv-d/toolbelt';
 import { TChat, TMessage, TMessagePhoto, TPhotoSize, TUser } from '../entities';
+import { StateUser } from '../store';
 
 interface GetSendFromMessageProps {
   isChat?: boolean;
   message: TMessage;
   getChat: (id: number) => TChat | undefined;
-  getUser: (id: number) => TUser | undefined;
+  getUser: (id: number) => Optional<StateUser>;
   myself: Optional<TUser>;
 }
 

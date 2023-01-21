@@ -10,18 +10,20 @@ import {
   addMessages,
   addNotification,
   addUser,
+  addUserFullInfo,
   getIsInitialized,
   getLoadMessage,
   getStateRestored,
   setChatIds,
   setIsInitialized,
   setLoadMessage,
+  updateUserFullInfo,
   useDispatch,
   useSelector,
 } from '../../store';
 import { TelegramContext } from './telegram.context';
 import { makeTErrorNotification } from './telegram.tools';
-import { TChat, TChats, TFilePart, TMessage, TMessages, TUser } from './types';
+import { TChat, TChats, TFilePart, TMessage, TMessages, TUser, TUserFullInfo } from './types';
 import { isDebugLogging } from '../../tools';
 import { CONFIG } from '../../config';
 import { useDebounce } from '../../hooks';
@@ -141,7 +143,6 @@ export function useTelegram() {
 
   const fetchUserById = useCallback(
     async (user_id: number) => {
-      // fectching user
       const maybeUser = await send<TUser>({ type: 'getUser', user_id });
 
       if (maybeUser.isNone) {
@@ -150,6 +151,15 @@ export function useTelegram() {
       }
 
       R.compose(dispatch, addUser)(maybeUser.payload);
+
+      const maybeUserFullInfo = await send<TUserFullInfo>({ type: 'getUserFullInfo', user_id });
+
+      if (maybeUserFullInfo.isNone) {
+        logger.error(maybeUserFullInfo.error, `User (Full Info) not found with id: ${user_id}`);
+        return;
+      }
+
+      R.compose(dispatch, addUserFullInfo)({ id: user_id, data: maybeUserFullInfo.payload });
     },
     [dispatch, send],
   );
