@@ -4,13 +4,16 @@ import { buildIntArray } from '@mv-d/toolbelt';
 import { MaybeNull } from '../../types';
 
 import classes from './List.module.scss';
+import { CONFIG } from '../../config';
 
-export interface ListProps<T> {
+const maintain = CONFIG.ui.elementsPerPage;
+
+export interface ListProps {
   renderItem: (arg0: number) => JSX.Element | null;
 }
 
-export function List<T extends { id: string | number }>({ renderItem }: ListProps<T>) {
-  const [showItems, setShowItems] = useState(buildIntArray(9, 0));
+export function List({ renderItem }: ListProps) {
+  const [showItems, setShowItems] = useState(buildIntArray(maintain - 1, 0));
 
   const itemIndexInView = useRef(-1);
 
@@ -38,8 +41,6 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
   }, [updateScreenRatio]);
 
   function updateItemsDown() {
-    const maintain = 10;
-
     const last = showItems[showItems.length - 1];
 
     const next = last + 1;
@@ -58,8 +59,6 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
   }
 
   function updateItemsUp() {
-    const maintain = 10;
-
     const first = showItems[0];
 
     const startPoint = first - maintain < 0 ? 0 : first - maintain;
@@ -115,7 +114,9 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
     if (shouldUpdate) updateItemsUp();
   }
 
-  function processScrollEvents() {
+  function processScrollEvents(e: UIEvent<HTMLDivElement>) {
+    e.persist();
+
     const bottom = bottomRef.current;
 
     if (!bottom) return;
@@ -124,8 +125,7 @@ export function List<T extends { id: string | number }>({ renderItem }: ListProp
     const bottomPosition = bottom.getBoundingClientRect().top;
 
     if (!lastPosition) setLastPosition(bottomPosition);
-    else if (lastPosition === bottomPosition) return;
-    else {
+    else if (lastPosition !== bottomPosition) {
       const isGoingUp = bottomPosition > lastPosition;
 
       setLastPosition(bottomPosition);

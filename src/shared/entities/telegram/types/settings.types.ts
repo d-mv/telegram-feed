@@ -1,4 +1,3 @@
-import { AnyValue } from '@mv-d/toolbelt';
 import { TUpdate } from './event.types';
 
 export interface TOptionBoolean {
@@ -60,6 +59,7 @@ export interface TOptions {
 export type TOption = keyof TOptions;
 
 // updates
+
 export interface TUpdateOption extends TUpdate {
   '@type': 'updateOption' | 'updateSelectedBackground';
   name: TOption;
@@ -81,4 +81,12 @@ export interface TUpdateConnState extends TUpdate {
 export interface TUpdateDiceEmojis extends TUpdate {
   '@type': 'updateDiceEmojis';
   emojis: string[];
+}
+
+// not technically part of the options
+// TODO: move to app options?
+export interface TUpdateDarkTheme extends TUpdate {
+  '@type': 'for_dark_theme';
+  name: TOption;
+  value: TOptionBoolean | TOptionInteger | TOptionString;
 }

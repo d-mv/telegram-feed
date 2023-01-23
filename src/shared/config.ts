@@ -16,4 +16,7 @@ export const CONFIG = {
   userSettings: {
     logging: LogLevel.QUIET,
   },
+  ui: {
+    elementsPerPage: 20,
+  },
 };

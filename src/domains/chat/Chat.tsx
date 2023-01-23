@@ -1,9 +1,10 @@
 import { logger } from '@mv-d/toolbelt';
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   CONFIG,
   getMessagesForSelectedChat,
   isDebugLogging,
+  List,
   MainCenter,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
@@ -16,12 +17,15 @@ import { FeedContext } from '../feed/feed.context';
 export default function Chat() {
   const messages = useSelector(getMessagesForSelectedChat);
 
+  const displayMessages = useMemo(() => messages.reverse(), [messages]);
+
   const bottomRef = useRef<MaybeNull<HTMLElement>>(null);
 
-  // TODO: finish
-  if (bottomRef.current) {
-    bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-  }
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [bottomRef]);
 
   // trigger loading comments for message_thread_id
   function handleClick(messageId: number) {
@@ -31,7 +35,11 @@ export default function Chat() {
     };
   }
 
-  function renderMessage(message: TMessage, i: number) {
+  function renderMessageByIndex(index: number) {
+    const message = displayMessages[index];
+
+    if (!message) return null;
+
     const type = message.content['@type'];
 
     // No direct input from user, so no need to be careful
@@ -47,7 +55,7 @@ export default function Chat() {
     return (
       <FeedContext.Provider
         key={message.id}
-        value={{ isChat: true, message, onCardClick: handleClick(message.id), isLast: i === 0 }}
+        value={{ isChat: true, message, onCardClick: handleClick(message.id), isLast: index === 0 }}
       >
         <Component />
         {/* <MessageDivider id={message.id} /> */}
@@ -55,9 +63,11 @@ export default function Chat() {
     );
   }
 
+  const renderChat = () => <List renderItem={renderMessageByIndex} />;
+
   return (
     <MainSection>
-      <MainCenter>{messages.reverse().map(renderMessage)}</MainCenter>
+      <MainCenter>{renderChat()}</MainCenter>
       <span ref={bottomRef} />
     </MainSection>
   );

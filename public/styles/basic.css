@@ -34,7 +34,8 @@
   --mainHeight: calc(100% - var(--headerHeight) - var(--footerHeight));
   font-size: 62.5%;
   overflow: auto;
-
+  --font-family-sans: 'Noto Sans', Helvetica, SegoeUI, sans-serif;
+  --font-family-serif: 'PT Serif', serif;
   /*
 
   /* Shadow levels */
@@ -53,6 +54,30 @@
   --border-primary-4: 0.1rem solid var(--color-primary-4);
   --border-accent-2: 0.1rem solid var(--color-accent-2);
   --divider-primary-3: 0.1rem solid var(--color-primary-3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -moz-osx-font-smoothing: grayscale;
+  /* scroll-behavior: smooth; */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  background-color: var(--color-back);
+  color: var(--color-text);
+}
+
+#root {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 /* ::-webkit-scrollbar {

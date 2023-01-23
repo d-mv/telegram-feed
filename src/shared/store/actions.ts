@@ -1,17 +1,5 @@
 import { Message } from '../../domains';
-import {
-  TChat,
-  TMessage,
-  TSupergroup,
-  TSupergroupFullInfo,
-  TUpdateDeleteMessages,
-  TUpdateNewMessage,
-  TUpdateOption,
-  TUpdateUser,
-  TUpdateUserFullInfo,
-  TUser,
-  TUserFullInfo,
-} from '../entities';
+import { TChat, TMessage, TSupergroup, TSupergroupFullInfo, TUpdates, TUser } from '../entities';
 import { Action, FeedFilters, SelectedChatId, StateActions, UpdateUserFullInfo } from './types';
 
 export const clearState = (): Action => ({
@@ -38,14 +26,14 @@ export const removeNotification = (payload: string): Action<string> => ({
 
 export const setMyself = (payload: TUser): Action<TUser> => ({ type: StateActions.SET_MYSELF, payload });
 
-export const setOption = (payload: TUpdateOption): Action<TUpdateOption> => ({
+export const setOption = (payload: TUpdates): Action<TUpdates> => ({
   type: StateActions.SET_OPTION,
   payload,
 });
 
 export const setLoadMessage = (payload: string) => ({ type: StateActions.SET_LOAD_MESSAGE, payload });
 
-export const addNewMessage = (payload: TUpdateNewMessage): Action<TUpdateNewMessage> => ({
+export const addNewMessage = (payload: TUpdates): Action<TUpdates> => ({
   type: StateActions.ADD_NEW_MESSAGE,
   payload,
 });
@@ -54,14 +42,14 @@ export const setChatIds = (payload: number[]): Action<number[]> => ({ type: Stat
 
 export const addUser = (payload: TUser): Action<TUser> => ({ type: StateActions.ADD_USER, payload });
 
-export const updateUser = (payload: TUpdateUser): Action<TUpdateUser> => ({ type: StateActions.UPDATE_USER, payload });
+export const updateUser = (payload: TUpdates): Action<TUpdates> => ({ type: StateActions.UPDATE_USER, payload });
 
 export const addUserFullInfo = (payload: UpdateUserFullInfo): Action<UpdateUserFullInfo> => ({
   type: StateActions.ADD_USER_FULL_INFO,
   payload,
 });
 
-export const updateUserFullInfo = (payload: TUpdateUserFullInfo): Action<TUpdateUserFullInfo> => ({
+export const updateUserFullInfo = (payload: TUpdates): Action<TUpdates> => ({
   type: StateActions.UPDATE_USER_FULL_INFO,
   payload,
 });

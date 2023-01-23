@@ -24,39 +24,46 @@ import {
   TUpdatePendingNotifications,
   TUpdateScopeNotificationSettings,
 } from './notifications.types';
-import { TUpdateConnState, TUpdateDiceEmojis, TUpdateOption, TUpdateSelectedBackground } from './settings.types';
+import {
+  TUpdateConnState,
+  TUpdateDarkTheme,
+  TUpdateDiceEmojis,
+  TUpdateOption,
+  TUpdateSelectedBackground,
+} from './settings.types';
 import { TUpdateSupergroup, TUpdateSupergroupFullInfo } from './supergroup.types';
 import { TUpdateUser, TUpdateUserFullInfo } from './user.types';
 
 export type TUpdates =
-  | TUpdateUserFullInfo
-  | TUpdateDeleteMessages
-  | TUpdateWaitPassword
-  | TUpdateWaitEncryptionKey
-  | TUpdateWaitPhoneNumber
-  | TUpdateAuthorizationState
+  | TUpdateDarkTheme
   | TAuthorizationStateClosed
   | TAuthorizationStateReady
-  | TUpdateVideoChat
-  | TUpdateUser
-  | TUpdateSupergroupFullInfo
-  | TUpdateSupergroup
-  | TUpdateSelectedBackground
-  | TUpdateScopeNotificationSettings
-  | TUpdatePendingNotifications
-  | TUpdateOption
-  | TUpdateNotificationSettingsScopeChannelChats
-  | TUpdateNewChat
-  | TUpdateNewMessage
-  | TUpdateMessageInteractionInfo
-  | TUpdateChatThemes
-  | TUpdateConnState
-  | TUpdateDiceEmojis
-  | TUpdateHavePendingNotifications
-  | TUpdateWaitOtherDeviceConfirmation
-  | TUpdateWaitPassword
+  | TUpdateAuthorizationState
   | TUpdateChatFilters
   | TUpdateChatLastMessage
   | TUpdateChatNotificationSettings
   | TUpdateChatReadInbox
-  | TUpdateChatReadOutbox;
+  | TUpdateChatReadOutbox
+  | TUpdateChatThemes
+  | TUpdateConnState
+  | TUpdateDeleteMessages
+  | TUpdateDiceEmojis
+  | TUpdateHavePendingNotifications
+  | TUpdateMessageInteractionInfo
+  | TUpdateNewChat
+  | TUpdateNewMessage
+  | TUpdateNotificationSettingsScopeChannelChats
+  | TUpdateOption
+  | TUpdatePendingNotifications
+  | TUpdateScopeNotificationSettings
+  | TUpdateSelectedBackground
+  | TUpdateSupergroup
+  | TUpdateSupergroupFullInfo
+  | TUpdateUser
+  | TUpdateUserFullInfo
+  | TUpdateVideoChat
+  | TUpdateWaitEncryptionKey
+  | TUpdateWaitOtherDeviceConfirmation
+  | TUpdateWaitPassword
+  | TUpdateWaitPassword
+  | TUpdateWaitPhoneNumber;

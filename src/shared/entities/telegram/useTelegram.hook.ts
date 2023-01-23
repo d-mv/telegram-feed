@@ -17,7 +17,6 @@ import {
   setChatIds,
   setIsInitialized,
   setLoadMessage,
-  updateUserFullInfo,
   useDispatch,
   useSelector,
 } from '../../store';
@@ -192,16 +191,25 @@ export function useTelegram() {
     return ids;
   }, [dispatch, send]);
 
-  const fetchChatById = useCallback(
-    async (chat_id: number) => {
-      const maybeChat = await send<TChat>({
-        type: 'getChat',
-        chat_id: String(chat_id),
-      });
+  const fetchChats = useCallback(
+    async (chatIds: number[]) => {
+      R.compose(dispatch, setLoadMessage)('Loading chats...');
 
-      if (maybeChat.isNone) return;
+      const chats: TChat[] = [];
 
-      R.compose(dispatch, addChat)(maybeChat.payload);
+      for await (const chat_id of chatIds) {
+        const maybeChat = await send<TChat>({
+          type: 'getChat',
+          chat_id,
+        });
+
+        if (maybeChat.isNone) return chats;
+
+        chats.push(maybeChat.payload);
+        R.compose(dispatch, addChat)(maybeChat.payload);
+      }
+
+      return chats;
     },
     [dispatch, send],
   );
@@ -212,7 +220,7 @@ export function useTelegram() {
 
       const limit = 20;
 
-      fetchChatById(chat_id);
+      // fetchChatById(chat_id);
 
       if (chat_id > 0) fetchUserById(chat_id);
 
@@ -233,12 +241,12 @@ export function useTelegram() {
 
         messages.push(...maybeMessages.payload.messages);
 
+        if (loadMessage) R.compose(dispatch, setLoadMessage)('');
+
         R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
       }
-
-      if (loadMessage) R.compose(dispatch, setLoadMessage)('');
     },
-    [dispatch, loadMessage, send],
+    [dispatch, fetchUserById, loadMessage, send],
   );
 
   const fetchMessagesForChats = useCallback(
@@ -264,10 +272,11 @@ export function useTelegram() {
 
     if (ids.length === 0) return;
 
+    fetchChats(ids);
     logger.info('Fetching messages...');
     R.compose(dispatch, setLoadMessage)('Loading messages...');
     fetchMessagesForChats(ids);
-  }, [acquireChatIds, dispatch, fetchMessagesForChats]);
+  }, [acquireChatIds, dispatch, fetchChats, fetchMessagesForChats]);
 
   const handleInitialization = useCallback(() => {
     logger.info('State is restored, initializing...');

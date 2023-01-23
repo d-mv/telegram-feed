@@ -1,5 +1,3 @@
-export * from './Loader';
-
 export * from './Icon';
 
 export * from './Image';

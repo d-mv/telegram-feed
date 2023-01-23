@@ -1,9 +1,9 @@
 import { ifTrue } from '@mv-d/toolbelt';
 import { useContextSelector } from 'use-context-selector';
 
-import { Notifications } from '../domains';
+import { LoadMessage, Notifications } from '../domains';
 import { Authenticate, Main } from '../pages';
-import { getMyself, LazyLoad, Loader, TelegramContext, useSelector } from '../shared';
+import { getMyself, LazyLoad, TelegramContext, useSelector } from '../shared';
 
 const VALID_TYPES = [
   'authorizationStateWaitEncryptionKey',
@@ -20,11 +20,11 @@ export function App() {
 
   const currentUser = useSelector(getMyself);
 
-  if (!event || !('authorization_state' in event)) return <Loader />;
+  if (!event || !('authorization_state' in event)) return <LoadMessage />;
 
   const type = event['authorization_state']['@type'];
 
-  if (!VALID_TYPES.includes(type)) return <Loader />;
+  if (!VALID_TYPES.includes(type)) return <LoadMessage />;
 
   const renderAuthenticate = () => <Authenticate />;
 
@@ -37,6 +37,7 @@ export function App() {
         {ifTrue(currentUser, renderMain)}
       </LazyLoad>
       <Notifications />
+      <LoadMessage />
     </>
   );
 }

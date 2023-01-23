@@ -6,7 +6,6 @@ import {
   getByMyself,
   getChatById,
   getFeedMessages,
-  getLoadMessage,
   isDebugLogging,
   List,
   MainSection,
@@ -15,9 +14,8 @@ import {
   setSelectedChatId,
   useDispatch,
   useSelector,
-} from '../../../shared';
-import { FeedContext } from '../feed.context';
-import classes from './Feed.module.scss';
+} from '../../shared';
+import { FeedContext } from './feed.context';
 
 export default function Feed() {
   const dispatch = useDispatch();
@@ -27,8 +25,6 @@ export default function Feed() {
   const getChat = useSelector(getChatById);
 
   const byMyself = useSelector(getByMyself);
-
-  const loadMessage = useSelector(getLoadMessage);
 
   const displayMessages = useMemo(
     () =>
@@ -67,6 +63,7 @@ export default function Feed() {
   }
 
   function renderMessageByIndex(index: number) {
+    // eslint-disable-next-line security/detect-object-injection
     const message = displayMessages[index];
 
     if (!message) return null;
@@ -93,15 +90,5 @@ export default function Feed() {
 
   const renderFeed = () => <List renderItem={renderMessageByIndex} />;
 
-  return (
-    <MainSection>
-      {ifTrue(
-        !displayMessages.length,
-        <div className={classes.loading}>
-          <p className='p4'>{loadMessage}</p>
-        </div>,
-      )}
-      {ifTrue(displayMessages.length, renderFeed)}
-    </MainSection>
-  );
+  return <MainSection>{ifTrue(displayMessages.length, renderFeed)}</MainSection>;
 }

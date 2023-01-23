@@ -1,7 +1,6 @@
 import { logger, makeMatch, R } from '@mv-d/toolbelt';
 import { Dispatch, SetStateAction } from 'react';
 
-import { CONFIG } from '../../config';
 import {
   useDispatch,
   updateAuthPasswordHint,
@@ -10,36 +9,25 @@ import {
   updateUser,
   updateUserFullInfo,
 } from '../../store';
-import { isDebugLogging } from '../../tools';
-import { TUpdates, TUpdateSelectedBackground } from './types';
+import { TUpdates } from './types';
 
 export function useUpdate({ setEvent }: { setEvent: Dispatch<SetStateAction<TUpdates | undefined>> }) {
   const dispatch = useDispatch();
 
-  // const getChat = useSelector(getChatById);
-
-  // const getUser = useSelector(getUserById);
-
-  // function handleMessages(update: TUpdateNewMessage) {
-  //   if (update['@type'] === 'updateNewMessage') {
-  //     R.compose(dispatch, addMessage)(update.message);
-  //   }
-  //   // eslint-disable-next-line no-console
-  //   else console.log('handleMessages', update);
-  // }
-
-  function handleBackground(update: TUpdateSelectedBackground) {
-    R.compose(
-      dispatch,
-      setOption,
-    )({
+  function handleBackground(update: TUpdates) {
+    const value: TUpdates = {
       ...update,
+      // FIXME
+      // @ts-ignore -- temp
       name: 'for_dark_theme',
       value: {
         '@type': 'optionValueBoolean',
+        // @ts-ignore -- temp
         value: update['for_dark_theme'],
       },
-    });
+    };
+
+    R.compose(dispatch, setOption)(value);
   }
 
   function handleAuthState(event: TUpdates) {
@@ -50,16 +38,24 @@ export function useUpdate({ setEvent }: { setEvent: Dispatch<SetStateAction<TUpd
     }
   }
 
-  const matchUpdate = makeMatch(
+  function log(event: TUpdates) {
+    // eslint-disable-next-line no-console
+    console.log(event['@type'], event);
+  }
+
+  const matchUpdate = makeMatch<(e: TUpdates) => void>(
     {
       updateAuthorizationState: handleAuthState,
       updateNewMessage: R.compose(dispatch, addNewMessage),
-      updateDeleteMessages: logger.dir,
+      updateDeleteMessages: log,
       updateOption: R.compose(dispatch, setOption),
       updateSelectedBackground: handleBackground,
       updateUser: R.compose(dispatch, updateUser),
       updateUserFullInfo: R.compose(dispatch, updateUserFullInfo),
-      // updateNewChat: (event: TUpdateNewChat) => R.compose(dispatch, addChat)(event.chat),
+      updateConnectionState: log,
+      updateChatFilters: log,
+      updateBasicGroup: log,
+      updateHavePendingNotifications: log,
     },
     (event: TUpdates) =>
       // isDebugLogging(CONFIG) &&
