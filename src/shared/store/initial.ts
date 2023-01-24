@@ -17,4 +17,5 @@ export const INITIAL_STATE: State = {
   chatIds: [],
   isRestored: false,
   isInitialized: false,
+  lastMessages: [],
 };

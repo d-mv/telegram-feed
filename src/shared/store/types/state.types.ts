@@ -25,4 +25,5 @@ export interface State {
   chatIds: number[];
   isRestored: boolean;
   isInitialized: boolean;
+  lastMessages: TMessage[];
 }

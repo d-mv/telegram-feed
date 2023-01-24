@@ -5,14 +5,14 @@ import {
   StorageService,
   TChat,
   TMessage,
-  TOptions,
   TSupergroup,
+  TUpdateNewChat,
   TUpdateNewMessage,
   TUpdateOption,
+  TUpdates,
   TUpdateUser,
   TUpdateUserFullInfo,
   TUser,
-  TUserFullInfo,
 } from '../entities';
 import { INITIAL_STATE } from './initial';
 import { Action, MappedReducerFns, StateActions, SelectedChatId, StateUser, UpdateUserFullInfo } from './types';
@@ -66,6 +66,9 @@ MAP.set(StateActions.SET_LOAD_MESSAGE, (state, action: Action<string>) => {
 MAP.set(StateActions.ADD_NEW_MESSAGE, (state, action: Action<TUpdateNewMessage>) => {
   if (!action.payload) return state;
 
+  // don't add comments
+  if (action.payload.message.message_thread_id) return state;
+
   if (state.chatIds.includes(action.payload.message.chat_id)) {
     return R.assoc('chatMessages', [...state.chatMessages, action.payload.message], state);
   }
@@ -76,7 +79,7 @@ MAP.set(StateActions.ADD_NEW_MESSAGE, (state, action: Action<TUpdateNewMessage>)
 MAP.set(StateActions.SET_CHAT_IDS, (state, action: Action<number[]>) => {
   if (!action.payload) return state;
 
-  StorageService.set('chatIds', action.payload);
+  StorageService.remove('chatIds');
   return R.assoc('chatIds', action.payload, state);
 });
 
@@ -140,6 +143,42 @@ MAP.set(StateActions.UPDATE_USER_FULL_INFO, (state, action: Action<TUpdateUserFu
   return R.assoc('users', state.users.map(updateUser), state);
 });
 
+MAP.set(StateActions.ADD_CHAT, (state, action: Action<TChat>) => {
+  const { payload } = action;
+
+  if (!payload) return state;
+
+  // don't add "chats" for channels
+  if (payload.type['@type'] !== 'chatTypePrivate' && !payload.type.is_channel) return state;
+
+  if (!state.chatIds.includes(payload.id)) return state;
+
+  return R.assoc('chats', [...state.chats.filter(c => c.id !== payload.id), payload], state);
+});
+
+MAP.set(StateActions.ADD_LAST_MESSAGE, (state, action: Action<TUpdates>) => {
+  const { payload } = action;
+
+  if (!payload) return state;
+
+  if (payload['@type'] !== 'updateChatLastMessage') return state;
+
+  if (payload.last_message.message_thread_id) return state;
+
+  const existingMessage = state.chatMessages.find(m => m.id === payload.last_message.id);
+
+  if (existingMessage) return state;
+
+  return R.assoc('chatMessages', [...state.chatMessages, payload.last_message], state);
+});
+
+MAP.set(StateActions.CLEAR_LAST_MESSAGES, state => {
+  return state;
+  // const chatMessages = state.lastMessages.filter(message => state.chatIds.includes(message.chat_id));
+
+  // return { ...state, lastMessages: [], chatMessages };
+});
+
 // review
 
 // MAP.set(
@@ -167,7 +206,9 @@ MAP.set(StateActions.UPDATE_SUPERGROUP, (state, action: Action<TSupergroup>) => 
 MAP.set(StateActions.ADD_MESSAGES, (state, action: Action<TMessage[]>) => {
   if (!action.payload) return state;
 
-  const noThreadMessages = action.payload.filter(m => m.message_thread_id === 0);
+  const noThreadMessages = action.payload
+    .filter(m => m.message_thread_id === 0)
+    .filter(m => state.chatIds.includes(m.chat_id));
 
   const ids = noThreadMessages.map(m => m.id);
 
@@ -176,39 +217,12 @@ MAP.set(StateActions.ADD_MESSAGES, (state, action: Action<TMessage[]>) => {
   filteredMessages.push(...noThreadMessages);
 
   return R.assoc('chatMessages', filteredMessages, state);
-  // const threadId = action.payload.message_thread_id;
-
-  // if (threadId === 0) {
-  //   const messages = state.chatMessages;
-
-  //   const filteredMessages = messages.filter(message => message.id !== action.payload?.id);
-
-  //   filteredMessages.push(action.payload);
-
-  //   return R.assoc('chatMessages', filteredMessages, state);
-  // } else {
-  // const messages = state.threadMessages.get(threadId) || [];
-
-  // const filteredMessages = messages.filter(m => m.id !== action.payload?.id);
-
-  // const newMessages = [...filteredMessages, action.payload];
-
-  // return R.assoc('threadMessages', state.threadMessages.set(threadId, newMessages), state);
-  // }
 });
 
 MAP.set(StateActions.SET_CURRENT_USER_ID, (state, action: Action<number>) => {
   if (!action.payload) return R.assoc('currentUserId', 0, state);
 
   return R.assoc('currentUserId', action.payload, state);
-});
-
-MAP.set(StateActions.ADD_CHAT, (state, action: Action<TChat>) => {
-  const { payload } = action;
-
-  if (!payload) return state;
-
-  return R.assoc('chats', [...state.chats.filter(chat => chat.id !== payload.id), payload], state);
 });
 
 MAP.set(StateActions.UPDATE_AUTH_PASSWORD_HINT, (state, action: Action<TChat>) => {

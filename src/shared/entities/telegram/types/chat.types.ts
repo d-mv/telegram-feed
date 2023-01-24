@@ -28,6 +28,11 @@ export interface TChatTypeSupergroup {
   is_channel: boolean;
 }
 
+export interface TChatTypePrivate {
+  '@type': 'chatTypePrivate';
+  user_id: number;
+}
+
 export interface TChatPhotoInfo extends TPhoto {
   '@type': 'chatPhotoInfo';
 }
@@ -60,7 +65,7 @@ export interface TChat {
   reply_markup_message_id: number;
   theme_name: string;
   title: string;
-  type: TChatTypeSupergroup;
+  type: TChatTypeSupergroup | TChatTypePrivate;
   unread_count: number;
   unread_mention_count: number;
   video_chat: TVideotChat;

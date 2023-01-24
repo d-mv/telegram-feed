@@ -1,30 +1,32 @@
-import { AnyValue } from '@mv-d/toolbelt';
+import { AnyValue, logger, none, Option, Optional, some } from '@mv-d/toolbelt';
 import TdClient, { TdOptions } from 'tdweb';
+import { CONFIG } from '../../config';
+import { isDebugLogging } from '../../tools';
+
+const { id, hash } = CONFIG.api;
+
+export interface TelegramSendParams {
+  type: string;
+  [key: string]: unknown;
+}
 
 export type JsLogVerbosityLevel = 'error' | 'warning' | 'info' | 'log' | 'debug' | undefined;
 
 export interface TelegramServiceArgs extends TdOptions {
-  apiId: string;
-  apiHash: string;
   onUpdate: (update: AnyValue) => void;
   logVerbosityLevel?: number | undefined;
   jsLogVerbosityLevel?: JsLogVerbosityLevel;
 }
 
-export class TelegramService {
-  client: TdClient;
+export class TelegramServiceClass {
+  client: Optional<TdClient>;
 
-  constructor(args: TelegramServiceArgs) {
-    this.client = this.#init(args);
-    this.#setParameters(args.apiId, args.apiHash);
-  }
-
-  #init({ onUpdate, logVerbosityLevel, jsLogVerbosityLevel }: TelegramServiceArgs) {
-    const client = new TdClient({
+  init({ onUpdate, logVerbosityLevel, jsLogVerbosityLevel }: TelegramServiceArgs) {
+    this.client = new TdClient({
       // @ts-ignore -- temp
       useTestDC: false,
       readOnly: false,
-      verbosity: 3,
+      verbosity: 1000,
       jsVerbosity: 3,
       fastUpdating: true,
       useDatabase: false,
@@ -35,15 +37,15 @@ export class TelegramService {
       onUpdate,
     });
 
-    return client;
+    this.#setParameters();
   }
 
-  #setParameters(apiId: string, apiHash: string) {
+  #setParameters() {
     const parameters = {
       '@type': 'tdParameters',
       use_test_dc: false,
-      api_id: apiId,
-      api_hash: apiHash,
+      api_id: id,
+      api_hash: hash,
       system_language_code: navigator.language || 'en',
       device_model: 'Telegram Feed',
       application_version: '0.1',
@@ -53,6 +55,25 @@ export class TelegramService {
       files_directory: '/',
     };
 
-    this.client.send({ '@type': 'setTdlibParameters', parameters });
+    this.client?.send({ '@type': 'setTdlibParameters', parameters });
+    this.client?.send({ '@type': 'getOption', name: 'my_id' });
+  }
+
+  async send<R>({ type, ...args }: TelegramSendParams): Promise<Option<R>> {
+    if (!this.client) return none(new Error('Client is not initialized'));
+
+    try {
+      const r = (await this.client.send({ '@type': type, ...args })) as R;
+
+      return some(r);
+    } catch (err) {
+      // if (isDebugLogging(CONFIG)) logger.error(err, 'Send error');
+      // eslint-disable-next-line no-console
+      console.log(err, type, args);
+
+      return none(err as Error);
+    }
   }
 }
+
+export const TelegramService = new TelegramServiceClass();

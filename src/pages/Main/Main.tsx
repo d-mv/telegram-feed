@@ -2,7 +2,7 @@ import { ifTrue, R } from '@mv-d/toolbelt';
 import { useEffect } from 'react';
 
 import { Chat, Feed } from '../../domains';
-import { getSelectedChat, LazyLoad, restoreState, useDispatch, useSelector, useTelegram } from '../../shared';
+import { getSelectedChat, LazyLoad, restoreState, useChats, useDispatch, useSelector, useTelegram } from '../../shared';
 import { Container } from './Container';
 import { Header } from './Header';
 
@@ -12,6 +12,7 @@ export default function Main() {
   const dispatch = useDispatch();
 
   useTelegram();
+  useChats();
 
   useEffect(() => {
     R.compose(dispatch, restoreState)();

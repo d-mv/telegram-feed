@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useContextSelector } from 'use-context-selector';
 
 import {
@@ -15,6 +15,11 @@ import {
   CardFooterSection,
   CardPhoto,
   MaybeNull,
+  useSender,
+  useSelector,
+  getSenderFromMsg,
+  getChatById,
+  useTelegram,
 } from '../..';
 import { FeedContext } from '../../../domains/feed/feed.context';
 import classes from './MessageText.module.scss';
@@ -24,7 +29,19 @@ const VALID_MESSAGE_TYPES = ['messagePhoto', 'messageText'];
 export function MessageText() {
   const [message, onClick, isChat] = useContextSelector(FeedContext, c => [c.message, c.onCardClick, c.isChat]);
 
-  const { sender, getRelativeMessageDate, isMyMessage } = useMessage(message, isChat);
+  const { getRelativeMessageDate, isMyMessage } = useMessage(message, isChat);
+
+  const getSender = useSelector(getSenderFromMsg);
+
+  const getChatSelector = useSelector(getChatById);
+
+  // const getSender = useSelector()
+  // const { sender } = useSender(message, isChat);
+  const sender = useMemo(() => getSender(message), [getSender, message]);
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.log('sender', sender);
+  // }, [sender]);
 
   const text = useTextProcessor(message.content);
 

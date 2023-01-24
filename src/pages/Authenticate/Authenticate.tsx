@@ -7,7 +7,7 @@ import { Container } from './Container';
 import { Passcode } from './Passcode';
 
 export default function Authenticate() {
-  const [event, client] = useContextSelector(TelegramContext, c => [c.event, c.client]);
+  const [event] = useContextSelector(TelegramContext, c => [c.event]);
 
   const state = authorizationState(event);
 
@@ -20,10 +20,10 @@ export default function Authenticate() {
   const authenticate = handleAuthentication(qr.current);
 
   useEffect(() => {
-    if (client && event && 'authorization_state' in event) {
+    if (event && 'authorization_state' in event) {
       authenticate();
     }
-  }, [authenticate, client, event]);
+  }, [authenticate, event]);
 
   function renderQr() {
     return (

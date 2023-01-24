@@ -11,6 +11,7 @@ export enum StateActions {
   ADD_NEW_MESSAGE = 'addNewMessage',
   ADD_MESSAGES = 'addMessages',
   ADD_CHAT = 'addChat',
+  ADD_CHAT_FROM_EVENT = 'addChatFromEvent',
   UPDATE_CHAT = 'updateChat',
   UPDATE_AUTH_PASSWORD_HINT = 'updateAuthPasswordHint',
   CLEAR_FILTERS = 'clearFilters',
@@ -23,4 +24,6 @@ export enum StateActions {
   SET_LOAD_MESSAGE = 'setLoadMessage',
   SET_CHAT_IDS = 'setChatIds',
   SET_IS_INITIALIZED = 'setIsInitialized',
+  ADD_LAST_MESSAGE = 'addLastMessage',
+  CLEAR_LAST_MESSAGES = 'clearLastMessages',
 }

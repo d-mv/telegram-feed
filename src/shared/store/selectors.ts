@@ -1,3 +1,5 @@
+import { TMessage } from '../entities';
+import { getSenderFromMessage } from '../tools';
 import { State } from './types';
 
 export const getNotifications = (state: State) => state.notifications;
@@ -30,10 +32,23 @@ export const getMessagesForSelectedChat = (state: State) => {
     .sort((a, b) => b.date - a.date);
 };
 
+export const getChats = (state: State) => state.chats;
+
 export const getChatById = (state: State) => (id: number) => state.chats.find(chat => chat.id === id);
 
 export const getUserById = (state: State) => (id: number) =>
   (state.myself && state.myself.id) === id ? state.myself : state.users.find(user => user.id === id);
+
+export const getSenderFromMsg =
+  (state: State) =>
+  (message: TMessage, isChat = false) =>
+    getSenderFromMessage({
+      isChat,
+      message,
+      getChat: getChatById(state),
+      getUser: getUserById(state),
+      myself: state.myself,
+    });
 
 export const getAuthPasswordHint = (state: State) => state.authPasswordHint;
 

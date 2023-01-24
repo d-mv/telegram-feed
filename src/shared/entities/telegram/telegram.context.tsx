@@ -1,6 +1,5 @@
-import { AnyValue, Optional, R, as, logger, Option, some, none } from '@mv-d/toolbelt';
+import { AnyValue, Optional, R, as, logger } from '@mv-d/toolbelt';
 import { useCallback, useEffect, useState } from 'react';
-import TdClient from 'tdweb';
 import { createContext } from 'use-context-selector';
 
 import { CONFIG } from '../../config';
@@ -10,18 +9,9 @@ import { JsLogVerbosityLevel, TelegramService } from './telegram.service';
 import { TUpdates, TUser } from './types';
 import { useUpdate } from './useUpdate.hook';
 
-const { id, hash } = CONFIG.api;
-
-export interface TelegramSendParams {
-  type: string;
-  [key: string]: unknown;
-}
-
 export interface TelegramContextType {
   event: Optional<TUpdates>;
-  client: TdClient;
   authEvent: Optional<TUpdates>;
-  send: <R>(args: TelegramSendParams) => Promise<Option<R>>;
 }
 
 export const TelegramContext = R.compose(createContext<TelegramContextType>, as<TelegramContextType>)({});
@@ -37,33 +27,9 @@ export function TelegramProvider(props: AnyValue) {
 
   const dispatch = useDispatch();
 
-  const [client, setClient] = useState<AnyValue>();
-
   const mySelf = useSelector(getMyself);
 
   const myId = useSelector(getMyId);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  async function send<R>({ type, ...args }: TelegramSendParams): Promise<Option<R>> {
-    try {
-      const data = (await client.send({ '@type': type, ...args })) as R;
-
-      return some(data);
-    } catch (err) {
-      if (isDebugLogging(CONFIG)) logger.error(err, 'Send error');
-
-      return none(err as Error);
-    }
-  }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchUser = useCallback(async (user_id: number) => await send<TUser>({ type: 'getUser', user_id }), []);
-
-  const fetchMyself = useCallback(async () => {
-    const result = await fetchUser(myId);
-
-    if (result.isSome) R.compose(dispatch, setMyself)(result.payload);
-  }, [dispatch, fetchUser, myId]);
 
   const onUpdate = useCallback((event: TUpdates) => {
     const type = event['@type'];
@@ -73,7 +39,6 @@ export function TelegramProvider(props: AnyValue) {
 
     if ('authorization_state' in event) setAuthEvent(event);
 
-    if (type === 'updateOption' && event.name === 'my_id' && !mySelf) fetchMyself();
     // matchUpdate is not memoized, so we need to disable the exhaustive-deps rule
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -90,30 +55,23 @@ export function TelegramProvider(props: AnyValue) {
       jsLogVerbosityLevel = 'debug';
     }
 
-    setClient(
-      new TelegramService({
-        apiId: id,
-        apiHash: hash,
-        onUpdate,
-        logVerbosityLevel,
-        jsLogVerbosityLevel,
-      }).client,
-    );
+    TelegramService.init({
+      onUpdate,
+      logVerbosityLevel,
+      jsLogVerbosityLevel,
+    });
   }, [onUpdate]);
 
-  // async function send<R>({ type, ...args }: TelegramSendParams): Promise<Option<R>> {
-  //   try {
-  //     const r = (await client.send({ '@type': type, ...args })) as R;
+  useEffect(() => {
+    async function fetchMyself() {
+      const maybeMyself = await TelegramService.send<TUser>({ type: 'getUser', user_id: myId });
 
-  //     return some(r);
-  //   } catch (err) {
-  //     if (isDebugLogging(CONFIG)) logger.error(err, 'Send error');
+      if (maybeMyself.isSome) R.compose(dispatch, setMyself)(maybeMyself.payload);
+    }
 
-  //     return none(err as Error);
-  //   }
-  // }
+    if (myId && !mySelf) fetchMyself();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mySelf, myId, dispatch]);
 
-  return (
-    <TelegramContext.Provider value={{ event, client, send, authEvent }}>{props.children}</TelegramContext.Provider>
-  );
+  return <TelegramContext.Provider value={{ event, authEvent }}>{props.children}</TelegramContext.Provider>;
 }

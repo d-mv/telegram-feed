@@ -3,22 +3,16 @@ import { R } from '@mv-d/toolbelt';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs, { extend } from 'dayjs';
 
-import { TMessage } from '../entities';
+import { TMessage, useTelegram } from '../entities';
 import { useSelector, getChatById, getUserById, getMyself } from '../store';
 import { getSenderFromMessage } from '../tools';
 
 extend(relativeTime);
 
 export function useMessage(message: TMessage, isChat = false) {
-  const myself = useSelector(getMyself);
-
-  const getChat = useSelector(getChatById);
-
-  const getUser = useSelector(getUserById);
-
   const messageDate = useMemo(() => message.date * 1000, [message]);
 
-  const sender = getSenderFromMessage({ isChat, message, getChat, getUser, myself });
+  const myself = useSelector(getMyself);
 
   const getRelativeMessageDate = () => dayjs(messageDate).fromNow();
 
@@ -30,5 +24,5 @@ export function useMessage(message: TMessage, isChat = false) {
     [myself, message],
   );
 
-  return { messageDate, sender, getRelativeMessageDate, isMyMessage };
+  return { messageDate, getRelativeMessageDate, isMyMessage };
 }

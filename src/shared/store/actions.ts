@@ -49,6 +49,11 @@ export const addUserFullInfo = (payload: UpdateUserFullInfo): Action<UpdateUserF
   payload,
 });
 
+export const addLastMessage = (payload: TUpdates): Action<TUpdates> => ({
+  type: StateActions.ADD_LAST_MESSAGE,
+  payload,
+});
+
 export const updateUserFullInfo = (payload: TUpdates): Action<TUpdates> => ({
   type: StateActions.UPDATE_USER_FULL_INFO,
   payload,
@@ -66,6 +71,11 @@ export const updateSuperGroupFullInfo = (payload: TSupergroupFullInfo): Action<T
 });
 
 export const addMessages = (payload: TMessage[]): Action<TMessage[]> => ({ type: StateActions.ADD_MESSAGES, payload });
+
+export const addChatFromEvent = (payload: TUpdates): Action<TUpdates> => ({
+  type: StateActions.ADD_CHAT_FROM_EVENT,
+  payload,
+});
 
 export const addChat = (payload: TChat): Action<TChat> => ({ type: StateActions.ADD_CHAT, payload });
 
