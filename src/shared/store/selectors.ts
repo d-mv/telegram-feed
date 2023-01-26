@@ -1,4 +1,5 @@
-import { R } from '@mv-d/toolbelt';
+import { last } from 'ramda';
+
 import { TMessage } from '../entities';
 import { getSenderFromMessage } from '../tools';
 import { State } from './types';
@@ -12,7 +13,7 @@ export const getByMyself = (state: State) => (id: number) => state.myself && sta
 export const getChatIds = (state: State) => state.chats.map(chat => chat.id);
 
 export const getLastMessageForChat = (state: State) => (chatId: number) =>
-  R.last(state.messages.filter(message => message.chat_id === chatId).sort((a, b) => b.date - a.date));
+  last(state.messages.filter(message => message.chat_id === chatId).sort((a, b) => b.date - a.date));
 
 export const getLastMessagesLoaded = (state: State) => state.lastMessagesLoaded;
 
