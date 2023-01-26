@@ -66,6 +66,12 @@ export interface TUpdateOption extends TUpdate {
   value: TOptionBoolean | TOptionInteger | TOptionString;
 }
 
+export interface TUpdateMyIdOption extends TUpdate {
+  '@type': 'updateOption';
+  name: 'my_id';
+  value: TOptionInteger;
+}
+
 export interface TUpdateSelectedBackground extends TUpdate {
   '@type': 'updateSelectedBackground';
   for_dark_theme: boolean;
@@ -88,5 +94,5 @@ export interface TUpdateDiceEmojis extends TUpdate {
 export interface TUpdateDarkTheme extends TUpdate {
   '@type': 'for_dark_theme';
   name: TOption;
-  value: TOptionBoolean | TOptionInteger | TOptionString;
+  value: TOptionBoolean;
 }

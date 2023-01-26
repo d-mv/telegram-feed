@@ -18,4 +18,5 @@ export const INITIAL_STATE: State = {
   isRestored: false,
   isInitialized: false,
   lastMessages: [],
+  lastMessagesLoaded: false,
 };

@@ -26,4 +26,5 @@ export interface State {
   isRestored: boolean;
   isInitialized: boolean;
   lastMessages: TMessage[];
+  lastMessagesLoaded: boolean;
 }

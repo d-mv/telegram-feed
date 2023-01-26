@@ -1,4 +1,5 @@
-import { as, R } from '@mv-d/toolbelt';
+import { as } from '@mv-d/toolbelt';
+import { compose } from 'ramda';
 import { MouseEvent } from 'react';
 import { createContext } from 'use-context-selector';
 import { TMessage } from '../../shared';
@@ -10,6 +11,6 @@ export interface FeedContextType {
   onCardClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
-export const FeedContext = R.compose(createContext<FeedContextType>, as<FeedContextType>)({});
+export const FeedContext = compose(createContext<FeedContextType>, as<FeedContextType>)({});
 
 FeedContext.displayName = 'FeedContext';

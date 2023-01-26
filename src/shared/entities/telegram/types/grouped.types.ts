@@ -17,6 +17,7 @@ import {
   TUpdateVideoChat,
 } from './chat.types';
 import { TUpdateChatThemes } from './chatTheme.types';
+import { TUpdateOk } from './event.types';
 import { TUpdateDeleteMessages, TUpdateMessageInteractionInfo, TUpdateNewMessage } from './message.types';
 import {
   TUpdateHavePendingNotifications,
@@ -28,13 +29,34 @@ import {
   TUpdateConnState,
   TUpdateDarkTheme,
   TUpdateDiceEmojis,
+  TUpdateMyIdOption,
   TUpdateOption,
   TUpdateSelectedBackground,
 } from './settings.types';
 import { TUpdateSupergroup, TUpdateSupergroupFullInfo } from './supergroup.types';
 import { TUpdateUser, TUpdateUserFullInfo } from './user.types';
 
+export type TAuthUpdates =
+  | TAuthorizationStateClosed
+  | TAuthorizationStateReady
+  | TUpdateAuthorizationState
+  | TUpdateWaitEncryptionKey
+  | TUpdateWaitOtherDeviceConfirmation
+  | TUpdateWaitPassword
+  | TUpdateWaitPhoneNumber;
+
+export type TAuthUpdatesTypes = TAuthUpdates['@type'];
+
 export type TUpdates =
+  | TUpdateOk
+  | TAuthorizationStateClosed
+  | TAuthorizationStateReady
+  | TUpdateAuthorizationState
+  | TUpdateWaitEncryptionKey
+  | TUpdateWaitOtherDeviceConfirmation
+  | TUpdateWaitPassword
+  | TUpdateWaitPhoneNumber
+  | TUpdateMyIdOption
   | TUpdateDarkTheme
   | TAuthorizationStateClosed
   | TAuthorizationStateReady

@@ -1,27 +1,20 @@
-import { ifTrue, R } from '@mv-d/toolbelt';
-import { useEffect } from 'react';
+import { ifTrue } from '@mv-d/toolbelt';
+import { useRecoilValue } from 'recoil';
+import { useGetChats } from '../../app/useGetChats.hook';
 
 import { Chat, Feed } from '../../domains';
-import { getSelectedChat, LazyLoad, restoreState, useChats, useDispatch, useSelector, useTelegram } from '../../shared';
+import { LazyLoad, selectedChatSelector } from '../../shared';
 import { Container } from './Container';
 import { Header } from './Header';
 
+const renderChat = () => <Chat />;
+
+const renderFeed = () => <Feed />;
+
 export default function Main() {
-  const selectedChat = useSelector(getSelectedChat);
+  const selectedChat = useRecoilValue(selectedChatSelector);
 
-  const dispatch = useDispatch();
-
-  useTelegram();
-  useChats();
-
-  useEffect(() => {
-    R.compose(dispatch, restoreState)();
-  }, [dispatch]);
-
-  const renderChat = () => <Chat />;
-
-  const renderFeed = () => <Feed />;
-
+  useGetChats();
   return (
     <Container>
       <Header />

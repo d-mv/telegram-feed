@@ -1,8 +1,10 @@
-import { getLoadMessage, useSelector } from '../../../shared';
+import { useRecoilValue } from 'recoil';
+
+import { loadingMessageSelector } from '../../../shared';
 import classes from './LoadMessage.module.scss';
 
 export function LoadMessage() {
-  const loadMessage = useSelector(getLoadMessage);
+  const loadMessage = useRecoilValue(loadingMessageSelector);
 
   if (!loadMessage) return null;
 

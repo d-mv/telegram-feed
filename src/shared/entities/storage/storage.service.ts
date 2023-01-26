@@ -1,4 +1,6 @@
-import { RecordObject, R, AnyValue, logger } from '@mv-d/toolbelt';
+import { RecordObject, AnyValue, logger } from '@mv-d/toolbelt';
+import { compose } from 'ramda';
+
 import { CONFIG } from '../../config';
 import { isDebugLogging } from '../../tools';
 import { MaybeNull } from '../../types';
@@ -31,10 +33,10 @@ class Storage {
   #init() {
     const data = window.localStorage.getItem('telefeed');
 
-    this.#state = R.compose(toMap, this.#decrypt)(data);
+    this.#state = compose(toMap, this.#decrypt)(data);
 
     if (isDebugLogging(CONFIG))
-      R.compose(logger.info, (s: string) => `Restored state ${s}`, JSON.stringify, fromMap)(this.#state);
+      compose(logger.info, (s: string) => `Restored state ${s}`, JSON.stringify, fromMap)(this.#state);
   }
 
   #decrypt(data: MaybeNull<string>): RecordObject<string> {
@@ -49,22 +51,22 @@ class Storage {
   }
 
   #updateLocalStorage() {
-    window.localStorage.setItem('telefeed', R.compose(JSON.stringify, fromMap)(this.#state));
+    window.localStorage.setItem('telefeed', compose(JSON.stringify, fromMap)(this.#state));
   }
 
-  set(key: string, value: AnyValue) {
+  set = (key: string, value: AnyValue) => {
     this.#state.set(key, value);
     this.#updateLocalStorage();
-  }
+  };
 
-  get(key: string) {
+  get = (key: string) => {
     return this.#state.get(key) || '';
-  }
+  };
 
-  remove(key: string) {
+  remove = (key: string) => {
     this.#state.delete(key);
     this.#updateLocalStorage();
-  }
+  };
 
   get state() {
     return fromMap(this.#state);

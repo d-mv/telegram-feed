@@ -148,8 +148,12 @@ MAP.set(StateActions.ADD_CHAT, (state, action: Action<TChat>) => {
 
   if (!payload) return state;
 
-  // don't add "chats" for channels
-  if (payload.type['@type'] !== 'chatTypePrivate' && !payload.type.is_channel) return state;
+  // // don't add "chats" for channels
+  // if (payload.type['@type'] !== 'chatTypePrivate' && !payload.type.is_channel) {
+  //   // eslint-disable-next-line no-console
+  //   console.log('add chat', action.payload);
+  //   return state;
+  // }
 
   if (!state.chatIds.includes(payload.id)) return state;
 
@@ -165,18 +169,17 @@ MAP.set(StateActions.ADD_LAST_MESSAGE, (state, action: Action<TUpdates>) => {
 
   if (payload.last_message.message_thread_id) return state;
 
-  const existingMessage = state.chatMessages.find(m => m.id === payload.last_message.id);
+  const existingMessage = state.lastMessages.find(m => m.id === payload.last_message.id);
 
   if (existingMessage) return state;
 
-  return R.assoc('chatMessages', [...state.chatMessages, payload.last_message], state);
+  return R.assoc('lastMessages', [...state.lastMessages, payload.last_message], state);
 });
 
-MAP.set(StateActions.CLEAR_LAST_MESSAGES, state => {
-  return state;
-  // const chatMessages = state.lastMessages.filter(message => state.chatIds.includes(message.chat_id));
+MAP.set(StateActions.MAIN_CHATS_LOADED, state => {
+  const chatMessages = state.lastMessages.filter(message => state.chatIds.includes(message.chat_id));
 
-  // return { ...state, lastMessages: [], chatMessages };
+  return { ...state, lastMessages: [], chatMessages, lastMessagesLoaded: true };
 });
 
 // review

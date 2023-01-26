@@ -1,45 +1,47 @@
-import { ifTrue, logger, R } from '@mv-d/toolbelt';
+import { ifTrue, logger } from '@mv-d/toolbelt';
 import { MouseEvent, useMemo } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
   CONFIG,
-  getByMyself,
-  getChatById,
-  getFeedMessages,
   isDebugLogging,
   List,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
   MessageDivider,
-  setSelectedChatId,
-  useDispatch,
-  useSelector,
+  messagesSelector,
+  myselfSelector,
+  selectedChatSelector,
+  useChats,
 } from '../../shared';
 import { FeedContext } from './feed.context';
 
 export default function Feed() {
-  const dispatch = useDispatch();
+  const messages = useRecoilValue(messagesSelector);
 
-  const messages = useSelector(getFeedMessages);
+  const myself = useRecoilValue(myselfSelector);
 
-  const getChat = useSelector(getChatById);
+  const setSelectedChatId = useSetRecoilState(selectedChatSelector);
 
-  const byMyself = useSelector(getByMyself);
+  const { getChatById } = useChats();
 
   const displayMessages = useMemo(
     () =>
       messages
         .filter(message => {
+          if (!myself) return false;
+
           // don't show comments to thread and messages from myself
           if (message.message_thread_id !== 0) return false;
 
-          if (message.sender_id['@type'] === 'messageSenderUser' && byMyself(message.sender_id.user_id)) return false;
+          if (message.sender_id['@type'] === 'messageSenderUser' && message.sender_id.user_id === myself.id)
+            return false;
 
           return true;
         })
         .sort((a, b) => b.date - a.date),
 
-    [byMyself, messages],
+    [messages, myself],
   );
 
   function handleClick(chatId: number) {
@@ -53,12 +55,12 @@ export default function Feed() {
           e.stopPropagation();
 
           if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
-
-          return;
         }
       }
 
-      R.compose(dispatch, setSelectedChatId)({ id: chatId, title: getChat(chatId)?.title || '' });
+      const chat = getChatById(chatId);
+
+      if (chat) setSelectedChatId({ id: chatId, title: chat.title || '' });
     };
   }
 

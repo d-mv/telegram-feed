@@ -8,6 +8,6 @@ export * from './useTelegram.hook';
 
 export * from './telegram.service';
 
-export * from './useAuthentication';
+export * from '../../hooks/useChats.hook';
 
-export * from './useChats.hook';
+export * from './telegram.data';

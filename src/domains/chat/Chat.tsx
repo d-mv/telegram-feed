@@ -1,23 +1,29 @@
 import { logger } from '@mv-d/toolbelt';
 import { useEffect, useMemo, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
+
 import {
   CONFIG,
-  getMessagesForSelectedChat,
   isDebugLogging,
   List,
   MainCenter,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
   MaybeNull,
-  TMessage,
-  useSelector,
+  messagesSelector,
+  selectedChatSelector,
 } from '../../shared';
 import { FeedContext } from '../feed/feed.context';
 
 export default function Chat() {
-  const messages = useSelector(getMessagesForSelectedChat);
+  const selectedChat = useRecoilValue(selectedChatSelector);
 
-  const displayMessages = useMemo(() => messages.reverse(), [messages]);
+  const messages = useRecoilValue(messagesSelector);
+
+  const displayMessages = useMemo(
+    () => messages.filter(m => m.chat_id === selectedChat?.id).reverse(),
+    [messages, selectedChat?.id],
+  );
 
   const bottomRef = useRef<MaybeNull<HTMLElement>>(null);
 

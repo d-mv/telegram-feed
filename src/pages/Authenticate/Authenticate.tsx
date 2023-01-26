@@ -1,29 +1,28 @@
-import { ifTrue } from '@mv-d/toolbelt';
+import { ifTrue, logger } from '@mv-d/toolbelt';
 import { useEffect, useRef } from 'react';
-import { useContextSelector } from 'use-context-selector';
+import { useRecoilValue } from 'recoil';
 
-import { authorizationState, getMyself, MaybeNull, TelegramContext, useSelector, useTelegram } from '../../shared';
+import { authEventSelector, authorizationState, MaybeNull, myselfSelector } from '../../shared';
 import { Container } from './Container';
 import { Passcode } from './Passcode';
+import { useAuthentication } from './useAuthentication';
 
 export default function Authenticate() {
-  const [event] = useContextSelector(TelegramContext, c => [c.event]);
+  const event = useRecoilValue(authEventSelector);
 
   const state = authorizationState(event);
 
-  const currentUser = useSelector(getMyself);
+  const myself = useRecoilValue(myselfSelector);
 
   const qr = useRef<MaybeNull<HTMLDivElement>>(null);
 
-  const { handleAuthentication } = useTelegram();
-
-  const authenticate = handleAuthentication(qr.current);
+  const { handleAuthentication } = useAuthentication();
 
   useEffect(() => {
     if (event && 'authorization_state' in event) {
-      authenticate();
+      handleAuthentication(qr.current);
     }
-  }, [authenticate, event]);
+  }, [event, handleAuthentication]);
 
   function renderQr() {
     return (
@@ -34,7 +33,10 @@ export default function Authenticate() {
     );
   }
 
-  if (currentUser) return null;
+  if (myself) {
+    logger.info('Is authenticated, redirecting to main page...');
+    return null;
+  }
 
   return (
     <Container>

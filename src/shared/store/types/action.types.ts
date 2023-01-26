@@ -25,5 +25,5 @@ export enum StateActions {
   SET_CHAT_IDS = 'setChatIds',
   SET_IS_INITIALIZED = 'setIsInitialized',
   ADD_LAST_MESSAGE = 'addLastMessage',
-  CLEAR_LAST_MESSAGES = 'clearLastMessages',
+  MAIN_CHATS_LOADED = 'mainChatsLoaded',
 }

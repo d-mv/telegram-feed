@@ -1,21 +1,15 @@
 import { ifTrue } from '@mv-d/toolbelt';
 import { useRecoilValue } from 'recoil';
-
-import { LoadMessage, Notifications } from '../domains';
+import { Notifications, LoadMessage } from '../domains';
 import { Authenticate, Main } from '../pages';
-import { LazyLoad, myselfSelector, useSelectedChat } from '../shared';
-import { useConnect } from './useConnect.hook';
+import { myselfSelector, LazyLoad } from '../shared';
 
 const renderAuthenticate = () => <Authenticate />;
 
 const renderMain = () => <Main />;
 
-export function App() {
+export function Container() {
   const myself = useRecoilValue(myselfSelector);
-
-  useConnect();
-
-  useSelectedChat();
 
   return (
     <>

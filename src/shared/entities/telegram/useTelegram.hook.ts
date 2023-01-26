@@ -1,115 +1,65 @@
-import { useContextSelector } from 'use-context-selector';
-import QRCodeStyling from 'qr-code-styling';
-import { failure, logger, PromisedResult, R, success } from '@mv-d/toolbelt';
-import { useCallback, useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { compose, omit } from 'ramda';
+import { failure, logger, PromisedResult, success, toArray } from '@mv-d/toolbelt';
+import { useCallback } from 'react';
 
-import tg_logo from '../../assets/tg_logo.png';
-import { MaybeNull } from '../../types';
-import {
-  addChat,
-  addMessages,
-  addNotification,
-  addUser,
-  addUserFullInfo,
-  getChats,
-  getIsInitialized,
-  getLoadMessage,
-  getStateRestored,
-  setChatIds,
-  setIsInitialized,
-  setLoadMessage,
-  StateActions,
-  useDispatch,
-  useSelector,
-} from '../../store';
-import { TelegramContext } from './telegram.context';
+import { myselfSelector, notificationsSelector, StateUser, usersSelector } from '../../store';
 import { makeTErrorNotification } from './telegram.tools';
-import { TChat, TChats, TFilePart, TMessage, TMessages, TUser, TUserFullInfo } from './types';
+import { TFilePart, TUser, TUserFullInfo } from './types';
 import { isDebugLogging } from '../../tools';
 import { CONFIG } from '../../config';
-import { useDebounce } from '../../hooks';
 import { TelegramService } from './telegram.service';
 
 export function useTelegram() {
-  const [event] = useContextSelector(TelegramContext, c => [c.event]);
+  const setMyself = useSetRecoilState(myselfSelector);
 
-  const loadMessage = useSelector(getLoadMessage);
+  const setUser = useSetRecoilState(usersSelector);
 
-  const isRestored = useSelector(getStateRestored);
+  const setNotification = useSetRecoilState(notificationsSelector);
 
-  const isInitialized = useSelector(getIsInitialized);
+  // const getChatHistory = useCallback(
+  //   async (chat_id: number) => {
+  //     const messages: TMessage[] = [];
 
-  const dispatch = useDispatch();
+  //     const limit = 20;
+
+  //     // if (chat_id > 0) fetchUserById(chat_id);
+
+  //     while (messages.length < 20) {
+  //       // First call
+  //       const maybeMessages = await TelegramService.send<TMessages>({
+  //         type: 'getChatHistory',
+  //         chat_id,
+  //         from_message_id: messages.length ? messages[messages.length - 1].id : lastMessageForChat(chat_id)?.id || 0,
+  //         // offset: -limit + 1,
+  //         limit,
+  //         only_local: false,
+  //       });
+
+  //       if (maybeMessages.isNone) break;
+
+  //       if (maybeMessages.payload.total_count === 0) break;
+
+  //       messages.push(...maybeMessages.payload.messages);
+
+  //       // R.compose(dispatch, addMessages)(maybeMessages.payload.messages);
+
+  //       // if (loadMessage) R.compose(dispatch, setLoadMessage)('');
+  //     }
+  //   },
+  //   [loadMessage],
+  // );
 
   function submitPassword(password: string) {
     TelegramService.send({
       type: 'checkAuthenticationPassword',
       password,
     }).catch((err: unknown) => {
-      if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+      // eslint-disable-next-line no-console
+      console.error(err);
+
+      if (isDebugLogging(CONFIG)) compose(setNotification, toArray, makeTErrorNotification)(err);
     });
-  }
-
-  function handleAuthentication(container: MaybeNull<HTMLDivElement>) {
-    return async function call() {
-      if (!event) return;
-
-      if (!('authorization_state' in event)) return;
-
-      const type = event.authorization_state['@type'];
-
-      switch (type) {
-        // case 'authorizationStateClosed':
-
-        //   break;
-        case 'authorizationStateWaitEncryptionKey':
-          TelegramService.send({
-            type: 'checkDatabaseEncryptionKey',
-          }).catch((err: unknown) => {
-            if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
-          });
-
-          break;
-        case 'authorizationStateWaitPhoneNumber':
-          await TelegramService.send({
-            type: 'requestQrCodeAuthentication',
-            other_user_ids: [],
-          });
-          break;
-        case 'authorizationStateWaitOtherDeviceConfirmation':
-          if (!container) {
-            if (isDebugLogging(CONFIG)) logger.error('Container is not defined');
-
-            return;
-          }
-
-          // eslint-disable-next-line no-case-declarations
-          const qrCode = new QRCodeStyling({
-            width: 200,
-            height: 200,
-            data: event.authorization_state.link,
-            dotsOptions: {
-              color: '#1132b6',
-              type: 'square',
-            },
-            backgroundOptions: {
-              color: 'transparent',
-            },
-            image: tg_logo,
-            imageOptions: {
-              crossOrigin: 'anonymous',
-              margin: 6,
-            },
-          });
-
-          container.innerHTML = '';
-          qrCode.append(container);
-
-          break;
-        default:
-          break;
-      }
-    };
   }
 
   async function downloadFile(fileId: number): PromisedResult<TFilePart> {
@@ -120,7 +70,10 @@ export function useTelegram() {
       priority: 1,
       synchronous: true,
     }).catch((err: unknown) => {
-      if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(err);
+      // eslint-disable-next-line no-console
+      console.error(err);
+
+      if (isDebugLogging(CONFIG)) compose(setNotification, toArray, makeTErrorNotification)(err);
     });
 
     // Read the data from local tdlib to blob
@@ -131,60 +84,40 @@ export function useTelegram() {
 
     if (maybeFile.isSome) return success(maybeFile.payload);
     else {
-      if (isDebugLogging(CONFIG)) R.compose(dispatch, addNotification, makeTErrorNotification)(maybeFile.error);
+      // eslint-disable-next-line no-console
+      console.error(maybeFile.error);
+
+      if (isDebugLogging(CONFIG)) compose(setNotification, toArray, makeTErrorNotification)(maybeFile.error);
 
       return failure(maybeFile.error);
     }
   }
 
-  const getChat = useCallback(
-    async (chat_id: number, isLast?: boolean) => {
-      const chat = await TelegramService.send<TChat>({ type: 'getChat', chat_id });
+  const fetchUserById = useCallback(
+    async (myId: string | number, isMyself = false) => {
+      const user_id = typeof myId === 'string' ? parseInt(myId) : myId;
 
-      if (chat.isSome) R.compose(dispatch, addChat)(chat.payload);
+      const maybeUser = await TelegramService.send<TUser>({ type: 'getUser', user_id });
 
-      if (isLast) dispatch({ type: StateActions.CLEAR_LAST_MESSAGES });
-    },
-    [dispatch],
-  );
-
-  const processChatIds = useCallback(
-    async (chatIds: number[]) => {
-      logger.info('Processing chat ids...');
-
-      for await (const id of chatIds) {
-        await getChat(id, id === R.last(chatIds));
+      if (maybeUser.isNone) {
+        logger.error(maybeUser.error, `User not found with id: ${user_id}`);
+        return;
       }
+
+      const maybeUserFullInfo = await TelegramService.send<TUserFullInfo>({ type: 'getUserFullInfo', user_id });
+
+      if (maybeUserFullInfo.isNone) {
+        logger.error(maybeUserFullInfo.error, `User (Full Info) not found with id: ${user_id}`);
+        return;
+      }
+
+      const update: StateUser = { ...maybeUser.payload, ...omit(['@type'], maybeUserFullInfo) };
+
+      if (isMyself) setMyself(update);
+      else setUser([update]);
     },
-    [getChat],
+    [setMyself, setUser],
   );
 
-  const getChats = useCallback(async () => {
-    logger.info('Getting chats...');
-
-    const maybeChats = await TelegramService.send<TChats>({
-      type: 'getChats',
-      // TODO: solve
-      limit: 1000,
-    });
-
-    if (maybeChats.isNone) {
-      logger.error(maybeChats.error, 'maybeChats');
-
-      return;
-    }
-
-    R.compose(dispatch, setChatIds)(maybeChats.payload.chat_ids);
-
-    if (maybeChats.payload.chat_ids.length) processChatIds(maybeChats.payload.chat_ids);
-  }, [dispatch, processChatIds]);
-
-  useEffect(() => {
-    if (isRestored && !isInitialized) {
-      R.compose(dispatch, setIsInitialized)();
-      getChats();
-    }
-  }, [isRestored, isInitialized, dispatch, getChats]);
-
-  return { handleAuthentication, submitPassword, downloadFile, getChat };
+  return { submitPassword, downloadFile, fetchUserById };
 }

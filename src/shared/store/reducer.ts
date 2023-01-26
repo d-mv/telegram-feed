@@ -12,6 +12,8 @@ function stateLogger(state: State, action: Action, nextState: State) {
 }
 
 export function reducer(state: State, action: Action) {
+  if (!action) return state;
+
   const fn = MAP.get(action.type);
 
   let nextState = state;
@@ -19,11 +21,11 @@ export function reducer(state: State, action: Action) {
   if (fn) {
     const result = fn(state, action);
 
-    if (!deepEqual(result, state)) {
-      nextState = result;
+    // if (!deepEqual(result, state)) {
+    nextState = result;
 
-      stateLogger(state, action, nextState);
-    }
+    stateLogger(state, action, nextState);
+    // }
   }
 
   return nextState;

@@ -1,16 +1,16 @@
 import { AnyValue, Optional, R, as, logger } from '@mv-d/toolbelt';
 import { useCallback, useEffect, useState } from 'react';
 import { createContext } from 'use-context-selector';
+import { compose } from 'ramda';
 
 import { CONFIG } from '../../config';
 import { getMyId, getMyself, setMyself, useDispatch, useSelector } from '../../store';
 import { isDebugLogging } from '../../tools';
 import { JsLogVerbosityLevel, TelegramService } from './telegram.service';
 import { TUpdates, TUser } from './types';
-import { useUpdate } from './useUpdate.hook';
 
 export interface TelegramContextType {
-  event: Optional<TUpdates>;
+  // event: Optional<TUpdates>;
   authEvent: Optional<TUpdates>;
 }
 
@@ -19,11 +19,11 @@ export const TelegramContext = R.compose(createContext<TelegramContextType>, as<
 TelegramContext.displayName = 'TelegramContext';
 
 export function TelegramProvider(props: AnyValue) {
-  const [event, setEvent] = useState<TUpdates>();
+  // const [event, setEvent] = useState<TUpdates>();
 
   const [authEvent, setAuthEvent] = useState<TUpdates>();
 
-  const { matchUpdate } = useUpdate({ setEvent });
+  // const { matchUpdate } = useUpdate();
 
   const dispatch = useDispatch();
 
@@ -35,7 +35,7 @@ export function TelegramProvider(props: AnyValue) {
     const type = event['@type'];
 
     // eslint-disable-next-line security/detect-object-injection
-    matchUpdate[type](event);
+    // matchUpdate[type](event);
 
     if ('authorization_state' in event) setAuthEvent(event);
 
@@ -55,11 +55,13 @@ export function TelegramProvider(props: AnyValue) {
       jsLogVerbosityLevel = 'debug';
     }
 
-    TelegramService.init({
-      onUpdate,
-      logVerbosityLevel,
-      jsLogVerbosityLevel,
-    });
+    // eslint-disable-next-line no-console
+    console.log('here');
+    // TelegramService.init({
+    //   onUpdate,
+    //   logVerbosityLevel,
+    //   jsLogVerbosityLevel,
+    // });
   }, [onUpdate]);
 
   useEffect(() => {
@@ -73,5 +75,5 @@ export function TelegramProvider(props: AnyValue) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mySelf, myId, dispatch]);
 
-  return <TelegramContext.Provider value={{ event, authEvent }}>{props.children}</TelegramContext.Provider>;
+  return <TelegramContext.Provider value={{ authEvent }}>{props.children}</TelegramContext.Provider>;
 }

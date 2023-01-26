@@ -5,3 +5,7 @@ export interface TUpdate {
 export interface TExtra {
   query_id: number;
 }
+
+export interface TUpdateOk extends TUpdate {
+  '@type': 'ok';
+}

@@ -1,4 +1,5 @@
-import { makeMatch, Optional, R } from '@mv-d/toolbelt';
+import { makeMatch, Optional } from '@mv-d/toolbelt';
+import { compose } from 'ramda';
 import { clsx } from 'clsx';
 import { useCallback, useEffect } from 'react';
 
@@ -39,7 +40,7 @@ export function Toast(message: Message) {
   const dispatch = useDispatch();
 
   const handleClick = useCallback(() => {
-    R.compose(dispatch, removeNotification)(message.id);
+    compose(dispatch, removeNotification)(message.id);
   }, [dispatch, message.id]);
 
   function clearTimer() {

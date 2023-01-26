@@ -1,6 +1,6 @@
 import { as, generateId, Optional } from '@mv-d/toolbelt';
 
-import { TError, TUpdates } from '..';
+import { TChat, TError, TUpdates } from '..';
 import { Message, MessageTypes } from '../../../domains';
 
 export function connectionState(event: Optional<TUpdates>) {
@@ -25,3 +25,11 @@ export function makeTErrorNotification(error: unknown): Message {
     text: as<TError>(error).message,
   };
 }
+
+export const type = <T extends { '@type': string }>(item: T) => item['@type'];
+
+export const isType = <T extends { '@type': string }>(item: T, type: T['@type']) => item['@type'] === type;
+
+export const isPrivate = (chat: TChat) => isType(chat.type, 'chatTypePrivate');
+
+export const isChannel = (chat: TChat) => chat.type['@type'] === 'chatTypeSupergroup' && chat.type.is_channel;
