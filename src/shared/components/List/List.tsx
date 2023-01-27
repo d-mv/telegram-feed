@@ -108,7 +108,7 @@ export function List({ renderItem, setBottomRef, setTopRef, qtyItems = 0 }: List
     const diff = lastPosition - containerHeight;
 
     const shouldUpdate =
-      (screenRatio < 0.5 && diff / containerHeight < 2.6) || (screenRatio >= 0.4 && diff / containerHeight < 3.6);
+      (screenRatio < 0.4 && diff / containerHeight < 2.6) || (screenRatio >= 0.4 && diff / containerHeight < 3.6);
 
     if (shouldUpdate) updateItemsDown();
   }
