@@ -3,7 +3,6 @@ import { buildIntArray, ifTrue } from '@mv-d/toolbelt';
 import { last } from 'ramda';
 
 import { MaybeNull } from '../../types';
-
 import classes from './List.module.scss';
 import { CONFIG } from '../../config';
 

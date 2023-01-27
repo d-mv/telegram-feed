@@ -36,7 +36,7 @@ export function Image({ photoId, className, alt, style, asBackground }: PhotoPro
     // TODO: switch to classNames
     return (
       <div className={className} style={{ ...style, display: 'grid', placeItems: 'center' }}>
-        <Icon icon='image' style={{ height: '35%', width: '100%', fill: 'var(--color-primary-4)' }} />
+        <Icon icon='image' style={{ height: '6rem', width: '100%', fill: 'var(--color-primary-4)' }} />
       </div>
     );
 

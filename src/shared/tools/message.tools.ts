@@ -48,6 +48,33 @@ interface GetPhotoContainerStyleOptions {
   maxHeight: number;
 }
 
+export function getMediaContainerStyle(
+  height: number,
+  width: number,
+  options?: Partial<GetPhotoContainerStyleOptions>,
+) {
+  // eslint-disable-next-line no-console
+  console.log('####f', height, width, options);
+
+  if (!options?.width)
+    return {
+      width: options?.width,
+      height: options?.maxHeight && height > options?.maxHeight ? options.maxHeight : '50vw',
+    };
+
+  const ratio = (height || 1) / (width || 1);
+
+  const isVertical = ratio > 1;
+
+  const r = width / (options.width * 10);
+
+  const widthArg = `${options.width}rem`;
+
+  if (isVertical) return { width: widthArg, height: height / r };
+
+  return { width: widthArg, height: `${options.width * ratio}rem` };
+}
+
 export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, options?: Partial<GetPhotoContainerStyleOptions>) {
   if (!photo) return {};
 
