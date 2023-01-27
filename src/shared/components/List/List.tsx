@@ -168,8 +168,6 @@ export function List({ renderItem, setBottomRef, setTopRef, qtyItems = 0 }: List
 
   const thereIsMore = qtyItems > (last(showItems) || 0);
 
-  // eslint-disable-next-line no-console
-  console.log('>>>>', qtyItems, last(showItems));
   return (
     <div ref={containerRef} className={classes.container}>
       <div className={classes.items} onScroll={processScrollEvents}>

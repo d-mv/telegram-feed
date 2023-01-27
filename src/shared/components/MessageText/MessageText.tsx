@@ -20,11 +20,12 @@ import {
   useChats,
   useUsers,
   myselfSelector,
+  CardVideo,
 } from '../..';
 import { FeedContext } from '../../../domains/feed/feed.context';
 import classes from './MessageText.module.scss';
 
-const VALID_MESSAGE_TYPES = ['messagePhoto', 'messageText'];
+const VALID_MESSAGE_TYPES = ['messagePhoto', 'messageText', 'messageVideo'];
 
 export function MessageText() {
   const [message, onClick, isChat] = useContextSelector(FeedContext, c => [c.message, c.onCardClick, c.isChat]);
@@ -49,16 +50,6 @@ export function MessageText() {
     [getChatById, getUserById, isChat, message, myself],
   );
 
-  // const getChatSelector = useSelector(getChatById);
-
-  // const getSender = useSelector()
-  // const { sender } = useSender(message, isChat);
-  // const sender = useMemo(() => getSender(message), [getSender, message]);
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-console
-  //   console.log('sender', sender);
-  // }, [sender]);
-
   const text = useTextProcessor(message.content);
 
   const containerRef = useRef<MaybeNull<HTMLDivElement | HTMLImageElement>>(null);
@@ -67,7 +58,9 @@ export function MessageText() {
 
   const containerWidth = useMemo(() => (currentContainerRef?.clientWidth || 0) / 10, [currentContainerRef]);
 
-  if (!VALID_MESSAGE_TYPES.includes(message.content['@type'])) return null;
+  const type = message.content['@type'];
+
+  if (!VALID_MESSAGE_TYPES.includes(type)) return null;
 
   function chooseClassname() {
     if (!isChat) return;
@@ -78,26 +71,33 @@ export function MessageText() {
   }
 
   function renderWebPage() {
-    if (message.content['@type'] === 'messageText' && message.content.web_page) return null;
+    if (type === 'messageText' && message.content.web_page) return null;
 
     // @ts-ignore -- typescript doesn't choose the type correctly
     return <CardWebPage webPage={message.content.web_page} />;
   }
 
   function renderPhoto() {
-    if (message.content['@type'] !== 'messagePhoto') return null;
+    if (type !== 'messagePhoto') return null;
 
     return <CardPhoto photo={message.content.photo} widthRem={containerWidth} />;
+  }
+
+  function renderVideo() {
+    if (type !== 'messageVideo') return null;
+
+    return <CardVideo video={message.content} widthRem={containerWidth} />;
   }
 
   return (
     <Card
       containerRef={containerRef}
-      id={`message-text-${message.id}`}
+      id={`${type}-${message.id}`}
       onClick={onClick}
       className={clsx(classes.container, chooseClassname(), 'animate__animated animate__fadeIn')}
     >
       {renderPhoto()}
+      {renderVideo()}
       <CardHeader>{sender}</CardHeader>
       <CardText>
         <span

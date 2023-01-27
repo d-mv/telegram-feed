@@ -13,6 +13,10 @@ const GET_CONTENT_AND_ENTITIES = makeMatch(
       originalText: content.caption.text,
       entities: content.caption.entities,
     }),
+    messageVideo: (content: TMessageVideo) => ({
+      originalText: content.caption.text,
+      entities: content.caption.entities,
+    }),
   },
   () => ({ originalText: '', entities: [] as TMessageTextEntity[] }),
 );

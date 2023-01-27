@@ -7,6 +7,7 @@ export const MATCH_MESSAGE_RENDERERS = makeMatch(
   {
     messageText: MessageText,
     messagePhoto: MessageText,
+    messageVideo: MessageText,
   },
   null,
 );
