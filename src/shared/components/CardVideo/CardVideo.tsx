@@ -1,11 +1,6 @@
-import { none } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
-import { path } from 'ramda';
-import { useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
 
 import { TVideo } from '../../entities';
-import { fileDownloadProgressSelector } from '../../store';
 import { getMediaContainerStyle } from '../../tools';
 import { Video } from '../Video';
 import classes from './CardVideo.module.scss';

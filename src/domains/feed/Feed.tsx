@@ -52,9 +52,6 @@ export default function Feed() {
 
   function handleClick(chatId: number) {
     return function click(e: MouseEvent<HTMLDivElement>) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-
       if ('path' in e.nativeEvent) {
         const path = e.nativeEvent.path as HTMLElement[];
 
