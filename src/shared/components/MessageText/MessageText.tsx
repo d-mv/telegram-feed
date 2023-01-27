@@ -80,13 +80,13 @@ export function MessageText() {
   function renderPhoto() {
     if (type !== 'messagePhoto') return null;
 
-    return <CardPhoto photo={message.content.photo} widthRem={containerWidth} />;
+    return <CardPhoto media={message.content.photo} widthRem={containerWidth} />;
   }
 
   function renderVideo() {
     if (type !== 'messageVideo') return null;
 
-    return <CardVideo video={message.content} widthRem={containerWidth} />;
+    return <CardVideo media={message.content.video} widthRem={containerWidth} />;
   }
 
   return (

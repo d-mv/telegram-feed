@@ -1,7 +1,12 @@
-import { AnyValue } from '@mv-d/toolbelt';
-import { CSSProperties, useEffect, useState } from 'react';
+import { AnyValue, ifTrue } from '@mv-d/toolbelt';
+import { clsx } from 'clsx';
+import { path } from 'ramda';
+import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { useTelegram } from '../entities';
+import { fileDownloadProgressSelector } from '../store';
+import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
 interface PhotoProps {
@@ -9,17 +14,25 @@ interface PhotoProps {
   className?: string;
   style?: CSSProperties;
   alt: string;
-  asBackground?: boolean;
+
   width?: number;
   mimeType?: string;
 }
 
-export function Video({ fileId, className, alt, style, asBackground, width, mimeType }: PhotoProps) {
+export function Video({ fileId, className, alt, style, width, mimeType }: PhotoProps) {
+  const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
+
   const [id, setId] = useState<number>(0);
+
+  const [file, setFile] = useState<AnyValue>();
 
   const { downloadFile } = useTelegram();
 
-  const [file, setFile] = useState<AnyValue>();
+  const progress = useMemo(
+    () => path([fileId], downloadProgress),
+
+    [downloadProgress, fileId],
+  );
 
   useEffect(() => {
     async function get() {
@@ -35,17 +48,17 @@ export function Video({ fileId, className, alt, style, asBackground, width, mime
   }, [downloadFile, fileId, id]);
 
   if (!file)
-    // TODO: switch to classNames
     return (
-      <div className={className} style={{ ...style, display: 'grid', placeItems: 'center' }}>
-        <Icon icon='video' style={{ height: '6rem', width: '100%', fill: 'var(--color-primary-4)' }} />
+      <div className={clsx('center', className)} style={style}>
+        <Icon icon='video' className='media-stub-icon' />
+        {ifTrue(progress, () => (
+          <DownloadIndicator progress={progress} />
+        ))}
       </div>
     );
 
-  if (asBackground) return <div id={alt} className={className} style={{ backgroundImage: `url(${file})`, ...style }} />;
-
   return (
-    <video width={width ? `${width}rem` : '100%'} controls className={className}>
+    <video id={alt} width={width ? `${width}rem` : '100%'} controls className={className}>
       <source src={file} type={mimeType}></source>
     </video>
   );

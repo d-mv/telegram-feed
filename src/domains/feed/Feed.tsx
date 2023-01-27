@@ -1,4 +1,4 @@
-import { ifTrue, logger } from '@mv-d/toolbelt';
+import { as, ifTrue, logger } from '@mv-d/toolbelt';
 import { MouseEvent, useMemo, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -52,6 +52,9 @@ export default function Feed() {
 
   function handleClick(chatId: number) {
     return function click(e: MouseEvent<HTMLDivElement>) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+
       if ('path' in e.nativeEvent) {
         const path = e.nativeEvent.path as HTMLElement[];
 
@@ -61,6 +64,16 @@ export default function Feed() {
           e.stopPropagation();
 
           if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
+
+          return;
+        }
+      } else if ('target' in e && e.target) {
+        if (as<HTMLElement>(e.target).id === 'outside-link') {
+          e.stopPropagation();
+
+          if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
+
+          return;
         }
       }
 

@@ -16,6 +16,7 @@ import {
   authState,
   loadingMessageSelector,
   messagesSelector,
+  fileDownloadProgressSelector,
 } from '../shared';
 
 export function useConnect() {
@@ -30,6 +31,8 @@ export function useConnect() {
   const setLoadingMessage = useSetRecoilState(loadingMessageSelector);
 
   const setMessages = useSetRecoilState(messagesSelector);
+
+  const setFileDownloadProgress = useSetRecoilState(fileDownloadProgressSelector);
 
   const { fetchUserById } = useTelegram();
 
@@ -133,6 +136,21 @@ export function useConnect() {
     [fetchUserById, setMessages],
   );
 
+  const updateFile = useCallback(
+    (e: TUpdates) => {
+      if (!e || e['@type'] !== 'updateFile') return;
+
+      const id = e.file.id;
+
+      const expectedSize = e.file.expected_size;
+
+      const downloadedSize = e.file.local.downloaded_size;
+
+      setFileDownloadProgress({ [id]: { expectedSize, downloadedSize } });
+    },
+    [setFileDownloadProgress],
+  );
+
   const matchUpdate = useMemo(
     () =>
       makeMatch<(e: TUpdates) => void>(
@@ -152,10 +170,11 @@ export function useConnect() {
           // updateHavePendingNotifications: log,
           // updateChatLastMessage: addLastMessageToMessages,
           // updateNewChat: handleNewChat,
+          updateFile,
         },
         (event: TUpdates) => isDebugLogging(CONFIG) && logger.warn(`Unmatched event: ${event['@type']}`),
       ),
-    [handleAuthState, handleBackground, handleOption, updateNewMessage],
+    [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage],
   );
 
   const [isAuthed, setIsAuthed] = useRecoilState(authState);

@@ -21,3 +21,5 @@ export * from './notifications.store';
 export * from './loadingMessage.store';
 
 export * from './auth.store';
+
+export * from './file.store';

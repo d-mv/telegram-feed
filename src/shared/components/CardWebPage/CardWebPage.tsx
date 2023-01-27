@@ -2,7 +2,7 @@ import { Optional } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import { TWebPage } from '../../entities';
-import { getPhotoContainerStyle, getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
+import { getMediaContainerStyle, getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
 import { CardDivider } from '../CardDivider';
 import { Image } from '../Image';
 import { WithTooltip } from '../Tooltip';
@@ -34,7 +34,7 @@ export function CardWebPage({ className, webPage }: CardProps) {
         photoId={photo.photo.id}
         className={classes.photo}
         alt='Web page photo'
-        style={getPhotoContainerStyle(photo)}
+        style={getMediaContainerStyle(photo.height, photo.width)}
       />
     );
   }

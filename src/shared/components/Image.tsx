@@ -1,4 +1,5 @@
 import { AnyValue } from '@mv-d/toolbelt';
+import { clsx } from 'clsx';
 import { CSSProperties, useEffect, useState } from 'react';
 
 import { useTelegram } from '../entities';
@@ -33,10 +34,9 @@ export function Image({ photoId, className, alt, style, asBackground }: PhotoPro
   }, [downloadFile, id, photoId]);
 
   if (!image)
-    // TODO: switch to classNames
     return (
-      <div className={className} style={{ ...style, display: 'grid', placeItems: 'center' }}>
-        <Icon icon='image' style={{ height: '6rem', width: '100%', fill: 'var(--color-primary-4)' }} />
+      <div className={clsx('center', className)} style={style}>
+        <Icon icon='image' className='media-stub-icon' />
       </div>
     );
 

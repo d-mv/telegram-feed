@@ -1,6 +1,7 @@
 import { logger } from '@mv-d/toolbelt';
 import { createRoot } from 'react-dom/client';
 
+import './shared/theme/media.css';
 import './shared/theme/tooltip.css';
 import { App } from './app';
 import reportWebVitals from './reportWebVitals';

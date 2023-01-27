@@ -1,21 +1,19 @@
 import { Optional } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
-import { MutableRefObject } from 'react';
 
 import { TMessagePhoto } from '../../entities';
-import { getPhotoContainerStyle, getPhotoSize } from '../../tools';
-import { MaybeNull } from '../../types';
+import { getMediaContainerStyle, getPhotoSize } from '../../tools';
 import { Image } from '../Image';
 import classes from './CardPhoto.module.scss';
 
 interface CardProps {
   widthRem: number;
-  photo: TMessagePhoto;
+  media: TMessagePhoto;
   className?: string;
 }
 
-export function CardPhoto({ photo, className, widthRem }: CardProps) {
-  const photoSize = getPhotoSize(photo);
+export function CardPhoto({ media, className, widthRem }: CardProps) {
+  const photoSize = getPhotoSize(media);
 
   if (!photoSize) return null;
 
@@ -24,8 +22,8 @@ export function CardPhoto({ photo, className, widthRem }: CardProps) {
       asBackground
       photoId={photoSize.photo.id}
       className={clsx(classes.container, className)}
-      alt='CardPhoto'
-      style={getPhotoContainerStyle(photoSize, { width: widthRem })}
+      alt='Photo'
+      style={getMediaContainerStyle(photoSize.height, photoSize.width, { width: widthRem })}
     />
   );
 }

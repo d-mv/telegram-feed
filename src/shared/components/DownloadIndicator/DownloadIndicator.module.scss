@@ -1,0 +1,27 @@
+.container {
+  overflow: hidden;
+  position: absolute;
+  height: 4rem;
+  width: 70%;
+  bottom: 0.5rem;
+  border-radius: 0.1rem;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  height: 2rem;
+  width: 2rem;
+  margin-inline-end: 1rem;
+  stroke: var(--color-info-1);
+}
+
+.text {
+  font-size: 1.6rem;
+  font-weight: 400;
+  overflow: hidden;
+  color: var(--color-info-1);
+}

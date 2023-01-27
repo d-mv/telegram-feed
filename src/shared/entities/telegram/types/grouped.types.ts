@@ -18,6 +18,7 @@ import {
 } from './chat.types';
 import { TUpdateChatThemes } from './chatTheme.types';
 import { TUpdateOk } from './event.types';
+import { TUpdateFile } from './file.types';
 import { TUpdateDeleteMessages, TUpdateMessageInteractionInfo, TUpdateNewMessage } from './message.types';
 import {
   TUpdateHavePendingNotifications,
@@ -48,6 +49,7 @@ export type TAuthUpdates =
 export type TAuthUpdatesTypes = TAuthUpdates['@type'];
 
 export type TUpdates =
+  | TUpdateFile
   | TUpdateOk
   | TAuthorizationStateClosed
   | TAuthorizationStateReady

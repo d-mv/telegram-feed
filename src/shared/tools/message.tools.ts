@@ -53,9 +53,6 @@ export function getMediaContainerStyle(
   width: number,
   options?: Partial<GetPhotoContainerStyleOptions>,
 ) {
-  // eslint-disable-next-line no-console
-  console.log('####f', height, width, options);
-
   if (!options?.width)
     return {
       width: options?.width,
@@ -71,28 +68,6 @@ export function getMediaContainerStyle(
   const widthArg = `${options.width}rem`;
 
   if (isVertical) return { width: widthArg, height: height / r };
-
-  return { width: widthArg, height: `${options.width * ratio}rem` };
-}
-
-export function getPhotoContainerStyle(photo: Optional<TPhotoSize>, options?: Partial<GetPhotoContainerStyleOptions>) {
-  if (!photo) return {};
-
-  if (!options?.width)
-    return {
-      width: options?.width,
-      height: options?.maxHeight && photo.height > options?.maxHeight ? options.maxHeight : '50vw',
-    };
-
-  const ratio = (photo.height || 1) / (photo.width || 1);
-
-  const isVertical = ratio > 1;
-
-  const r = photo.width / (options.width * 10);
-
-  const widthArg = `${options.width}rem`;
-
-  if (isVertical) return { width: widthArg, height: photo.height / r };
 
   return { width: widthArg, height: `${options.width * ratio}rem` };
 }

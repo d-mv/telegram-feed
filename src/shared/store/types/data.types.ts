@@ -8,3 +8,12 @@ export interface SelectedChatId {
 export type StateUser = TUser & Partial<Omit<TUserFullInfo, '@type'>>;
 
 export type UpdateUserFullInfo = { id: number; data: TUserFullInfo };
+
+export interface DownloadProgress {
+  expectedSize: number;
+  downloadedSize: number;
+}
+
+export interface FileDownloadProgress {
+  [key: number]: DownloadProgress;
+}
