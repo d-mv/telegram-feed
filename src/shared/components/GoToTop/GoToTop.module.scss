@@ -1,0 +1,25 @@
+.container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 5rem;
+  height: 5rem;
+  background: #e1e1e180;
+  border-radius: 50%;
+  display: flex;
+  padding-top: 0.5rem;
+  padding-right: 0.1rem;
+  user-select: none;
+  cursor: pointer;
+  &:active {
+	transform: scale(0.9);
+  }
+}
+
+.icon {
+  height: 4rem;
+  width: 4rem;
+  display: flex;
+  margin: 0 auto;
+  fill: var(--color-primary-3);
+}

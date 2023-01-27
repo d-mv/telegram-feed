@@ -1,5 +1,6 @@
 import { UIEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { buildIntArray } from '@mv-d/toolbelt';
+import { buildIntArray, ifTrue } from '@mv-d/toolbelt';
+import { last } from 'ramda';
 
 import { MaybeNull } from '../../types';
 
@@ -10,9 +11,12 @@ const maintain = CONFIG.ui.elementsPerPage;
 
 export interface ListProps {
   renderItem: (arg0: number) => JSX.Element | null;
+  setBottomRef?: (arg0: HTMLButtonElement) => void;
+  setTopRef?: (arg0: HTMLSpanElement) => void;
+  qtyItems?: number;
 }
 
-export function List({ renderItem }: ListProps) {
+export function List({ renderItem, setBottomRef, setTopRef, qtyItems = 0 }: ListProps) {
   const [showItems, setShowItems] = useState(buildIntArray(maintain - 1, 0));
 
   const itemIndexInView = useRef(-1);
@@ -24,6 +28,18 @@ export function List({ renderItem }: ListProps) {
   const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
 
   const [screenRatio, setScreenRatio] = useState(window.outerWidth / window.outerHeight);
+
+  const currentBottomRef = bottomRef.current;
+
+  const currentTopRef = topRef.current;
+
+  useEffect(() => {
+    if (currentBottomRef && setBottomRef) setBottomRef(currentBottomRef);
+  }, [currentBottomRef, setBottomRef]);
+
+  useEffect(() => {
+    if (currentTopRef && setTopRef) setTopRef(currentTopRef);
+  }, [currentTopRef, setTopRef]);
 
   const updateScreenRatio = useCallback(() => {
     const ratio = window.outerWidth / window.outerHeight;
@@ -150,13 +166,17 @@ export function List({ renderItem }: ListProps) {
     );
   }
 
+  const thereIsMore = qtyItems > (last(showItems) || 0);
+
+  // eslint-disable-next-line no-console
+  console.log('>>>>', qtyItems, last(showItems));
   return (
     <div ref={containerRef} className={classes.container}>
       <div className={classes.items} onScroll={processScrollEvents}>
         <span ref={topRef} />
         {showItems.map(mapRenderItem)}
-        <button ref={bottomRef} className={classes['load-more-button']} onClick={updateItemsDown}>
-          <p className='p4'>load more?</p>
+        <button ref={bottomRef} className={ifTrue(thereIsMore, classes['load-more-button'])} onClick={updateItemsDown}>
+          {ifTrue(thereIsMore, <p className='p4'>load more?</p>)}
         </button>
       </div>
     </div>

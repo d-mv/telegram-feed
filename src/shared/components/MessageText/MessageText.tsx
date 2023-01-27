@@ -95,7 +95,7 @@ export function MessageText() {
       containerRef={containerRef}
       id={`message-text-${message.id}`}
       onClick={onClick}
-      className={clsx(classes.container, chooseClassname())}
+      className={clsx(classes.container, chooseClassname(), 'animate__animated animate__fadeIn')}
     >
       {renderPhoto()}
       <CardHeader>{sender}</CardHeader>

@@ -21,17 +21,16 @@ export default function Chat() {
   const messages = useRecoilValue(messagesSelector);
 
   const displayMessages = useMemo(
-    () => messages.filter(m => m.chat_id === selectedChat?.id).reverse(),
+    () => messages.filter(m => m.chat_id === selectedChat?.id).sort((a, b) => a.date - b.date),
+    // .reverse(),
     [messages, selectedChat?.id],
   );
 
   const bottomRef = useRef<MaybeNull<HTMLElement>>(null);
 
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [bottomRef]);
+    bottomRef.current?.scrollIntoView();
+  });
 
   // trigger loading comments for message_thread_id
   function handleClick(messageId: number) {
@@ -69,12 +68,14 @@ export default function Chat() {
     );
   }
 
-  const renderChat = () => <List renderItem={renderMessageByIndex} />;
+  const setBottomRef = (ref: HTMLButtonElement) => (bottomRef.current = ref);
+
+  const renderChat = () => <List renderItem={renderMessageByIndex} setBottomRef={setBottomRef} />;
 
   return (
     <MainSection>
       <MainCenter>{renderChat()}</MainCenter>
-      <span ref={bottomRef} />
+      {/* <span id='bottom' ref={bottomRef} /> */}
     </MainSection>
   );
 }

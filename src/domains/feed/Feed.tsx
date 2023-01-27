@@ -1,13 +1,15 @@
 import { ifTrue, logger } from '@mv-d/toolbelt';
-import { MouseEvent, useMemo } from 'react';
+import { MouseEvent, useMemo, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
   CONFIG,
+  GoToTop,
   isDebugLogging,
   List,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
+  MaybeNull,
   MessageDivider,
   messagesSelector,
   myselfSelector,
@@ -24,6 +26,8 @@ export default function Feed() {
   const setSelectedChatId = useSetRecoilState(selectedChatSelector);
 
   const { getChatById } = useChats();
+
+  const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
 
   const displayMessages = useMemo(
     () =>
@@ -43,6 +47,8 @@ export default function Feed() {
 
     [messages, myself],
   );
+
+  const qtyMessages = useMemo(() => displayMessages.length, [displayMessages]);
 
   function handleClick(chatId: number) {
     return function click(e: MouseEvent<HTMLDivElement>) {
@@ -90,7 +96,16 @@ export default function Feed() {
     );
   }
 
-  const renderFeed = () => <List renderItem={renderMessageByIndex} />;
+  const setTopRef = (ref: HTMLSpanElement) => (topRef.current = ref);
 
-  return <MainSection>{ifTrue(displayMessages.length, renderFeed)}</MainSection>;
+  const handleGotToTop = () => topRef.current?.scrollIntoView();
+
+  const renderFeed = () => <List renderItem={renderMessageByIndex} qtyItems={qtyMessages} setTopRef={setTopRef} />;
+
+  return (
+    <MainSection>
+      {ifTrue(displayMessages.length, renderFeed)}
+      <GoToTop onClick={handleGotToTop} />
+    </MainSection>
+  );
 }

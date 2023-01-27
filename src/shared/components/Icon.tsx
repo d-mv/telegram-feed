@@ -1,7 +1,7 @@
 import { CSSProperties, PropsWithoutRef } from 'react';
 import { MdDeleteOutline, MdOutlineError } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
-import { TiInfoLarge, TiThMenu } from 'react-icons/ti';
+import { TiInfoLarge, TiThMenu, TiArrowUp } from 'react-icons/ti';
 import { IoClose, IoWarning, IoReturnUpBack } from 'react-icons/io5';
 import { BsFillHandThumbsUpFill, BsFileImage } from 'react-icons/bs';
 import { BiShow, BiHide, BiRadioCircle } from 'react-icons/bi';
@@ -30,6 +30,7 @@ export const Icons = makeMatch(
     dividerH: RxDividerHorizontal,
     radioCircle: BiRadioCircle,
     image: BsFileImage,
+    up: TiArrowUp,
   },
   () => <div />,
 );

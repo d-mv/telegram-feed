@@ -15,6 +15,7 @@ import {
   useTelegram,
   authState,
   loadingMessageSelector,
+  messagesSelector,
 } from '../shared';
 
 export function useConnect() {
@@ -27,6 +28,8 @@ export function useConnect() {
   const setPasswordHint = useSetRecoilState(passwordHintSelector);
 
   const setLoadingMessage = useSetRecoilState(loadingMessageSelector);
+
+  const setMessages = useSetRecoilState(messagesSelector);
 
   const { fetchUserById } = useTelegram();
 
@@ -91,14 +94,6 @@ export function useConnect() {
   //   },
   //   [setMessages],
   // );
-
-  // const addMessageToMessages = useCallback(
-  //   (message: TMessage) => {
-  //     setMessages([...messages.filter(m => m.id !== message.id), message]);
-  //   },
-  //   [messages, setMessages],
-  // );
-
   // const addLastMessageToMessages = useCallback(
   //   (e: TUpdates) => {
   //     if (!e || e['@type'] !== 'updateChatLastMessage') return;
@@ -124,12 +119,26 @@ export function useConnect() {
   //   [setChats],
   // );
 
+  const updateNewMessage = useCallback(
+    (e: TUpdates) => {
+      if (!e || e['@type'] !== 'updateNewMessage') return;
+
+      if (e.message.message_thread_id) return;
+
+      setMessages([e.message]);
+      // fetchMessagesForChatId(e.chat_id, e.last_message.id);
+
+      if (e.message.sender_id['@type'] === 'messageSenderUser') fetchUserById(e.message.sender_id.user_id);
+    },
+    [fetchUserById, setMessages],
+  );
+
   const matchUpdate = useMemo(
     () =>
       makeMatch<(e: TUpdates) => void>(
         {
           updateAuthorizationState: handleAuthState,
-          //   updateNewMessage: R.compose(dispatch, addNewMessage),
+          updateNewMessage,
           // updateDeleteMessages: log,
           updateOption: handleOption,
           updateSelectedBackground: handleBackground,
@@ -146,7 +155,7 @@ export function useConnect() {
         },
         (event: TUpdates) => isDebugLogging(CONFIG) && logger.warn(`Unmatched event: ${event['@type']}`),
       ),
-    [handleAuthState, handleBackground, handleOption],
+    [handleAuthState, handleBackground, handleOption, updateNewMessage],
   );
 
   const [isAuthed, setIsAuthed] = useRecoilState(authState);

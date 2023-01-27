@@ -18,6 +18,8 @@ export * from './CardDivider';
 
 export * from './CardText';
 
+export * from './GoToTop';
+
 export * from './CardWebPage';
 
 export * from './CardPhoto';
