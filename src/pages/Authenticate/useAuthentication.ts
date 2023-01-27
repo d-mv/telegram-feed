@@ -89,7 +89,7 @@ export function useAuthentication() {
 
     // isCalled.push(type(event.authorization_state));
     // eslint-disable-next-line no-console
-    console.log(event.authorization_state['@type']);
+    // console.log(event.authorization_state['@type']);
     await MATCH_AUTH_STATE[type(event.authorization_state)](event, container);
   }
 

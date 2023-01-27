@@ -17,7 +17,7 @@ interface CardProps {
 
 export function CardVideo({ video, className, widthRem }: CardProps) {
   // eslint-disable-next-line no-console
-  console.log('####', video);
+  // console.log('####', video);
   // TODO: add video downloaded and formatter
   return <div />;
   // const photoSize = getPhotoSize(photo);

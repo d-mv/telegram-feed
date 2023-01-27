@@ -14,7 +14,7 @@ export const CONFIG = {
     hash: env('REACT_APP_TELEGRAM_API_HASH').expect(),
   },
   userSettings: {
-    logging: LogLevel.DEBUG,
+    logging: LogLevel.QUIET,
   },
   ui: {
     elementsPerPage: 20,
