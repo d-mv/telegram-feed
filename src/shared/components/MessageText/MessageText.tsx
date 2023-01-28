@@ -14,13 +14,11 @@ import {
   CardInteractionInfo,
   useTextProcessor,
   CardFooterSection,
-  CardPhoto,
   MaybeNull,
   getSenderFromMessage,
   useChats,
   useUsers,
   myselfSelector,
-  CardVideo,
   CardMedia,
 } from '../..';
 import { FeedContext } from '../../../domains/feed/feed.context';
@@ -72,22 +70,9 @@ export function MessageText() {
   }
 
   function renderWebPage() {
-    if (type === 'messageText' && message.content.web_page) return null;
+    if (type !== 'messageText' || !message.content.web_page) return null;
 
-    // @ts-ignore -- typescript doesn't choose the type correctly
-    return <CardWebPage webPage={message.content.web_page} />;
-  }
-
-  function renderPhoto() {
-    if (type !== 'messagePhoto') return null;
-
-    return <CardPhoto media={message.content.photo} widthRem={containerWidth} />;
-  }
-
-  function renderVideo() {
-    if (type !== 'messageVideo') return null;
-
-    return <CardVideo media={message.content.video} widthRem={containerWidth} />;
+    return <CardWebPage webPage={message.content.web_page} width={containerWidth} />;
   }
 
   function renderMedia() {
@@ -106,8 +91,6 @@ export function MessageText() {
       className={clsx(classes.container, chooseClassname(), 'animate__animated animate__fadeIn')}
     >
       {renderMedia()}
-      {/* {renderPhoto()} */}
-      {/* {renderVideo()} */}
       <CardHeader>{sender}</CardHeader>
       <CardText>
         <span

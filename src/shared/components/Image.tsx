@@ -1,7 +1,7 @@
 import { AnyValue, ifTrue, Result } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { path } from 'ramda';
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { TFilePart, TPhoto, useTelegram } from '../entities';
@@ -13,16 +13,12 @@ import { Icon } from './Icon';
 interface PhotoProps {
   media: TPhoto;
   className?: string;
-
   width: number;
   alt: string;
   asBackground?: boolean;
 }
 
 export function Image({ media, className, alt, width, asBackground }: PhotoProps) {
-  // eslint-disable-next-line no-console
-  console.log(media, width);
-
   const photoSize = getPhotoSize(media);
 
   const photoId = photoSize?.photo.id || 0;
@@ -42,9 +38,6 @@ export function Image({ media, className, alt, width, asBackground }: PhotoProps
   );
 
   const setImageToState = useCallback((file: Result<TFilePart, Error>) => {
-    // eslint-disable-next-line no-console
-    console.log('setImageToState', file);
-
     if (file.isOK) setImage(URL.createObjectURL(file.payload.data));
   }, []);
 

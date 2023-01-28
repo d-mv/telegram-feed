@@ -1,20 +1,21 @@
 import { Optional } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { useMemo } from 'react';
+
 import { TWebPage } from '../../entities';
-import { getMediaContainerStyle, getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
+import { getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
 import { CardDivider } from '../CardDivider';
 import { Image } from '../Image';
 import { WithTooltip } from '../Tooltip';
-
 import classes from './CardWebPage.module.scss';
 
 interface CardProps {
   webPage: Optional<TWebPage>;
   className?: string;
+  width: number;
 }
 
-export function CardWebPage({ className, webPage }: CardProps) {
+export function CardWebPage({ className, webPage, width }: CardProps) {
   const description = useMemo(() => webPage?.description.text || '', [webPage]);
 
   const url = useMemo(() => (webPage?.display_url ?? webPage?.url) || '', [webPage]);
@@ -28,11 +29,8 @@ export function CardWebPage({ className, webPage }: CardProps) {
 
     if (!photo) return null;
 
-    return <Image asBackground media={webPage.photo} className={classes.photo} alt='Web page photo' width={0} />;
+    return <Image asBackground media={webPage.photo} className={classes.photo} alt='Web page photo' width={width} />;
   }
-
-  // eslint-disable-next-line no-console
-  console.log(webPage);
 
   function renderDescriptionContents() {
     return (

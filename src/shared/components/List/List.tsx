@@ -134,7 +134,6 @@ export function List({ renderItem, setBottomRef, setTopRef, qtyItems = 0 }: List
 
     if (!bottom) return;
 
-    // const { offsetTop, clientTop, scrollTop } = idElement;
     const bottomPosition = bottom.getBoundingClientRect().top;
 
     if (!lastPosition) setLastPosition(bottomPosition);
@@ -148,7 +147,6 @@ export function List({ renderItem, setBottomRef, setTopRef, qtyItems = 0 }: List
     }
   }
 
-  // const its = showItems.map(i => items[i]).filter(Boolean);
   function handleCurrentItem(e: UIEvent<HTMLDivElement>) {
     const itemId = parseInt(e.currentTarget.id);
 

@@ -22,12 +22,6 @@ export * from './GoToTop';
 
 export * from './CardWebPage';
 
-export * from './CardPhoto';
-
-export * from './CardVideo';
-
-export * from './Video';
-
 export * from './Tooltip';
 
 export * from './CardMedia';
