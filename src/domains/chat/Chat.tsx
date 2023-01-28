@@ -20,11 +20,9 @@ export default function Chat() {
 
   const messages = useRecoilValue(messagesSelector);
 
-  const displayMessages = useMemo(
-    () => messages.filter(m => m.chat_id === selectedChat?.id).sort((a, b) => a.date - b.date),
-    // .reverse(),
-    [messages, selectedChat?.id],
-  );
+  const displayMessages = useMemo(() => {
+    return messages.filter(m => m.chat_id === selectedChat?.id).sort((a, b) => a.date - b.date);
+  }, [messages, selectedChat?.id]);
 
   const bottomRef = useRef<MaybeNull<HTMLElement>>(null);
 
@@ -63,7 +61,6 @@ export default function Chat() {
         value={{ isChat: true, message, onCardClick: handleClick(message.id), isLast: index === 0 }}
       >
         <Component />
-        {/* <MessageDivider id={message.id} /> */}
       </FeedContext.Provider>
     );
   }
@@ -75,7 +72,6 @@ export default function Chat() {
   return (
     <MainSection>
       <MainCenter>{renderChat()}</MainCenter>
-      {/* <span id='bottom' ref={bottomRef} /> */}
     </MainSection>
   );
 }
