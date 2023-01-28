@@ -37,9 +37,6 @@ export function Video({ media, className, alt, style, width, mimeType }: PhotoPr
   );
 
   const setFileToState = useCallback((file: Result<TFilePart, Error>) => {
-    // eslint-disable-next-line no-console
-    console.log('setFileToState', file);
-
     if (file.isOK) setFile(URL.createObjectURL(file.payload.data));
   }, []);
 

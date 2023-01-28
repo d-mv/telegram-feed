@@ -28,16 +28,11 @@ export function CardWebPage({ className, webPage }: CardProps) {
 
     if (!photo) return null;
 
-    return (
-      <Image
-        asBackground
-        photoId={photo.photo.id}
-        className={classes.photo}
-        alt='Web page photo'
-        style={getMediaContainerStyle(photo.height, photo.width)}
-      />
-    );
+    return <Image asBackground media={webPage.photo} className={classes.photo} alt='Web page photo' width={0} />;
   }
+
+  // eslint-disable-next-line no-console
+  console.log(webPage);
 
   function renderDescriptionContents() {
     return (

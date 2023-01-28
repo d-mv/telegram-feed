@@ -1,15 +1,14 @@
-import { AnyValue, ifTrue, Optional, Result } from '@mv-d/toolbelt';
+import { ifTrue, Result } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { path } from 'ramda';
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { TFile, TFilePart, TPhoto, TVideo, useTelegram } from '../../entities';
+import { TFilePart, TPhoto, TVideo, useTelegram } from '../../entities';
 import { fileDownloadProgressSelector } from '../../store';
 import { getMediaContainerStyle, getPhotoSize } from '../../tools';
 import { DownloadIndicator } from '../DownloadIndicator';
 import { Icon } from '../Icon';
-import { Image } from '../Image';
 import classes from './CardMedia.module.scss';
 
 interface CardMediaProps {

@@ -20,6 +20,9 @@ interface PhotoProps {
 }
 
 export function Image({ media, className, alt, width, asBackground }: PhotoProps) {
+  // eslint-disable-next-line no-console
+  console.log(media, width);
+
   const photoSize = getPhotoSize(media);
 
   const photoId = photoSize?.photo.id || 0;
