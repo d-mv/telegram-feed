@@ -5,3 +5,5 @@ export * from './feed';
 export * from './chat';
 
 export * from './loadMessage';
+
+export * from './menu';

@@ -1,37 +1,57 @@
 .container {
-	position: fixed;
-	left: 0;
-	right: 0;
-	top: 0;
-	height: 5rem;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	border-bottom: .1rem solid var(--color-primary-4);
-	box-shadow: var(--shadow-1);
-	z-index: 100;
-	background-color: var(--color-accent-2);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0.1rem 0.3rem var(--color-primary-3);
+  z-index: 100;
+  background-color: var(--color-primary-3);
+}
+
+.chat {
+  background-color: var(--color-info-1);
+  svg {
+    filter: none;
+    path {
+      fill: var(--color-back);
+    }
+  }
+  .name {
+    color: var(--color-back);
+    text-shadow: none;
+  }
 }
 
 .name {
-	margin-inline-start: 1rem;
-	height: fit-content;
-	color: var(--color-back);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  position: absolute;
+  left: 5rem;
+  right: 5rem;
+  text-align: center;
+  height: fit-content;
+  color: var(--color-text);
+  text-shadow: 0.2rem 0.1rem 0.2rem var(--color-primary-2);
 }
 
 .chat-title {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-family-sans);
 }
 
 .chat-title-icon {
-	display: flex;
-	stroke: var(--color-back);
-	height: 3rem;
-	width: 3rem;
+  display: flex;
+  stroke: var(--color-back);
+  height: 3rem;
+  width: 3rem;
 }
 
 .chat-title-button {
-	cursor: pointer;
-	padding: .8rem;
+  cursor: pointer;
+  padding: 0.8rem;
 }

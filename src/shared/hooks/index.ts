@@ -11,3 +11,5 @@ export * from './useSelectedChat.hook';
 export * from './useChats.hook';
 
 export * from './useUsers.hook';
+
+export * from './useLogout.hook';

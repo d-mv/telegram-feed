@@ -14,6 +14,7 @@ export const authEventSelector = selector({
   set: ({ set }, v) => set(authEventState, v),
 });
 
+// TODO: reset after use
 export const passwordHintState = atom<string>({
   key: 'passwordHint',
   default: undefined,

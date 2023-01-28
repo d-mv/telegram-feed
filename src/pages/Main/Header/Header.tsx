@@ -1,18 +1,14 @@
+import { clsx } from 'clsx';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 
-import { Icon, myselfSelector, selectedChatSelector } from '../../../shared';
+import { Menu } from '../../../domains';
+import { selectedChatSelector } from '../../../shared';
 import classes from './Header.module.scss';
 
 export function Header() {
-  const myself = useRecoilValue(myselfSelector);
-
   const selectedChat = useRecoilValue(selectedChatSelector);
 
   const resetSelectedChat = useResetRecoilState(selectedChatSelector);
-
-  function handleReturn() {
-    resetSelectedChat();
-  }
 
   function makeH2(s: string) {
     return <h2 className={classes.name}>{s}</h2>;
@@ -21,25 +17,18 @@ export function Header() {
   function makeHeaderTitle() {
     if (selectedChat?.id)
       return (
-        <div className={classes['chat-title']}>
-          <button onClick={handleReturn} className={classes['chat-title-button']}>
-            <Icon icon='return' className={classes['chat-title-icon']} />
-          </button>
-
+        <button className={classes['chat-title']} onClick={resetSelectedChat}>
           {makeH2(selectedChat.title || '')}
-        </div>
+        </button>
       );
 
-    if (!myself) return 'Feed';
-
-    return makeH2(`Feed for ${myself.first_name} ${myself.last_name}`);
+    return makeH2('Feed');
   }
 
   return (
-    <header className={classes.container}>
+    <header className={clsx(classes.container, { [classes.chat]: selectedChat?.id })}>
+      <Menu />
       {makeHeaderTitle()}
-      {/* <FilterPanel /> */}
-      {/* <Avatar user={myself} /> */}
     </header>
   );
 }

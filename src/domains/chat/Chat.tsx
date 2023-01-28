@@ -14,6 +14,7 @@ import {
   selectedChatSelector,
 } from '../../shared';
 import { FeedContext } from '../feed/feed.context';
+import { useGetChats } from '../feed/useGetChats.hook';
 
 export default function Chat() {
   const selectedChat = useRecoilValue(selectedChatSelector);
@@ -25,6 +26,9 @@ export default function Chat() {
   }, [messages, selectedChat?.id]);
 
   const bottomRef = useRef<MaybeNull<HTMLElement>>(null);
+
+  // TODO: change to one specific to chat
+  useGetChats();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView();

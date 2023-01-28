@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  width: fit-content;
+  padding: 1.5rem;
+}
+
+.icon {
+  height: 2rem;
+  width: 2rem;
+  filter: drop-shadow(0.2rem 0.1rem 0.2rem var(--color-primary-3));
+  path {
+    fill: var(--color-text);
+  }
+}
+
+.open {
+  background-color: var(--color-primary-2);
+
+  svg {
+    filter: none;
+  }
+
+  path {
+    fill: var(--color-primary-5);
+  }
+}

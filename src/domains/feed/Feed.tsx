@@ -2,6 +2,8 @@ import { as, ifTrue, logger } from '@mv-d/toolbelt';
 import { MouseEvent, useMemo, useRef } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import { useGetChats } from './useGetChats.hook';
+
 import {
   CONFIG,
   GoToTop,
@@ -28,6 +30,8 @@ export default function Feed() {
   const { getChatById } = useChats();
 
   const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
+
+  useGetChats();
 
   const displayMessages = useMemo(
     () =>

@@ -1,0 +1,13 @@
+.container {
+  padding: 1rem 2rem;
+}
+
+.text {
+  user-select: none;
+  cursor: pointer;
+  text-align: start;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--color-primary-5);
+  font-family: var(--font-family-sans);
+}

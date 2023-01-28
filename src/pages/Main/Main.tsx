@@ -1,6 +1,5 @@
 import { ifTrue } from '@mv-d/toolbelt';
 import { useRecoilValue } from 'recoil';
-import { useGetChats } from '../../app/useGetChats.hook';
 
 import { Chat, Feed } from '../../domains';
 import { LazyLoad, selectedChatSelector } from '../../shared';
@@ -14,7 +13,6 @@ const renderFeed = () => <Feed />;
 export default function Main() {
   const selectedChat = useRecoilValue(selectedChatSelector);
 
-  useGetChats();
   return (
     <Container>
       <Header />

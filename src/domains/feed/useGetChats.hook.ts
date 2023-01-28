@@ -17,7 +17,7 @@ import {
   TMessages,
   useTelegram,
   loadingMessageSelector,
-} from '../shared';
+} from '../../shared';
 
 export function useGetChats() {
   const myself = useRecoilValue(myselfSelector);
@@ -31,6 +31,8 @@ export function useGetChats() {
   const { fetchUserById } = useTelegram();
 
   const setMessages = useSetRecoilState(messagesSelector);
+
+  const messages = useRecoilValue(messagesSelector);
 
   const init = useRef(false);
 
@@ -127,10 +129,10 @@ export function useGetChats() {
   }, [processChatIds, setChatIds]);
 
   useEffect(() => {
-    if (authStatus && myself && !init.current) {
+    if (authStatus && myself && !init.current && !messages.length) {
       init.current = true;
       setLoadingMessage('Connected, getting chats...');
       getChats();
     }
-  }, [myself, getChats, authStatus, setLoadingMessage]);
+  }, [myself, getChats, authStatus, setLoadingMessage, messages.length]);
 }
