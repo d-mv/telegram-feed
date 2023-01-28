@@ -71,7 +71,7 @@ export function useTelegram() {
 
       updateItemInQueue(fileId, 'finished');
 
-      if (maybeFile.isSome) callback(success(maybeFile.payload));
+      if (maybeFile.isSome) callback(success(maybeFile.value));
       else {
         // eslint-disable-next-line no-console
         console.error(maybeFile.error);
@@ -120,7 +120,7 @@ export function useTelegram() {
         return;
       }
 
-      const update: StateUser = { ...maybeUser.payload, ...omit(['@type'], maybeUserFullInfo) };
+      const update: StateUser = { ...maybeUser.value, ...omit(['@type'], maybeUserFullInfo) };
 
       if (isMyself) setMyself(update);
       else setUser([update]);

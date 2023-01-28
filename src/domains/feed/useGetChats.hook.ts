@@ -47,8 +47,8 @@ export function useGetChats() {
       const chat = await TelegramService.send<TChat>({ type: 'getChat', chat_id });
 
       if (chat.isSome) {
-        setChats([...chats, chat.payload]);
-        chat.payload.type['@type'] === 'chatTypePrivate' && fetchUserById(chat.payload.type.user_id);
+        setChats([...chats, chat.value]);
+        chat.value.type['@type'] === 'chatTypePrivate' && fetchUserById(chat.value.type.user_id);
       }
       // eslint-disable-next-line no-console
       else console.log('getChat error', chat_id, chat.error);
@@ -78,13 +78,13 @@ export function useGetChats() {
 
         if (maybeMessages.isNone) break;
 
-        if (maybeMessages.payload.total_count === 0) break;
+        if (maybeMessages.value.total_count === 0) break;
 
-        messages.push(...maybeMessages.payload.messages);
+        messages.push(...maybeMessages.value.messages);
 
         if (isFirst) resetLoadingMessage();
 
-        setMessages(maybeMessages.payload.messages);
+        setMessages(maybeMessages.value.messages);
       }
     },
     [resetLoadingMessage, setLoadingMessage, setMessages],
@@ -121,7 +121,7 @@ export function useGetChats() {
       return;
     }
 
-    const ids = maybeChats.payload.chat_ids;
+    const ids = maybeChats.value.chat_ids;
 
     setChatIds(ids);
 
