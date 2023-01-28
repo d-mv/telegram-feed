@@ -123,8 +123,6 @@ export function useGetChats() {
 
     setChatIds(ids);
 
-    // setChatsLoaded(true);
-
     if (ids.length) processChatIds(ids);
   }, [processChatIds, setChatIds]);
 

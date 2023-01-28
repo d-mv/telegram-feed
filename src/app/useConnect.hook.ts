@@ -1,6 +1,6 @@
-import { logger, makeMatch } from '@mv-d/toolbelt';
+import { logger, makeMatch, Optional } from '@mv-d/toolbelt';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
   authEventSelector,
@@ -17,7 +17,10 @@ import {
   loadingMessageSelector,
   messagesSelector,
   fileDownloadProgressSelector,
+  chatIdsState,
 } from '../shared';
+
+let timer: Optional<NodeJS.Timeout> = undefined;
 
 export function useConnect() {
   const isInit = useRef(false);
@@ -33,6 +36,10 @@ export function useConnect() {
   const setMessages = useSetRecoilState(messagesSelector);
 
   const setFileDownloadProgress = useSetRecoilState(fileDownloadProgressSelector);
+
+  const chatIds = useRecoilValue(chatIdsState);
+
+  const [isAuthed, setIsAuthed] = useRecoilState(authState);
 
   const { fetchUserById } = useTelegram();
 
@@ -70,58 +77,6 @@ export function useConnect() {
     [setAuthEvent, setPasswordHint],
   );
 
-  // const fetchMessagesForChatId = useCallback(
-  //   async (chat_id: number, lastMessageId: number) => {
-  //     const messages: TMessage[] = [];
-
-  //     const limit = 20;
-
-  //     while (messages.length < 20) {
-  //       const maybeMessages = await TelegramService.send<TMessages>({
-  //         type: 'getChatHistory',
-  //         chat_id,
-  //         from_message_id: messages.length ? messages[messages.length - 1].id : lastMessageId,
-  //         // offset: -limit + 1,
-  //         limit,
-  //         only_local: false,
-  //       });
-
-  //       if (maybeMessages.isNone) break;
-
-  //       if (maybeMessages.payload.total_count === 0) break;
-
-  //       messages.push(...maybeMessages.payload.messages);
-
-  //       setMessages(maybeMessages.payload.messages);
-  //     }
-  //   },
-  //   [setMessages],
-  // );
-  // const addLastMessageToMessages = useCallback(
-  //   (e: TUpdates) => {
-  //     if (!e || e['@type'] !== 'updateChatLastMessage') return;
-
-  //     if (e.last_message.message_thread_id) return;
-
-  //     addMessageToMessages(e.last_message);
-  //     // fetchMessagesForChatId(e.chat_id, e.last_message.id);
-
-  //     if (e.last_message.sender_id['@type'] === 'messageSenderUser') fetchUserById(e.last_message.sender_id.user_id);
-  //   },
-  //   [addMessageToMessages, fetchMessagesForChatId, fetchUserById],
-  // );
-
-  // const setChats = useSetRecoilState(chatsSelector);
-
-  // const handleNewChat = useCallback(
-  //   (e: TUpdates) => {
-  //     if (!e || e['@type'] !== 'updateNewChat') return;
-
-  //     setChats([e.chat]);
-  //   },
-  //   [setChats],
-  // );
-
   const updateNewMessage = useCallback(
     (e: TUpdates) => {
       if (!e || e['@type'] !== 'updateNewMessage') return;
@@ -129,7 +84,6 @@ export function useConnect() {
       if (e.message.message_thread_id) return;
 
       setMessages([e.message]);
-      // fetchMessagesForChatId(e.chat_id, e.last_message.id);
 
       if (e.message.sender_id['@type'] === 'messageSenderUser') fetchUserById(e.message.sender_id.user_id);
     },
@@ -177,7 +131,13 @@ export function useConnect() {
     [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage],
   );
 
-  const [isAuthed, setIsAuthed] = useRecoilState(authState);
+  const reloadIfStuck = useCallback(() => {
+    logger.info('Timer was not off, loading stuck, reloading');
+
+    if (timer) clearTimeout(timer);
+
+    window.history.go(0);
+  }, []);
 
   const onUpdate = useCallback(
     (event: TUpdates) => {
@@ -197,8 +157,14 @@ export function useConnect() {
     [isAuthed, matchUpdate, setAuthEvent, setIsAuthed],
   );
 
+  // disable reloading, if chatIds fetched
+  useEffect(() => {
+    if (chatIds.length > 0 && timer) clearTimeout(timer);
+  }, [chatIds]);
+
   // setup client
   useEffect(() => {
+    // avoid double initialization
     if (isInit.current) return;
 
     isInit.current = true;
@@ -213,10 +179,11 @@ export function useConnect() {
       jsLogVerbosityLevel = 'debug';
     }
 
+    timer = setTimeout(reloadIfStuck, 3000);
     TelegramService.init({
       onUpdate,
       logVerbosityLevel,
       jsLogVerbosityLevel,
     });
-  }, [onUpdate, setLoadingMessage]);
+  }, [onUpdate, reloadIfStuck, setLoadingMessage]);
 }
