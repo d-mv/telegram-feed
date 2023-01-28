@@ -21,6 +21,7 @@ import {
   useUsers,
   myselfSelector,
   CardVideo,
+  CardMedia,
 } from '../..';
 import { FeedContext } from '../../../domains/feed/feed.context';
 import classes from './MessageText.module.scss';
@@ -89,6 +90,14 @@ export function MessageText() {
     return <CardVideo media={message.content.video} widthRem={containerWidth} />;
   }
 
+  function renderMedia() {
+    if (type !== 'messagePhoto' && type !== 'messageVideo') return null;
+
+    const media = type === 'messageVideo' ? message.content.video : message.content.photo;
+
+    return <CardMedia asBackground media={media} width={containerWidth} />;
+  }
+
   return (
     <Card
       containerRef={containerRef}
@@ -96,8 +105,9 @@ export function MessageText() {
       onClick={onClick}
       className={clsx(classes.container, chooseClassname(), 'animate__animated animate__fadeIn')}
     >
-      {renderPhoto()}
-      {renderVideo()}
+      {renderMedia()}
+      {/* {renderPhoto()} */}
+      {/* {renderVideo()} */}
       <CardHeader>{sender}</CardHeader>
       <CardText>
         <span

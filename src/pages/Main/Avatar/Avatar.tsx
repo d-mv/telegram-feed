@@ -10,7 +10,7 @@ interface AvatarProps {
 export default function Avatar({ user }: AvatarProps) {
   return (
     <div className={classes.container}>
-      <Image photoId={user.profile_photo.small.id} alt={user.first_name} className={classes.image} />
+      {/* <Image media={user.profile_photo} alt={user.first_name} className={classes.image} /> */}
     </div>
   );
 }

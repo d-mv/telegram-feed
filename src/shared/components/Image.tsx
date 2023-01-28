@@ -1,28 +1,34 @@
-import { AnyValue, ifTrue } from '@mv-d/toolbelt';
+import { AnyValue, ifTrue, Result } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { path } from 'ramda';
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { useTelegram } from '../entities';
+import { TFilePart, TPhoto, useTelegram } from '../entities';
 import { fileDownloadProgressSelector } from '../store';
+import { getMediaContainerStyle, getPhotoSize } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
 interface PhotoProps {
-  photoId: number;
+  media: TPhoto;
   className?: string;
-  style?: CSSProperties;
+
+  width: number;
   alt: string;
   asBackground?: boolean;
 }
 
-export function Image({ photoId, className, alt, style, asBackground }: PhotoProps) {
+export function Image({ media, className, alt, width, asBackground }: PhotoProps) {
+  const photoSize = getPhotoSize(media);
+
+  const photoId = photoSize?.photo.id || 0;
+
   const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
 
   const [id, setId] = useState<number>(0);
 
-  const { downloadFile } = useTelegram();
+  const { downloadFile, queueFileDownload } = useTelegram();
 
   const [image, setImage] = useState<AnyValue>();
 
@@ -32,18 +38,27 @@ export function Image({ photoId, className, alt, style, asBackground }: PhotoPro
     [downloadProgress, photoId],
   );
 
+  const setImageToState = useCallback((file: Result<TFilePart, Error>) => {
+    // eslint-disable-next-line no-console
+    console.log('setImageToState', file);
+
+    if (file.isOK) setImage(URL.createObjectURL(file.payload.data));
+  }, []);
+
   useEffect(() => {
     async function get() {
-      const file = await downloadFile(photoId);
-
-      if (file.isOK) setImage(URL.createObjectURL(file.payload.data));
+      queueFileDownload(photoId, photoSize?.photo.expected_size || 0, setImageToState);
     }
 
     if (photoId !== id) {
       setId(photoId);
       get();
     }
-  }, [downloadFile, id, photoId]);
+  }, [downloadFile, id, photoId, photoSize?.photo.expected_size, queueFileDownload, setImageToState]);
+
+  if (!photoSize) return null;
+
+  const style = getMediaContainerStyle(photoSize.height, photoSize.width, { width });
 
   if (!image)
     return (

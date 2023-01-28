@@ -87,7 +87,7 @@ export interface TFormattedText {
   text: string;
 }
 
-export interface TMessagePhoto {
+export interface TPhoto {
   '@type': 'photo';
   has_stickers: boolean;
   minithumbnail: TMiniThumbnail;
@@ -105,7 +105,7 @@ export interface TWebPage {
   embed_url: string;
   embed_width: number;
   instant_view_version: number;
-  photo: TMessagePhoto;
+  photo: TPhoto;
   site_name: string;
   title: string;
   type: 'video';
@@ -118,11 +118,11 @@ export interface TMessageText {
   web_page?: TWebPage;
 }
 
-export interface TMessageContentPhoto {
+export interface TMessagePhoto {
   '@type': 'messagePhoto';
   caption: TFormattedText;
   is_secret: false;
-  photo: TMessagePhoto;
+  photo: TPhoto;
 }
 
 export interface TVideo {
@@ -160,7 +160,7 @@ export interface TMessage {
   can_get_viewers: boolean;
   chat_id: number;
   contains_unread_mention: boolean;
-  content: TMessageContentPhoto | TFormattedText | TMessageText | TMessageVideo;
+  content: TMessagePhoto | TFormattedText | TMessageText | TMessageVideo;
   date: number;
   edit_date: number;
   has_timestamped_media: boolean;

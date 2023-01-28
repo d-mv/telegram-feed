@@ -30,6 +30,8 @@ export * from './Video';
 
 export * from './Tooltip';
 
+export * from './CardMedia';
+
 export * from './CardInteractionInfo';
 
 export * from './MainCenter';

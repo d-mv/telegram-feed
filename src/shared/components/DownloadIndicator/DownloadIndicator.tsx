@@ -42,7 +42,7 @@ export function DownloadIndicator({ progress }: DownloadProgressProps) {
 
   return (
     <>
-      {ifTrue(progress.expectedSize / 1024 > 300, renderProgressData)}
+      {ifTrue(progress.expectedSize / 1024 > 150, renderProgressData)}
       <ProgressIndicator progress={(progress.downloadedSize / progress.expectedSize) * 100} />
     </>
   );

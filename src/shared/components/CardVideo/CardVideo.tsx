@@ -14,7 +14,7 @@ interface CardProps {
 export function CardVideo({ media, className, widthRem }: CardProps) {
   return (
     <Video
-      fileId={media.video.id}
+      media={media}
       className={clsx(classes.container, className)}
       mimeType={media.mime_type}
       alt={media.file_name}

@@ -1,5 +1,5 @@
 import { Optional } from '@mv-d/toolbelt';
-import { TChat, TMessage, TMessagePhoto, TPhotoSize, TUser } from '../entities';
+import { TChat, TMessage, TPhoto, TPhotoSize, TUser } from '../entities';
 import { StateUser } from '../store';
 
 interface GetSendFromMessageProps {
@@ -37,7 +37,7 @@ export function getSenderFromMessage({ isChat, message, getChat, getUser, myself
   return getChat(s.chat_id)?.title;
 }
 
-export function getPhotoSize(photo: TMessagePhoto, size = 'x') {
+export function getPhotoSize(photo: TPhoto, size = 'x') {
   const { sizes } = photo;
 
   return sizes.find(p => p.type === size);

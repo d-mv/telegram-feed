@@ -1,16 +1,16 @@
-import { AnyValue, ifTrue } from '@mv-d/toolbelt';
+import { AnyValue, ifTrue, Result } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { path } from 'ramda';
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { useTelegram } from '../entities';
+import { TFilePart, TVideo, useTelegram } from '../entities';
 import { fileDownloadProgressSelector } from '../store';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
 interface PhotoProps {
-  fileId: number;
+  media: TVideo;
   className?: string;
   style?: CSSProperties;
   alt: string;
@@ -19,33 +19,40 @@ interface PhotoProps {
   mimeType?: string;
 }
 
-export function Video({ fileId, className, alt, style, width, mimeType }: PhotoProps) {
+export function Video({ media, className, alt, style, width, mimeType }: PhotoProps) {
   const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
+
+  const fileId = media.video.id;
 
   const [id, setId] = useState<number>(0);
 
   const [file, setFile] = useState<AnyValue>();
 
-  const { downloadFile } = useTelegram();
+  const { queueFileDownload } = useTelegram();
 
   const progress = useMemo(
-    () => path([fileId], downloadProgress),
+    () => path([media.video.id], downloadProgress),
 
-    [downloadProgress, fileId],
+    [downloadProgress, media],
   );
+
+  const setFileToState = useCallback((file: Result<TFilePart, Error>) => {
+    // eslint-disable-next-line no-console
+    console.log('setFileToState', file);
+
+    if (file.isOK) setFile(URL.createObjectURL(file.payload.data));
+  }, []);
 
   useEffect(() => {
     async function get() {
-      const file = await downloadFile(fileId);
-
-      if (file.isOK) setFile(URL.createObjectURL(file.payload.data));
+      queueFileDownload(fileId, media.video.expected_size || 0, setFileToState);
     }
 
     if (fileId !== id) {
       setId(fileId);
       get();
     }
-  }, [downloadFile, fileId, id]);
+  }, [fileId, id, media.video.expected_size, queueFileDownload, setFileToState]);
 
   if (!file)
     return (

@@ -3,13 +3,13 @@ import { useMemo } from 'react';
 
 import { CONFIG } from '../config';
 
-import { TFormattedText, TMessageContentPhoto, TMessageText, TMessageTextEntity, TMessageVideo } from '../entities';
+import { TFormattedText, TMessagePhoto, TMessageText, TMessageTextEntity, TMessageVideo } from '../entities';
 import { isDebugLogging } from '../tools';
 
 const GET_CONTENT_AND_ENTITIES = makeMatch(
   {
     messageText: (content: TMessageText) => ({ originalText: content.text.text, entities: content.text.entities }),
-    messagePhoto: (content: TMessageContentPhoto) => ({
+    messagePhoto: (content: TMessagePhoto) => ({
       originalText: content.caption.text,
       entities: content.caption.entities,
     }),
@@ -42,7 +42,7 @@ const PROCESS_TEXT = makeMatch(
   () => '',
 );
 
-export function useTextProcessor(content: TMessageContentPhoto | TMessageText | TFormattedText | TMessageVideo) {
+export function useTextProcessor(content: TMessagePhoto | TMessageText | TFormattedText | TMessageVideo) {
   return useMemo(() => {
     const f = GET_CONTENT_AND_ENTITIES[content['@type']];
 
