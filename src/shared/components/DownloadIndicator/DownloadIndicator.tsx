@@ -1,8 +1,10 @@
+import { ifTrue } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
 import { useState } from 'react';
 
 import { DownloadProgress } from '../../store';
 import { Icon } from '../Icon';
+import { ProgressIndicator } from '../ProgressIndicator';
 import classes from './DownloadIndicator.module.scss';
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -27,12 +29,21 @@ export function DownloadIndicator({ progress }: DownloadProgressProps) {
     setRenderAsValues(state => !state);
   }
 
+  function renderProgressData() {
+    return (
+      <button id='outside-link' className={classes.button} onClick={toggleView}>
+        <Icon id='outside-link' icon='download' className={classes.icon} />
+        <p id='outside-link' className={clsx('p4', classes.text)}>
+          {renderAsValues ? renderValues() : renderPercentage()}
+        </p>
+      </button>
+    );
+  }
+
   return (
-    <button id='outside-link' className={classes.container} onClick={toggleView}>
-      <Icon id='outside-link' icon='download' className={classes.icon} />
-      <p id='outside-link' className={clsx('p4', classes.text)}>
-        {renderAsValues ? renderValues() : renderPercentage()}
-      </p>
-    </button>
+    <>
+      {ifTrue(progress.expectedSize / 1024 > 300, renderProgressData)}
+      <ProgressIndicator progress={(progress.downloadedSize / progress.expectedSize) * 100} />
+    </>
   );
 }
