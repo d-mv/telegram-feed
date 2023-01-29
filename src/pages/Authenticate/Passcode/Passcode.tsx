@@ -1,13 +1,14 @@
 import { clsx } from 'clsx';
 import { MouseEvent, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { getAuthPasswordHint, Icon, useSelector, useTelegram } from '../../../shared';
+import { Icon, passwordHintState, useTelegram } from '../../../shared';
 import classes from './Passcode.module.scss';
 
 export default function Passcode() {
   const { submitPassword } = useTelegram();
 
-  const authPasswordHint = useSelector(getAuthPasswordHint);
+  const authPasswordHint = useRecoilValue(passwordHintState);
 
   const [password, setPassword] = useState('');
 

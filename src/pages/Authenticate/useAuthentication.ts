@@ -1,13 +1,11 @@
 import { makeMatch, none, logger, Option, some } from '@mv-d/toolbelt';
 import QRCodeStyling from 'qr-code-styling';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import {
   authEventSelector,
-  authSelector,
   CONFIG,
   isDebugLogging,
-  isType,
   MaybeNull,
   TELEGRAM_AUTH_TYPES,
   TUpdates,
@@ -66,12 +64,6 @@ const MATCH_AUTH_STATE = makeMatch<(event: TUpdates, container?: Container) => P
   // eslint-disable-next-line promise/avoid-new
   () => new Promise(resolve => resolve(none())),
 );
-// class StateMachine {
-//   currentStage = 'authorizationStateWaitTdlibParameters';
-
-// }
-
-const isCalled: unknown[] = [];
 
 export function useAuthentication() {
   const event = useRecoilValue(authEventSelector);
@@ -81,15 +73,6 @@ export function useAuthentication() {
 
     if (!('authorization_state' in event)) return;
 
-    // if (isCalled.includes(event.authorization_state['@type'])) {
-    //   // eslint-disable-next-line no-console
-    //   console.log('duplciate', event.authorization_state['@type']);
-    //   return;
-    // }
-
-    // isCalled.push(type(event.authorization_state));
-    // eslint-disable-next-line no-console
-    // console.log(event.authorization_state['@type']);
     await MATCH_AUTH_STATE[type(event.authorization_state)](event, container);
   }
 

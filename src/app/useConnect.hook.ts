@@ -1,5 +1,5 @@
 import { logger, makeMatch, Optional } from '@mv-d/toolbelt';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
@@ -19,6 +19,7 @@ import {
   fileDownloadProgressSelector,
   chatIdsState,
   supergroupsSelector,
+  authLinkState,
 } from '../shared';
 
 let timer: Optional<NodeJS.Timeout> = undefined;
@@ -27,6 +28,8 @@ export function useConnect() {
   const isInit = useRef(false);
 
   const setAuthEvent = useSetRecoilState(authEventSelector);
+
+  const authEvent = useRecoilValue(authEventSelector);
 
   const setOption = useSetRecoilState(optionsSelector);
 
@@ -41,6 +44,8 @@ export function useConnect() {
   const chatIds = useRecoilValue(chatIdsState);
 
   const [isAuthed, setIsAuthed] = useRecoilState(authState);
+
+  const [authLink, setAuthLink] = useRecoilState(authLinkState);
 
   const { fetchUserById } = useTelegram();
 
@@ -72,8 +77,14 @@ export function useConnect() {
       // @ts-ignore -- temp
       if (event && TELEGRAM_AUTH_TYPES.includes(event['@type'])) setAuthEvent(event);
 
-      if ('authorization_state' in event && event.authorization_state['@type'] === 'authorizationStateWaitPassword')
-        setPasswordHint(event['authorization_state'].password_hint);
+      if ('authorization_state' in event) {
+        if (event.authorization_state['@type'] === 'authorizationStateWaitPassword')
+          setPasswordHint(event['authorization_state'].password_hint);
+
+        if (event.authorization_state['@type'] === 'authorizationStateWaitOtherDeviceConfirmation') {
+          setAuthLink(event.authorization_state.link);
+        }
+      }
     },
     [setAuthEvent, setPasswordHint],
   );
@@ -113,7 +124,6 @@ export function useConnect() {
       if (!e || e['@type'] !== 'updateSupergroup') return;
 
       // eslint-disable-next-line no-console
-      // console.log('updateSupergroup', e.supergroup.id, e.supergroup);
       setSupergroup({ [e.supergroup.id]: { username: e.supergroup.username } });
     },
     [setSupergroup],
@@ -142,7 +152,9 @@ export function useConnect() {
           // updateNewChat: handleNewChat,
           updateFile,
         },
-        (event: TUpdates) => isDebugLogging(CONFIG) && logger.warn(`Unmatched event: ${event['@type']}`),
+        (event: TUpdates) =>
+          // isDebugLogging(CONFIG) &&
+          logger.warn(`Unmatched event: ${event['@type']}`),
       ),
     [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage, updateSupergroup],
   );
@@ -158,9 +170,6 @@ export function useConnect() {
   const onUpdate = useCallback(
     (event: TUpdates) => {
       const type = event['@type'];
-
-      // eslint-disable-next-line no-console
-      // console.log(type, event);
 
       if (type === 'updateConnectionState' && event.state['@type'] === 'connectionStateReady' && !isAuthed) {
         logger.info('Connection ready');
@@ -181,6 +190,14 @@ export function useConnect() {
     if (chatIds.length > 0 && timer) clearTimeout(timer);
   }, [chatIds]);
 
+  // disable reloading, if authLink fetched
+  useEffect(() => {
+    if (authLink && timer) {
+      clearTimeout(timer);
+      setLoadingMessage('');
+    }
+  }, [authLink, chatIds, setLoadingMessage]);
+
   // setup client
   useEffect(() => {
     // avoid double initialization
@@ -198,7 +215,7 @@ export function useConnect() {
       jsLogVerbosityLevel = 'debug';
     }
 
-    timer = setTimeout(reloadIfStuck, 3000);
+    timer = setTimeout(reloadIfStuck, 4000);
     TelegramService.init({
       onUpdate,
       logVerbosityLevel,

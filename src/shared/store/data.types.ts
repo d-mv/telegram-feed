@@ -1,4 +1,4 @@
-import { TUser, TUserFullInfo } from '../../entities';
+import { TUser, TUserFullInfo } from '../entities';
 
 export interface SelectedChatId {
   id: number;
@@ -6,8 +6,6 @@ export interface SelectedChatId {
 }
 
 export type StateUser = TUser & Partial<Omit<TUserFullInfo, '@type'>>;
-
-export type UpdateUserFullInfo = { id: number; data: TUserFullInfo };
 
 export interface DownloadProgress {
   expectedSize: number;

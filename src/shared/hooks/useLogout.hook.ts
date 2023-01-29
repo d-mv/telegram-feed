@@ -1,4 +1,5 @@
 import { useResetRecoilState } from 'recoil';
+
 import { TelegramService } from '../entities';
 import {
   authEventState,
@@ -62,6 +63,7 @@ export function useLogout() {
       resetPasswordHint();
       resetSelectedChat();
       resetUsers();
+      window.history.go(0);
     }
   }
 

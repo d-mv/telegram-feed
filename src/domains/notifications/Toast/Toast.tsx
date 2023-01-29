@@ -1,9 +1,9 @@
 import { makeMatch, Optional } from '@mv-d/toolbelt';
-import { compose } from 'ramda';
+import { useRecoilState } from 'recoil';
 import { clsx } from 'clsx';
 import { useCallback, useEffect } from 'react';
 
-import { Icon, removeNotification, useDispatch } from '../../../shared';
+import { Icon, notificationsState } from '../../../shared';
 import { Message, MessageTypes } from '../message.types';
 import classes from './Toast.module.scss';
 
@@ -37,11 +37,11 @@ const ICON_CLASSES = makeMatch(
 let timer: Optional<NodeJS.Timeout> = undefined;
 
 export function Toast(message: Message) {
-  const dispatch = useDispatch();
+  const [messages, setMessages] = useRecoilState(notificationsState);
 
   const handleClick = useCallback(() => {
-    compose(dispatch, removeNotification)(message.id);
-  }, [dispatch, message.id]);
+    setMessages(messages.filter(m => m.id !== message.id));
+  }, [message.id, messages, setMessages]);
 
   function clearTimer() {
     if (timer) {

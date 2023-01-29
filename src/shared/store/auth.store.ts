@@ -10,3 +10,5 @@ export const authSelector = selector({
   get: ({ get }) => get(authState),
   set: ({ set }, v) => set(authState, v),
 });
+
+export const authLinkState = atom({ key: 'auth/link', default: '' });
