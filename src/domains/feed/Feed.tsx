@@ -27,7 +27,7 @@ export default function Feed() {
 
   const setSelectedChatId = useSetRecoilState(selectedChatSelector);
 
-  const { getChatById } = useChats();
+  const { getChatById, getSupergroupUsernameById } = useChats();
 
   const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
 
@@ -80,7 +80,15 @@ export default function Feed() {
 
       const chat = getChatById(chatId);
 
-      if (chat) setSelectedChatId({ id: chatId, title: chat.title || '' });
+      const username = getSupergroupUsernameById(chatId);
+
+      // TODO: open the exact message
+      if (username) {
+        // eslint-disable-next-line no-console
+        console.log(chat, username);
+
+        window.open(`tg://resolve?domain=${username}`);
+      }
     };
   }
 

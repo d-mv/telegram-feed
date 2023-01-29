@@ -33,18 +33,17 @@ export interface TSupergroup {
   date: number;
   has_linked_chat: number;
   has_location: number;
-  id: 1774242343;
+  id: number;
   is_broadcast_group: number;
   is_channel: number;
   is_fake: number;
   is_scam: number;
   is_slow_mode_enabled: number;
   is_verified: number;
-  member_count: 0;
+  member_count: number;
   restriction_reason: '';
   sign_messages: number;
   status: TSupergroupStatusMember;
-
   username: string;
 }
 

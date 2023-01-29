@@ -1,7 +1,7 @@
 import { Optional } from '@mv-d/toolbelt';
 import { atom, DefaultValue, selector } from 'recoil';
 
-import { isChannel, isPrivate, StorageService, TChat } from '../entities';
+import { isChannel, isPrivate, StorageService, TChat, TSupergroup } from '../entities';
 import { SelectedChatId } from './types';
 
 export const chatsLoadedState = atom({
@@ -55,5 +55,29 @@ export const selectedChatSelector = selector({
   set: ({ set }, v) => {
     set(selectedChatState, v);
     StorageService.set('selectedChat', v);
+  },
+});
+
+export const supergroupsState = atom<Record<number, { username: string }>>({
+  key: 'chats/supergroups',
+  default: {},
+});
+
+export const supergroupsSelector = selector({
+  key: 'chats/supergroups/selector',
+  get: ({ get }) => get(supergroupsState),
+  set: ({ set, get }, v) => {
+    if (v instanceof DefaultValue) {
+      set(supergroupsState, v);
+      return;
+    }
+
+    const entry = Object.entries(v)[0];
+
+    // const id = parseInt(String(entry[0]).replace(/^-100/, ''));
+
+    // eslint-disable-next-line no-console
+    // console.log(entry, id);
+    set(supergroupsState, { ...get(supergroupsState), [entry[0]]: entry[1] });
   },
 });

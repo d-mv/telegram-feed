@@ -59,6 +59,7 @@ export function CardWebPage({ className, webPage, width }: CardProps) {
     return renderDescriptionContents();
   }
 
+  // TODO: fix the render of instagram links
   return (
     <div id='card-web-page' className={clsx(classes.container, className)}>
       <CardDivider className={classes.divider} />

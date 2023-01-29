@@ -18,6 +18,7 @@ import {
   messagesSelector,
   fileDownloadProgressSelector,
   chatIdsState,
+  supergroupsSelector,
 } from '../shared';
 
 let timer: Optional<NodeJS.Timeout> = undefined;
@@ -105,6 +106,19 @@ export function useConnect() {
     [setFileDownloadProgress],
   );
 
+  const setSupergroup = useSetRecoilState(supergroupsSelector);
+
+  const updateSupergroup = useCallback(
+    (e: TUpdates) => {
+      if (!e || e['@type'] !== 'updateSupergroup') return;
+
+      // eslint-disable-next-line no-console
+      // console.log('updateSupergroup', e.supergroup.id, e.supergroup);
+      setSupergroup({ [e.supergroup.id]: { username: e.supergroup.username } });
+    },
+    [setSupergroup],
+  );
+
   const matchUpdate = useMemo(
     () =>
       makeMatch<(e: TUpdates) => void>(
@@ -120,7 +134,9 @@ export function useConnect() {
           //   v, // eslint-disable-next-line no-console
           // ) => console.log('>>>', v),
           // updateChatFilters: log,
-          // updateBasicGroup: log,
+          // updateBasicGroup: console.log,
+          updateSupergroup,
+          // updateSupergroupFullInfo: console.log,
           // updateHavePendingNotifications: log,
           // updateChatLastMessage: addLastMessageToMessages,
           // updateNewChat: handleNewChat,
@@ -128,7 +144,7 @@ export function useConnect() {
         },
         (event: TUpdates) => isDebugLogging(CONFIG) && logger.warn(`Unmatched event: ${event['@type']}`),
       ),
-    [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage],
+    [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage, updateSupergroup],
   );
 
   const reloadIfStuck = useCallback(() => {

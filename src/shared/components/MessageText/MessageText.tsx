@@ -72,7 +72,7 @@ export function MessageText() {
   function renderWebPage() {
     if (type !== 'messageText' || !message.content.web_page) return null;
 
-    return <CardWebPage webPage={message.content.web_page} width={containerWidth} />;
+    return <CardWebPage webPage={message.content.web_page} width={containerWidth - 2} />;
   }
 
   function renderMedia() {
