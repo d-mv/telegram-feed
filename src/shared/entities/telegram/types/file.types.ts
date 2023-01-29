@@ -1,4 +1,4 @@
-import { TExtra } from './event.types';
+import { TData, TExtra } from './event.types';
 
 export interface TFileLocal {
   '@type': 'localFile';
@@ -30,8 +30,7 @@ export interface TFile {
   size: number;
 }
 
-export interface TFilePart {
-  '@extra': TExtra;
+export interface TFilePart extends TData {
   '@type': 'filePart';
   data: Blob;
   transaction_id: number;

@@ -159,6 +159,9 @@ export function useConnect() {
     (event: TUpdates) => {
       const type = event['@type'];
 
+      // eslint-disable-next-line no-console
+      // console.log(type, event);
+
       if (type === 'updateConnectionState' && event.state['@type'] === 'connectionStateReady' && !isAuthed) {
         logger.info('Connection ready');
         setIsAuthed(true);

@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
+import { useRecoilValue } from 'recoil';
 import { propEq } from 'ramda';
 
 import { chatsSelector, supergroupsSelector } from '../store';
-import { useRecoilValue } from 'recoil';
 
 export function useChats() {
   const chats = useRecoilValue(chatsSelector);
@@ -11,6 +11,7 @@ export function useChats() {
 
   const getChatById = useCallback((id: number) => chats.find(propEq('id', id)), [chats]);
 
+  // TODO: do we need this?
   const getSupergroupUsernameById = useCallback(
     (id: number) => {
       // TODO: rename

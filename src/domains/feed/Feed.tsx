@@ -1,6 +1,6 @@
-import { as, ifTrue, logger } from '@mv-d/toolbelt';
-import { MouseEvent, useMemo, useRef } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { ifTrue, logger } from '@mv-d/toolbelt';
+import { useMemo, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { useGetChats } from './useGetChats.hook';
 
@@ -15,8 +15,6 @@ import {
   MessageDivider,
   messagesSelector,
   myselfSelector,
-  selectedChatSelector,
-  useChats,
 } from '../../shared';
 import { FeedContext } from './feed.context';
 
@@ -24,10 +22,6 @@ export default function Feed() {
   const messages = useRecoilValue(messagesSelector);
 
   const myself = useRecoilValue(myselfSelector);
-
-  const setSelectedChatId = useSetRecoilState(selectedChatSelector);
-
-  const { getChatById, getSupergroupUsernameById } = useChats();
 
   const topRef = useRef<MaybeNull<HTMLSpanElement>>(null);
 
@@ -54,44 +48,6 @@ export default function Feed() {
 
   const qtyMessages = useMemo(() => displayMessages.length, [displayMessages]);
 
-  function handleClick(chatId: number) {
-    return function click(e: MouseEvent<HTMLDivElement>) {
-      if ('path' in e.nativeEvent) {
-        const path = e.nativeEvent.path as HTMLElement[];
-
-        const outsideLink = path.find(el => el.id === 'outside-link');
-
-        if (outsideLink) {
-          e.stopPropagation();
-
-          if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
-
-          return;
-        }
-      } else if ('target' in e && e.target) {
-        if (as<HTMLElement>(e.target).id === 'outside-link') {
-          e.stopPropagation();
-
-          if (isDebugLogging(CONFIG)) logger.info('Outside link clicked');
-
-          return;
-        }
-      }
-
-      const chat = getChatById(chatId);
-
-      const username = getSupergroupUsernameById(chatId);
-
-      // TODO: open the exact message
-      if (username) {
-        // eslint-disable-next-line no-console
-        console.log(chat, username);
-
-        window.open(`tg://resolve?domain=${username}`);
-      }
-    };
-  }
-
   function renderMessageByIndex(index: number) {
     // eslint-disable-next-line security/detect-object-injection
     const message = displayMessages[index];
@@ -111,7 +67,7 @@ export default function Feed() {
     }
 
     return (
-      <FeedContext.Provider key={message.id} value={{ message, onCardClick: handleClick(message.chat_id) }}>
+      <FeedContext.Provider key={message.id} value={{ message }}>
         <Component />
         <MessageDivider id={message.id} />
       </FeedContext.Provider>

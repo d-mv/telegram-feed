@@ -46,9 +46,7 @@ export function CardMedia({ asBackground, media, className, width, title, id }: 
   }, []);
 
   useEffect(() => {
-    async function get() {
-      queueFileDownload(fileId, mediaData.expected_size || 0, setFileToState);
-    }
+    const get = async () => queueFileDownload(fileId, mediaData.expected_size || 0, setFileToState);
 
     get();
   }, [fileId, mediaData.expected_size, queueFileDownload, setFileToState]);

@@ -1,4 +1,4 @@
-import { TExtra, TUpdate } from './event.types';
+import { TData, TUpdate } from './event.types';
 import { TMessage } from './message.types';
 import { TChatNotificationSettings } from './notifications.types';
 import { TMiniThumbnail, TPhoto, TPhotoSize } from './photo.types';
@@ -79,9 +79,7 @@ export interface TChatPhoto {
   sizes: TPhotoSize[];
 }
 
-export interface TChats {
-  '@client_id': number;
-  '@extra': TExtra;
+export interface TChats extends TData {
   '@type': 'chats';
   chat_ids: number[];
   total_count: number;

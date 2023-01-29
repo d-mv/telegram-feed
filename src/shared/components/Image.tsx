@@ -42,9 +42,7 @@ export function Image({ media, className, alt, width, asBackground }: PhotoProps
   }, []);
 
   useEffect(() => {
-    async function get() {
-      queueFileDownload(photoId, photoSize?.photo.expected_size || 0, setImageToState);
-    }
+    const get = async () => queueFileDownload(photoId, photoSize?.photo.expected_size || 0, setImageToState);
 
     if (photoId !== id) {
       setId(photoId);

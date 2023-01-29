@@ -1,6 +1,6 @@
-export interface TError {
-  '@client_id': 1;
-  '@extra': { query_id: number };
+import { TData } from './event.types';
+
+export interface TError extends TData {
   '@type': 'error';
   code: number;
   message: string;

@@ -27,11 +27,11 @@ import classes from './MessageText.module.scss';
 const VALID_MESSAGE_TYPES = ['messagePhoto', 'messageText', 'messageVideo'];
 
 export function MessageText() {
-  const [message, onClick, isChat] = useContextSelector(FeedContext, c => [c.message, c.onCardClick, c.isChat]);
+  const message = useContextSelector(FeedContext, c => c.message);
 
   const myself = useRecoilValue(myselfSelector);
 
-  const { getRelativeMessageDate, isMyMessage } = useMessage(message, isChat);
+  const { getRelativeMessageDate, openMessage } = useMessage(message);
 
   const { getChatById } = useChats();
 
@@ -40,13 +40,12 @@ export function MessageText() {
   const sender = useMemo(
     () =>
       getSenderFromMessage({
-        isChat,
         message,
         getChat: getChatById,
         getUser: getUserById,
         myself,
       }),
-    [getChatById, getUserById, isChat, message, myself],
+    [getChatById, getUserById, message, myself],
   );
 
   const text = useTextProcessor(message.content);
@@ -60,14 +59,6 @@ export function MessageText() {
   const type = message.content['@type'];
 
   if (!VALID_MESSAGE_TYPES.includes(type)) return null;
-
-  function chooseClassname() {
-    if (!isChat) return;
-
-    if (isMyMessage) return classes.myself;
-
-    return classes.owner;
-  }
 
   function renderWebPage() {
     if (type !== 'messageText' || !message.content.web_page) return null;
@@ -87,8 +78,8 @@ export function MessageText() {
     <Card
       containerRef={containerRef}
       id={`${type}-${message.id}`}
-      onClick={onClick}
-      className={clsx(classes.container, chooseClassname(), 'animate__animated animate__fadeIn')}
+      onClick={openMessage()}
+      className={clsx(classes.container, 'animate__animated animate__fadeIn')}
     >
       {renderMedia()}
       <CardHeader>{sender}</CardHeader>

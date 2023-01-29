@@ -1,17 +1,5 @@
 .container {
-	max-width: 100%;
-}
-
-.owner {
-
-	margin-inline: 0;
-	width: fit-content;
-	align-self: flex-start;
-}
-
-.myself {
-	margin-inline: 0;
-	width: fit-content;
-	align-self: flex-end;
-	background: var(--color-accent-4);
+  margin-inline: 0;
+  width: 100%;
+  align-self: flex-start;
 }

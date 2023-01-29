@@ -1,16 +1,16 @@
 import { Optional } from '@mv-d/toolbelt';
-import { TChat, TMessage, TPhoto, TPhotoSize, TUser } from '../entities';
+
+import { TChat, TMessage, TPhoto, TUser } from '../entities';
 import { StateUser } from '../store';
 
 interface GetSendFromMessageProps {
-  isChat?: boolean;
   message: TMessage;
   getChat: (id: number) => TChat | undefined;
   getUser: (id: number) => Optional<StateUser>;
   myself: Optional<TUser>;
 }
 
-export function getSenderFromMessage({ isChat, message, getChat, getUser, myself }: GetSendFromMessageProps) {
+export function getSenderFromMessage({ message, getChat, getUser, myself }: GetSendFromMessageProps) {
   const s = message.sender_id;
 
   const chat = getChat(message.chat_id);
@@ -27,8 +27,6 @@ export function getSenderFromMessage({ isChat, message, getChat, getUser, myself
 
     if (senderName === chat?.title) return senderName;
 
-    if (isChat) return senderName;
-
     if (itsMe) return chat?.title;
 
     return `${chat?.title} (${senderName})`;
@@ -40,7 +38,7 @@ export function getSenderFromMessage({ isChat, message, getChat, getUser, myself
 export function getPhotoSize(photo: TPhoto, size = 'x') {
   const { sizes } = photo;
 
-  return sizes.find(p => p.type === size);
+  return sizes.find(p => p.type === size || p.type === 'm' || p.type === 's');
 }
 
 interface GetPhotoContainerStyleOptions {
