@@ -215,7 +215,7 @@ export function useConnect() {
       jsLogVerbosityLevel = 'debug';
     }
 
-    timer = setTimeout(reloadIfStuck, 4000);
+    timer = setTimeout(reloadIfStuck, 8000);
     TelegramService.init({
       onUpdate,
       logVerbosityLevel,
