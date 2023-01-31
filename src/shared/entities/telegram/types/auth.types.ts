@@ -20,6 +20,35 @@ export interface TUpdateWaitPassword extends TUpdateAuthState {
   };
 }
 
+export interface TAuthenticationCode {
+  length: number;
+}
+
+export interface TAuthenticationCodeTypeSms extends TAuthenticationCode {
+  '@type': 'authenticationCodeTypeSms';
+}
+
+export interface TAuthenticationCodeTypeTelegramMessage extends TAuthenticationCode {
+  '@type': 'authenticationCodeTypeTelegramMessage';
+}
+
+export type TAuthenticationCodes = TAuthenticationCodeTypeSms | TAuthenticationCodeTypeTelegramMessage;
+
+export interface TAuthenticationCodeInfo {
+  '@type': 'authenticationCodeInfo';
+  next_type: TAuthenticationCodes;
+  phone_number: string;
+  timeout: number;
+  type: TAuthenticationCodes;
+}
+
+export interface TUpdateAuthorizationStateWaitCode extends TUpdateAuthState {
+  authorization_state: {
+    '@type': 'authorizationStateWaitCode';
+    code_info: TAuthenticationCodeInfo;
+  };
+}
+
 export interface TUpdateWaitEncryptionKey extends TUpdateAuthState {
   authorization_state: {
     '@type': 'authorizationStateWaitEncryptionKey';

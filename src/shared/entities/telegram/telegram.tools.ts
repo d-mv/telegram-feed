@@ -1,4 +1,5 @@
-import { as, generateId, Optional } from '@mv-d/toolbelt';
+import { as, Optional } from '@mv-d/toolbelt';
+import { nanoid } from 'nanoid';
 
 import { TChat, TError, TUpdates } from '..';
 import { Message, MessageTypes } from '../../../domains';
@@ -20,7 +21,7 @@ export function authorizationState(event: Optional<TUpdates>) {
 
 export function makeTErrorNotification(error: unknown): Message {
   return {
-    id: generateId(),
+    id: nanoid(),
     type: MessageTypes.ERROR,
     text: as<TError>(error).message,
   };

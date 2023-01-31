@@ -2,6 +2,7 @@ import {
   TAuthorizationStateClosed,
   TAuthorizationStateReady,
   TUpdateAuthorizationState,
+  TUpdateAuthorizationStateWaitCode,
   TUpdateWaitEncryptionKey,
   TUpdateWaitOtherDeviceConfirmation,
   TUpdateWaitPassword,
@@ -38,6 +39,7 @@ import { TUpdateSupergroup, TUpdateSupergroupFullInfo } from './supergroup.types
 import { TUpdateUser, TUpdateUserFullInfo } from './user.types';
 
 export type TAuthUpdates =
+  | TUpdateAuthorizationStateWaitCode
   | TAuthorizationStateClosed
   | TAuthorizationStateReady
   | TUpdateAuthorizationState
@@ -49,6 +51,7 @@ export type TAuthUpdates =
 export type TAuthUpdatesTypes = TAuthUpdates['@type'];
 
 export type TUpdates =
+  | TUpdateAuthorizationStateWaitCode
   | TUpdateFile
   | TUpdateOk
   | TAuthorizationStateClosed

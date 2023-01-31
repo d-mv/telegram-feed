@@ -61,6 +61,7 @@ specifiers:
   jest-resolve: 29.3.1
   jest-watch-typeahead: 2.2.1
   mini-css-extract-plugin: 2.4.5
+  nanoid: ^4.0.0
   postcss: 8.4.4
   postcss-flexbugs-fixes: 5.0.2
   postcss-loader: 6.2.1
@@ -157,6 +158,7 @@ dependencies:
   jest-resolve: 29.3.1
   jest-watch-typeahead: 2.2.1_jest@29.3.1
   mini-css-extract-plugin: 2.4.5_webpack@5.64.4
+  nanoid: 4.0.0
   postcss: 8.4.4
   postcss-flexbugs-fixes: 5.0.2_postcss@8.4.4
   postcss-loader: 6.2.1_zw4lpqrkpbk3ovuy5iijgzwtnu
@@ -7315,6 +7317,12 @@ packages:
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+    dev: false
+
+  /nanoid/4.0.0:
+    resolution: {integrity: sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==}
+    engines: {node: ^14 || ^16 || >=18}
     hasBin: true
     dev: false
 

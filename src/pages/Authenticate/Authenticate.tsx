@@ -11,8 +11,10 @@ import {
   useGlobal,
 } from '../../shared';
 import { AuthenticateWithApp } from './AuthenticateWithApp';
+import { LoginCodeInput } from './LoginCodeInput';
 import { Container } from './Container';
-import { Passcode } from './Passcode';
+import { Login } from './Login';
+import { PasswordInput } from './PasswordInput';
 import { useAuthentication } from './useAuthentication';
 
 export default function Authenticate() {
@@ -52,15 +54,29 @@ export default function Authenticate() {
 
   const isWaiting = state === 'authorizationStateWaitOtherDeviceConfirmation';
 
+  const isWaitingForPhoneNumber = state === 'authorizationStateWaitPhoneNumber';
+
+  const isWaitingForCode = state === 'authorizationStateWaitCode';
+
+  const isWaitingForPassword = state === 'authorizationStateWaitPassword';
+
+  const renderLogin = () => <Login />;
+
+  const renderCodeInput = () => <LoginCodeInput />;
+
+  const renderPasswordInput = () => <PasswordInput />;
+
   return (
     <Container>
-      {ifTrue(isWaiting && authLink && isMobile(), () => (
-        <AuthenticateWithApp />
-      ))}
-      {ifTrue(isWaiting && !isMobile(), renderQr)}
-      {ifTrue(state === 'authorizationStateWaitPassword', () => (
-        <Passcode />
-      ))}
+      {ifTrue(isWaitingForPhoneNumber, renderLogin)}
+      {ifTrue(isWaitingForCode, renderCodeInput)}
+      {ifTrue(isWaitingForPassword, renderPasswordInput)}
     </Container>
   );
 }
+
+// {ifTrue(isWaiting && authLink && isMobile(), () => (
+// ))}
+// {ifTrue(isWaiting && !isMobile(), renderQr)}
+// {ifTrue(state === 'authorizationStateWaitPassword', () => (
+// ))}

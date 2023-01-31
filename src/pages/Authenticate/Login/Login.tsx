@@ -1,22 +1,22 @@
 import { AnyValue, as } from '@mv-d/toolbelt';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import { useAuthentication } from '../useAuthentication';
 
 import classes from './Login.module.scss';
 
-const tester = new RegExp(/^\+[\d\s]{12}/);
-
-// TODO: add submit phone
-export function Login() {
+export default function Login() {
   const [phone, setPhone] = useState('');
+
+  const [error, setError] = useState('');
 
   const [disableSubmit, setDisableSubmit] = useState(false);
 
-  const testPhoneValue = useCallback(() => tester.test(phone.replace(' ', '')), [phone]);
+  const { isPhoneNo, sendAuthenticationPhoneNumber } = useAuthentication();
 
   useEffect(() => {
     if (phone.length === 0 && !disableSubmit) setDisableSubmit(true);
-    else if (phone.length > 12 && testPhoneValue() && disableSubmit) setDisableSubmit(false);
-  }, [disableSubmit, phone, testPhoneValue]);
+    else if (phone.length > 12 && disableSubmit) setDisableSubmit(false);
+  }, [disableSubmit, phone]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -25,7 +25,14 @@ export function Login() {
       .filter(([el]) => Number.isNaN(parseInt(el)))
       .reduce((acc, [key, element]) => ({ ...acc, [key]: element.value }), {} as Record<string, string>);
 
-    setPhone(value.phone);
+    if (isPhoneNo(value.phone)) sendAuthenticationPhoneNumber(value.phone);
+    else setError('Incorrect number');
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    if (error) setError('');
+
+    setPhone(e.target.value);
   }
 
   return (
@@ -43,8 +50,11 @@ export function Login() {
           autoFocus
           placeholder='+1 555 555 5555'
           value={phone}
-          onChange={e => setPhone(e.target.value)}
+          onChange={handleChange}
         />
+      </div>
+      <div className={classes['error-message']}>
+        <p>{error}</p>
       </div>
       <button disabled={disableSubmit} className={classes['submit-button']} type='submit'>
         Submit

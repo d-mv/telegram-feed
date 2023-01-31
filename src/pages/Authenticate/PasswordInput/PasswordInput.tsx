@@ -3,9 +3,9 @@ import { MouseEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { Icon, passwordHintState, useTelegram } from '../../../shared';
-import classes from './Passcode.module.scss';
+import classes from './PasswordInput.module.scss';
 
-export default function Passcode() {
+export default function PasswordInput() {
   const { submitPassword } = useTelegram();
 
   const authPasswordHint = useRecoilValue(passwordHintState);

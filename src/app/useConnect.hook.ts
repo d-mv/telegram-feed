@@ -1,5 +1,5 @@
 import { logger, makeMatch, Optional } from '@mv-d/toolbelt';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
@@ -23,6 +23,8 @@ import {
 } from '../shared';
 
 let timer: Optional<NodeJS.Timeout> = undefined;
+
+const NEED_AUTHORIZATION_STATES = ['authorizationStateWaitPhoneNumber', 'authorizationStateWaitCode'];
 
 export function useConnect() {
   const isInit = useRef(false);
@@ -86,7 +88,7 @@ export function useConnect() {
         }
       }
     },
-    [setAuthEvent, setPasswordHint],
+    [setAuthEvent, setAuthLink, setPasswordHint],
   );
 
   const updateNewMessage = useCallback(
@@ -197,6 +199,14 @@ export function useConnect() {
       setLoadingMessage('');
     }
   }, [authLink, chatIds, setLoadingMessage]);
+
+  useEffect(() => {
+    if (NEED_AUTHORIZATION_STATES.includes(authEvent?.authorization_state['@type'] || '') && timer) {
+      clearTimeout(timer);
+      setLoadingMessage('');
+      logger.info('Waiting for phone number input');
+    }
+  }, [authEvent, setLoadingMessage]);
 
   // setup client
   useEffect(() => {

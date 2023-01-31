@@ -20,7 +20,7 @@
 
 .input {
   font-size: 2rem;
-  margin-block-end: 3rem;
+  margin-block-end: 1rem;
   color: var(--color-text);
   border-radius: 0.1rem;
   outline: none;
@@ -46,11 +46,21 @@
   &:disabled {
     cursor: not-allowed;
     background-color: var(--color-primary-3);
-	color: var(--color-primary-4);
-	border-bottom-color: var(--color-primary-2)
+    color: var(--color-primary-4);
+    border-bottom-color: var(--color-primary-2)
   }
 
   &:active {
-	transform: translateY(0.2rem);
+    transform: translateY(0.2rem);
+  }
+}
+
+.error-message {
+  height: 2.2rem;
+  margin-block-end: 1rem;
+
+  p {
+    font-size: 1.6rem;
+    color: var(--color-error-1);
   }
 }
