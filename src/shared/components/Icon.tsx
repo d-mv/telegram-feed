@@ -6,7 +6,7 @@ import { IoClose, IoWarning, IoReturnUpBack } from 'react-icons/io5';
 import { BsFillHandThumbsUpFill, BsFileImage, BsCameraVideo } from 'react-icons/bs';
 import { BiShow, BiHide, BiRadioCircle } from 'react-icons/bi';
 import { FiEye, FiDownloadCloud } from 'react-icons/fi';
-import { TfiControlForward } from 'react-icons/tfi';
+import { TfiControlForward, TfiCommentAlt } from 'react-icons/tfi';
 import { TbFilterOff } from 'react-icons/tb';
 import { RxDividerHorizontal } from 'react-icons/rx';
 import { CgMenu } from 'react-icons/cg';
@@ -34,6 +34,7 @@ export const Icons = makeMatch(
     up: TiArrowUp,
     video: BsCameraVideo,
     download: FiDownloadCloud,
+    comment: TfiCommentAlt,
   },
   () => <div />,
 );

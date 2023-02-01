@@ -1,10 +1,11 @@
 import { AnyValue, as } from '@mv-d/toolbelt';
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+
+import { ErrorMessage, Input, SubmitButton } from '../../../shared';
 import { useAuthentication } from '../useAuthentication';
+import classes from './PhoneInput.module.scss';
 
-import classes from './Login.module.scss';
-
-export default function Login() {
+export default function PhoneInput() {
   const [phone, setPhone] = useState('');
 
   const [error, setError] = useState('');
@@ -37,28 +38,11 @@ export default function Login() {
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
-      <label className={classes.label} htmlFor='password'>
+      <Input type='tel' name='phone' placeholder='+1 555 555 5555' value={phone} onChange={handleChange}>
         Phone #
-      </label>
-      <div className={classes['input-container']}>
-        <input
-          className={classes.input}
-          type='tel'
-          name='phone'
-          required
-          autoComplete='off'
-          autoFocus
-          placeholder='+1 555 555 5555'
-          value={phone}
-          onChange={handleChange}
-        />
-      </div>
-      <div className={classes['error-message']}>
-        <p>{error}</p>
-      </div>
-      <button disabled={disableSubmit} className={classes['submit-button']} type='submit'>
-        Submit
-      </button>
+      </Input>
+      <ErrorMessage>{error}</ErrorMessage>
+      <SubmitButton isDisabled={disableSubmit} />
     </form>
   );
 }

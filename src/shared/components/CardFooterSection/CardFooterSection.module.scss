@@ -1,7 +1,15 @@
 .container {
-	width: 8rem;
+	width: 12rem;
 	display: flex;
 	height: 1.5rem;
 	align-items: center;
 	white-space: nowrap;
+}
+
+.align-left {
+	justify-content: flex-start
+}
+
+.align-right {
+	justify-content: flex-end;
 }

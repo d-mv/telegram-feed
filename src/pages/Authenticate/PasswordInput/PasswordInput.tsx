@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { MouseEvent, useState } from 'react';
+import { FormEvent, MouseEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { Icon, passwordHintState, useTelegram } from '../../../shared';
+import { Icon, Input, passwordHintState, SubmitButton, useTelegram } from '../../../shared';
 import classes from './PasswordInput.module.scss';
 
 export default function PasswordInput() {
@@ -12,7 +12,7 @@ export default function PasswordInput() {
 
   const [password, setPassword] = useState('');
 
-  function handleSubmit(e: MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     submitPassword(password);
   }
@@ -25,26 +25,22 @@ export default function PasswordInput() {
   }
 
   return (
-    <div className={classes.form}>
-      <label htmlFor='password'>Password</label>
-      <div className={classes['input-container']}>
-        <input
-          type={show ? 'text' : 'password'}
-          name='password'
-          required
-          autoComplete='off'
-          autoFocus
-          placeholder={authPasswordHint ?? 'Enter your password'}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button className={clsx(classes['show-button'], { [classes['hide-color']]: show })} onClick={handleShowHide}>
-          <Icon icon={show ? 'hide' : 'show'} />
-        </button>
-      </div>
-      <button disabled={!password.length} className={classes['submit-button']} type='submit' onClick={handleSubmit}>
-        Submit
-      </button>
-    </div>
+    <form className={classes.form} onSubmit={handleSubmit}>
+      <Input
+        type={show ? 'text' : 'password'}
+        name='password'
+        placeholder={authPasswordHint ?? 'Enter your password'}
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        suffixElement={
+          <button className={clsx(classes['show-button'], { [classes['hide-color']]: show })} onClick={handleShowHide}>
+            <Icon icon={show ? 'hide' : 'show'} />
+          </button>
+        }
+      >
+        Password
+      </Input>
+      <SubmitButton isDisabled={!password.length} />
+    </form>
   );
 }
