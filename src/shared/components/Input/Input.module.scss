@@ -1,0 +1,30 @@
+ .container {
+   position: relative;
+   width: 90%;
+   margin-block-end: 1rem;
+   display: flex;
+   flex-flow: column;
+ }
+
+ .label {
+   text-align: center;
+   font-size: 1.6rem;
+   margin-block-end: 1rem;
+   color: var(--color-text);
+   font-weight: 300;
+ }
+
+ .input {
+   width: 100%;
+   font-size: 2rem;
+   color: var(--color-text);
+   border-radius: 0.1rem;
+   outline: none;
+   border: 0.1rem solid var(--color-primary-4);
+   padding: 0.8rem 1rem;
+   text-align: center;
+
+   &::placeholder {
+     color: var(--color-primary-3);
+   }
+ }

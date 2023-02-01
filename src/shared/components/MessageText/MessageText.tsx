@@ -92,9 +92,9 @@ export function MessageText() {
       </CardText>
       {renderWebPage()}
       <CardFooter>
-        <CardFooterSection>{getRelativeMessageDate()}</CardFooterSection>
+        <CardFooterSection left>{getRelativeMessageDate()}</CardFooterSection>
         <CardDivider />
-        <CardFooterSection>
+        <CardFooterSection right>
           <CardInteractionInfo interactionInfo={message.interaction_info} />
         </CardFooterSection>
       </CardFooter>

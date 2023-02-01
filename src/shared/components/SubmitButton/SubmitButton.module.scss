@@ -1,0 +1,22 @@
+.container {
+  font-size: 1.6rem;
+  padding: 0.6rem 1.6rem;
+  background-color: var(--color-info-1);
+  border-radius: 0.1rem;
+  border: 0.3rem solid transparent;
+  border-bottom: 0.3rem solid var(--color-info-2);
+  color: var(--color-white);
+  cursor: pointer;
+  user-select: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-primary-3);
+    color: var(--color-primary-4);
+    border-bottom-color: var(--color-primary-2);
+  }
+
+  &:active {
+    transform: translateY(0.2rem);
+  }
+}

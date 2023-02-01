@@ -2,17 +2,11 @@ import { ifTrue, logger } from '@mv-d/toolbelt';
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import {
-  authEventSelector,
-  authLinkState,
-  authorizationState,
-  MaybeNull,
-  myselfSelector,
-  useGlobal,
-} from '../../shared';
-import { AuthenticateWithApp } from './AuthenticateWithApp';
+import { authEventSelector, authorizationState, MaybeNull, myselfSelector } from '../../shared';
+import { LoginCodeInput } from './LoginCodeInput';
 import { Container } from './Container';
-import { Passcode } from './Passcode';
+import { PhoneInput } from './PhoneInput';
+import { PasswordInput } from './PasswordInput';
 import { useAuthentication } from './useAuthentication';
 
 export default function Authenticate() {
@@ -22,13 +16,13 @@ export default function Authenticate() {
 
   const myself = useRecoilValue(myselfSelector);
 
-  const authLink = useRecoilValue(authLinkState);
+  // const authLink = useRecoilValue(authLinkState);
 
   const qr = useRef<MaybeNull<HTMLDivElement>>(null);
 
   const { handleAuthentication } = useAuthentication();
 
-  const { isMobile } = useGlobal();
+  // const { isMobile } = useGlobal();
 
   useEffect(() => {
     if (event && 'authorization_state' in event) {
@@ -36,31 +30,39 @@ export default function Authenticate() {
     }
   }, [event, handleAuthentication]);
 
-  function renderQr() {
-    return (
-      <>
-        <h2>Login with your device</h2>
-        <div ref={qr}>Generating QR code...</div>
-      </>
-    );
-  }
+  // function renderQr() {
+  //   return (
+  //     <>
+  //       <h2>Login with your device</h2>
+  //       <div ref={qr}>Generating QR code...</div>
+  //     </>
+  //   );
+  // }
 
   if (myself) {
     logger.info('Is authenticated, redirecting to main page...');
     return null;
   }
 
-  const isWaiting = state === 'authorizationStateWaitOtherDeviceConfirmation';
+  // const isWaiting = state === 'authorizationStateWaitOtherDeviceConfirmation';
+
+  const isWaitingForPhoneNumber = state === 'authorizationStateWaitPhoneNumber';
+
+  const isWaitingForCode = state === 'authorizationStateWaitCode';
+
+  const isWaitingForPassword = state === 'authorizationStateWaitPassword';
+
+  const renderPhoneInput = () => <PhoneInput />;
+
+  const renderCodeInput = () => <LoginCodeInput />;
+
+  const renderPasswordInput = () => <PasswordInput />;
 
   return (
     <Container>
-      {ifTrue(isWaiting && authLink && isMobile(), () => (
-        <AuthenticateWithApp />
-      ))}
-      {ifTrue(isWaiting && !isMobile(), renderQr)}
-      {ifTrue(state === 'authorizationStateWaitPassword', () => (
-        <Passcode />
-      ))}
+      {ifTrue(isWaitingForPhoneNumber, renderPhoneInput)}
+      {ifTrue(isWaitingForCode, renderCodeInput)}
+      {ifTrue(isWaitingForPassword, renderPasswordInput)}
     </Container>
   );
 }

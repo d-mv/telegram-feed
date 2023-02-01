@@ -80,12 +80,12 @@ body {
   right: 0;
 }
 
-/* ::-webkit-scrollbar {
-  display:initial;
-  background-color: transparent;
-  width: 0.5rem;
+::-webkit-scrollbar {
+  display:none;
+  /* background-color: transparent;
+  width: 0.5rem; */
 }
-
+/*
 ::-webkit-scrollbar-button {
 }
 

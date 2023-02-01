@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <link type="text/css" rel="stylesheet" href="%PUBLIC_URL%/styles/basic.css" />
-    <link type="text/css" rel="stylesheet" href="%PUBLIC_URL%/styles/service.css" />
-    <!-- <meta name="description" content="Web site created using create-react-app" /> -->
-    <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
-    <!--
+
+<head>
+  <meta charset="utf-8" />
+  <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link type="text/css" rel="stylesheet" href="%PUBLIC_URL%/styles/basic.css" />
+  <link type="text/css" rel="stylesheet" href="%PUBLIC_URL%/styles/service.css" />
+  <!-- <meta name="description" content="Web site created using create-react-app" /> -->
+  <!-- <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" /> -->
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
-    <!--
+  <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -23,98 +24,104 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <script type="text/javascript" src="%PUBLIC_URL%/logger.js"></script>
-    <title>Telegram Feed</title>
-    <style>
-      /* pt-serif-regular - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'PT Serif';
-        font-style: normal;
-        font-weight: 400;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script type="text/javascript" src="%PUBLIC_URL%/logger.js"></script>
+  <title>Telegram Feed</title>
+  <style>
+    /* pt-serif-regular - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'PT Serif';
+      font-style: normal;
+      font-weight: 400;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* pt-serif-italic - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'PT Serif';
-        font-style: italic;
-        font-weight: 400;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-italic.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-italic.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+    /* pt-serif-italic - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'PT Serif';
+      font-style: italic;
+      font-weight: 400;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-italic.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-italic.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* pt-serif-700 - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'PT Serif';
-        font-style: normal;
-        font-weight: 700;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+    /* pt-serif-700 - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'PT Serif';
+      font-style: normal;
+      font-weight: 700;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* pt-serif-700italic - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'PT Serif';
-        font-style: italic;
-        font-weight: 700;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700italic.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700italic.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+    /* pt-serif-700italic - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'PT Serif';
+      font-style: italic;
+      font-weight: 700;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700italic.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/pt-serif-v17-latin-ext_latin_cyrillic-ext_cyrillic-700italic.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* noto-sans-300 - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'Noto Sans';
-        font-style: normal;
-        font-weight: 300;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+    /* noto-sans-300 - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 300;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-300.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* noto-sans-regular - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'Noto Sans';
-        font-style: normal;
-        font-weight: 400;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
+    /* noto-sans-regular - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 400;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-regular.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
 
-      /* noto-sans-600 - latin-ext_latin_cyrillic-ext_cyrillic */
-      @font-face {
-        font-family: 'Noto Sans';
-        font-style: normal;
-        font-weight: 600;
-        src: local(''),
-          url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff') format('woff');
-        /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
-    </style>
-  </head>
+    /* noto-sans-600 - latin-ext_latin_cyrillic-ext_cyrillic */
+    @font-face {
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 600;
+      src: local(''),
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */
+        url('%PUBLIC_URL%/fonts/noto-sans-v27-latin-ext_latin_cyrillic-ext_cyrillic-600.woff') format('woff');
+      /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+  </style>
+  <style>
+    #root {
+      background: linear-gradient(0deg, var(--color-secondary-3), var(--color-secondary-4))
+    }
+  </style>
+</head>
 
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+
 </html>
