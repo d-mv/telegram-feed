@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import classes from './ErrorMessage.module.css';
+import classes from './ErrorMessage.module.scss';
 
 export function ErrorMessage({ children }: PropsWithChildren) {
   return (

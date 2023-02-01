@@ -24,7 +24,11 @@ import {
 
 let timer: Optional<NodeJS.Timeout> = undefined;
 
-const NEED_AUTHORIZATION_STATES = ['authorizationStateWaitPhoneNumber', 'authorizationStateWaitCode'];
+const NEED_AUTHORIZATION_STATES = [
+  'authorizationStateWaitPhoneNumber',
+  'authorizationStateWaitCode',
+  'authorizationStateWaitPassword',
+];
 
 export function useConnect() {
   const isInit = useRef(false);
