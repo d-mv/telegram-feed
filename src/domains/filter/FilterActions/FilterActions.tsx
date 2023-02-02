@@ -29,7 +29,7 @@ export default function FilterActions() {
       <button className={classes.button} onClick={closeModal}>
         Cancel
       </button>
-      <Button isDisabled={false} onClick={handleUpdate}>
+      <Button isDisabled={!selected.length} onClick={handleUpdate}>
         Update
       </Button>
     </div>

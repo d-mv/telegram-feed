@@ -106,7 +106,7 @@ export function useConnect() {
 
       if (e.message.message_thread_id) return;
 
-      if (!filter.includes(e.message.chat_id)) return;
+      if (filter.length && !filter.includes(e.message.chat_id)) return;
 
       setMessages([e.message]);
 

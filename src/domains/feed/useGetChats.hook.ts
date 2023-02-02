@@ -110,7 +110,12 @@ export function useGetChats() {
       for await (const id of chatIds) {
         await getChat(id, id === last(chatIds));
 
-        if (filter.includes(id)) {
+        if (filter.length) {
+          if (filter.includes(id)) {
+            await fetchMessagesForChatId(id, 0, isFirst);
+            isFirst = false;
+          }
+        } else {
           await fetchMessagesForChatId(id, 0, isFirst);
           isFirst = false;
         }
