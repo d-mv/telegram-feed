@@ -10,6 +10,7 @@ import { TfiControlForward, TfiCommentAlt } from 'react-icons/tfi';
 import { TbFilterOff } from 'react-icons/tb';
 import { RxDividerHorizontal } from 'react-icons/rx';
 import { CgMenu } from 'react-icons/cg';
+import { RiCheckboxBlankCircleLine, RiCheckboxBlankCircleFill } from 'react-icons/ri';
 import { makeMatch } from '@mv-d/toolbelt';
 
 export const Icons = makeMatch(
@@ -35,6 +36,8 @@ export const Icons = makeMatch(
     video: BsCameraVideo,
     download: FiDownloadCloud,
     comment: TfiCommentAlt,
+    checkbox: RiCheckboxBlankCircleLine,
+    checkboxChecked: RiCheckboxBlankCircleFill,
   },
   () => <div />,
 );

@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.label {
+  font-size: 1.6rem;
+  max-width: calc(100% - 4rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  // padding-block: 1rem;
+  // padding-inline-start: 1rem;
+}
+
+.checkbox {
+  height: 2rem;
+  width: 2rem;
+  fill: var(--color-text);
+}
+
+.selected {
+  background-color: var(--color-info-1);
+  color: var(--color-white);
+
+  .checkbox {
+    fill: var(--color-white);
+  }
+}

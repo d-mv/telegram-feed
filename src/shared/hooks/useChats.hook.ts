@@ -1,11 +1,18 @@
 import { useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
-import { propEq } from 'ramda';
+import { pick, propEq } from 'ramda';
 
 import { chatsSelector, supergroupsSelector } from '../store';
+import { TChatPhotoInfo } from '../entities';
+
+export type TChatRender = { id: number; title: string; photo: TChatPhotoInfo };
 
 export function useChats() {
   const chats = useRecoilValue(chatsSelector);
+
+  const makeChatList = useCallback((): TChatRender[] => {
+    return chats.map(c => pick(['id', 'title', 'photo'], c));
+  }, [chats]);
 
   const supergroups = useRecoilValue(supergroupsSelector);
 
@@ -22,5 +29,5 @@ export function useChats() {
     [supergroups],
   );
 
-  return { getChatById, getSupergroupUsernameById };
+  return { getChatById, getSupergroupUsernameById, makeChatList };
 }

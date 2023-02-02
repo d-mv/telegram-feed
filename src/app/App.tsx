@@ -1,7 +1,7 @@
 import { ifTrue } from '@mv-d/toolbelt';
 import { useRecoilValue } from 'recoil';
 
-import { LoadMessage, Notifications } from '../domains';
+import { LoadMessage, Modals, Notifications } from '../domains';
 import { Authenticate, Main } from '../pages';
 import { LazyLoad, myselfSelector, useSelectedChat } from '../shared';
 import { useConnect } from './useConnect.hook';
@@ -25,6 +25,7 @@ export function App() {
       </LazyLoad>
       <Notifications />
       <LoadMessage />
+      <Modals />
     </>
   );
 }
