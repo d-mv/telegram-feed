@@ -1,25 +1,27 @@
 import { makeMatch } from '@mv-d/toolbelt';
 import { useRecoilValue } from 'recoil';
 
-import { LazyLoad } from '../../shared';
-import { Filter } from '../filter';
+import { LazyLoad, modalState } from '../../shared';
+import { Filter, FilterCounter, FilterActions } from '../filter';
 import { Modal } from './Modal';
-import { modalState } from './modals.store';
 
-const MODAL_CONTENTS = makeMatch({ filter: Filter }, () => null);
+const MODAL_CONTENTS = makeMatch(
+  { filter: { Component: Filter, footer: FilterActions, widgets: { header: FilterCounter } } },
+  { component: () => null },
+);
 
 export default function Modals() {
   const modalId = useRecoilValue(modalState);
 
-  const Component = MODAL_CONTENTS[modalId];
+  if (!(modalId in MODAL_CONTENTS)) return null;
 
-  if (!Component) return null;
+  const { Component, widgets, footer } = MODAL_CONTENTS[modalId];
 
   return (
-    <Modal>
-      <LazyLoad>
+    <LazyLoad>
+      <Modal widgets={widgets} footer={footer}>
         <Component />
-      </LazyLoad>
-    </Modal>
+      </Modal>
+    </LazyLoad>
   );
 }

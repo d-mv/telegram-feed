@@ -10,7 +10,8 @@
 }
 
 .overlay {
-	background-color: #44444440;
+	background-color: #000000bd;
+	backdrop-filter: blur(.2rem);
 	position: absolute;
 	top: 0;
 	right: 0;

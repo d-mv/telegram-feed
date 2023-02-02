@@ -52,7 +52,7 @@ export interface TChat {
   default_disable_notification: boolean;
   has_protected_content: boolean;
   has_scheduled_messages: boolean;
-  id: -1001774242343;
+  id: number;
   is_blocked: boolean;
   is_marked_as_unread: boolean;
   last_read_inbox_message_id: 0;

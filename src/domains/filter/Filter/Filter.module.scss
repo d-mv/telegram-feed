@@ -11,7 +11,7 @@
   flex-flow: column nowrap;
   width: 100%;
 
-  *+* {
-    margin-block-end: .5rem;
+  button + button {
+    margin-block-start: .5rem;
   }
 }

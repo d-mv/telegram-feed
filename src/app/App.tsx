@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 
 import { LoadMessage, Modals, Notifications } from '../domains';
 import { Authenticate, Main } from '../pages';
-import { LazyLoad, myselfSelector, useSelectedChat } from '../shared';
+import { LazyLoad, myselfSelector, useFilter, useSelectedChat } from '../shared';
 import { useConnect } from './useConnect.hook';
 
 const renderAuthenticate = () => <Authenticate />;
@@ -14,8 +14,8 @@ export function App() {
   const myself = useRecoilValue(myselfSelector);
 
   useConnect();
-
   useSelectedChat();
+  useFilter();
 
   return (
     <>

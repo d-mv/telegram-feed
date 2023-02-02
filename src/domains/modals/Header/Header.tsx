@@ -1,16 +1,35 @@
-import { MouseEvent, PropsWithChildren } from 'react';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { Icon } from '../../../shared';
+import { ifTrue, Optional } from '@mv-d/toolbelt';
+import { LazyExoticComponent, PropsWithChildren } from 'react';
+import { useResetRecoilState } from 'recoil';
 
-import { modalState } from '../modals.store';
+import { Icon, LazyLoad, modalState } from '../../../shared';
 import classes from './Header.module.scss';
 
-export function Header({ children }: PropsWithChildren) {
+interface HeaderProps {
+  widget: Optional<LazyExoticComponent<() => JSX.Element>>;
+}
+
+export function Header({ children, widget }: PropsWithChildren<HeaderProps>) {
   const closeModal = useResetRecoilState(modalState);
+
+  function renderWidget() {
+    if (!widget) return null;
+
+    const Widget = widget;
+
+    return (
+      <LazyLoad>
+        <Widget />
+      </LazyLoad>
+    );
+  }
 
   return (
     <header className={classes.container}>
-      <h6>{children}</h6>
+      <div className={classes.left}>
+        <h6>{children}</h6>
+        {ifTrue(widget, renderWidget)}
+      </div>
       <button className={classes['close-button']} onClick={closeModal}>
         <Icon icon='close' />
       </button>

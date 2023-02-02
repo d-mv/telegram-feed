@@ -1,22 +1,30 @@
 import { useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { TChatRender, useChats } from '../../../shared';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import { TChatRender, useChats, filterState } from '../../../shared';
 import { FilterContext } from '../filter.context';
-import { filterSelector, filterState } from '../filter.store';
+import { selectedSelector, selectedState } from '../filter.store';
 import { Item } from '../Item';
 import classes from './Filter.module.scss';
 
 export default function Filter() {
   const { makeChatList } = useChats();
 
-  const selected = useRecoilValue(filterState);
+  const [selected, setSelected] = useRecoilState(selectedState);
 
-  const setFilters = useSetRecoilState(filterSelector);
+  const filter = useRecoilValue(filterState);
+
+  const setFilters = useSetRecoilState(selectedSelector);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('selected', selected);
-  }, [selected]);
+    setSelected(filter);
+  }, [filter, setSelected]);
+
+  useEffect(() => {
+    return () => {
+      setSelected([]);
+    };
+  }, [setSelected]);
 
   function toggleAddRemove(id: number) {
     return function call() {
