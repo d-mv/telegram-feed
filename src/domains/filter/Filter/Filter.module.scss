@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  padding: 1rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.list {
+  height: fit-content;
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+
+  button + button {
+    margin-block-start: .5rem;
+  }
+}

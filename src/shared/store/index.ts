@@ -17,3 +17,7 @@ export * from './auth.store';
 export * from './file.store';
 
 export * from './data.types';
+
+export * from './modals.store';
+
+export * from './filter.store';

@@ -10,7 +10,7 @@ export * from './CardHeader';
 
 export * from './CardFooter';
 
-export * from './Buttons';
+// export * from './Buttons';
 
 export * from './MainSection';
 
@@ -43,3 +43,5 @@ export * from './SubmitButton';
 export * from './ErrorMessage';
 
 export * from './Input';
+
+export * from './Button';

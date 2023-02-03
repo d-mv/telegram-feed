@@ -1,11 +1,20 @@
 import { useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-import { propEq } from 'ramda';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { pick, propEq } from 'ramda';
 
-import { chatsSelector, supergroupsSelector } from '../store';
+import { chatsSelector, messagesState, supergroupsSelector } from '../store';
+import { TChatPhotoInfo } from '../entities';
+
+export type TChatRender = { id: number; title: string; photo: TChatPhotoInfo };
 
 export function useChats() {
   const chats = useRecoilValue(chatsSelector);
+
+  const setMessages = useSetRecoilState(messagesState);
+
+  const makeChatList = useCallback((): TChatRender[] => {
+    return chats.map(c => pick(['id', 'title', 'photo'], c));
+  }, [chats]);
 
   const supergroups = useRecoilValue(supergroupsSelector);
 
@@ -22,5 +31,12 @@ export function useChats() {
     [supergroups],
   );
 
-  return { getChatById, getSupergroupUsernameById };
+  const cleanUpOrphanMessages = useCallback(
+    (chatIds: number[]) => {
+      setMessages(state => state.filter(m => chatIds.includes(m.chat_id)));
+    },
+    [setMessages],
+  );
+
+  return { getChatById, getSupergroupUsernameById, makeChatList, cleanUpOrphanMessages };
 }

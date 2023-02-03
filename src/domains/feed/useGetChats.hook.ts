@@ -18,6 +18,7 @@ import {
   useTelegram,
   loadingMessageSelector,
 } from '../../shared';
+import { filterState } from '../../shared/store/filter.store';
 
 export function useGetChats() {
   const myself = useRecoilValue(myselfSelector);
@@ -37,6 +38,8 @@ export function useGetChats() {
   const init = useRef(false);
 
   const authStatus = useRecoilValue(authState);
+
+  const filter = useRecoilValue(filterState);
 
   const setLoadingMessage = useSetRecoilState(loadingMessageSelector);
 
@@ -90,6 +93,15 @@ export function useGetChats() {
     [resetLoadingMessage, setLoadingMessage, setMessages],
   );
 
+  const messagesForChatIds = useCallback(
+    async (chatIds: number[]) => {
+      for await (const id of chatIds) {
+        await fetchMessagesForChatId(id, 0);
+      }
+    },
+    [fetchMessagesForChatId],
+  );
+
   const processChatIds = useCallback(
     async (chatIds: number[]) => {
       logger.info('Processing chat ids...');
@@ -98,12 +110,18 @@ export function useGetChats() {
       for await (const id of chatIds) {
         await getChat(id, id === last(chatIds));
 
-        await fetchMessagesForChatId(id, 0, isFirst);
-
-        isFirst = false;
+        if (filter.length) {
+          if (filter.includes(id)) {
+            await fetchMessagesForChatId(id, 0, isFirst);
+            isFirst = false;
+          }
+        } else {
+          await fetchMessagesForChatId(id, 0, isFirst);
+          isFirst = false;
+        }
       }
     },
-    [fetchMessagesForChatId, getChat],
+    [fetchMessagesForChatId, filter, getChat],
   );
 
   const getChats = useCallback(async () => {
@@ -125,7 +143,7 @@ export function useGetChats() {
 
     setChatIds(ids);
 
-    if (ids.length) processChatIds(ids);
+    if (ids) processChatIds(ids);
   }, [processChatIds, setChatIds]);
 
   useEffect(() => {
@@ -135,4 +153,6 @@ export function useGetChats() {
       getChats();
     }
   }, [myself, getChats, authStatus, setLoadingMessage, messages.length]);
+
+  return { messagesForChatIds };
 }

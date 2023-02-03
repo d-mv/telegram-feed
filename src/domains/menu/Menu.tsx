@@ -1,15 +1,20 @@
-import { useResetRecoilState } from 'recoil';
-import { useLogout } from '../../shared';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 
+import { modalState, useLogout } from '../../shared';
 import { Dropdown } from './Dropdown';
 import { DropdownItem } from './DropdownItem';
 import { menuIsOpenState } from './menu.store';
 import { MenuButton } from './MenuButton';
 
-const MENU_ITEMS = [{ id: 'logout', title: 'Log out' }];
+const MENU_ITEMS = [
+  { id: 'filter', title: 'Filter' },
+  { id: 'logout', title: 'Log out' },
+];
 
 export function Menu() {
   const closeMenu = useResetRecoilState(menuIsOpenState);
+
+  const setModalId = useSetRecoilState(modalState);
 
   const { logOut } = useLogout();
 
@@ -18,6 +23,7 @@ export function Menu() {
       closeMenu();
 
       if (id === 'logout') logOut();
+      else if (id === 'filter') setModalId('filter');
     };
   }
 

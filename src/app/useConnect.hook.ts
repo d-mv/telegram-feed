@@ -21,6 +21,7 @@ import {
   supergroupsSelector,
   authLinkState,
 } from '../shared';
+import { filterState } from '../shared/store/filter.store';
 
 let timer: Optional<NodeJS.Timeout> = undefined;
 
@@ -52,6 +53,10 @@ export function useConnect() {
   const [isAuthed, setIsAuthed] = useRecoilState(authState);
 
   const [authLink, setAuthLink] = useRecoilState(authLinkState);
+
+  const filter = useRecoilValue(filterState);
+
+  const setSupergroup = useSetRecoilState(supergroupsSelector);
 
   const { fetchUserById } = useTelegram();
 
@@ -101,11 +106,13 @@ export function useConnect() {
 
       if (e.message.message_thread_id) return;
 
+      if (filter.length && !filter.includes(e.message.chat_id)) return;
+
       setMessages([e.message]);
 
       if (e.message.sender_id['@type'] === 'messageSenderUser') fetchUserById(e.message.sender_id.user_id);
     },
-    [fetchUserById, setMessages],
+    [fetchUserById, filter, setMessages],
   );
 
   const updateFile = useCallback(
@@ -123,16 +130,16 @@ export function useConnect() {
     [setFileDownloadProgress],
   );
 
-  const setSupergroup = useSetRecoilState(supergroupsSelector);
-
   const updateSupergroup = useCallback(
     (e: TUpdates) => {
       if (!e || e['@type'] !== 'updateSupergroup') return;
 
+      if (!filter.includes(parseInt(`-100${e.supergroup.id}`))) return;
+
       // eslint-disable-next-line no-console
       setSupergroup({ [e.supergroup.id]: { username: e.supergroup.username } });
     },
-    [setSupergroup],
+    [filter, setSupergroup],
   );
 
   const matchUpdate = useMemo(

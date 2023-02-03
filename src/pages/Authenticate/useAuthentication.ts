@@ -80,9 +80,6 @@ export function useAuthentication() {
   async function handleAuthentication(container: Container): Promise<void> {
     if (!event) return;
 
-    // eslint-disable-next-line no-console
-    console.log(event);
-
     if (!('authorization_state' in event)) return;
 
     await MATCH_AUTH_STATE[type(event.authorization_state)](event, container);

@@ -1,0 +1,38 @@
+.container {
+  padding: .5rem 1rem;
+  min-height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  h6 {
+    font-weight: 400;
+  }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  width: calc(100% - 4rem);
+}
+
+.close-button {
+  padding: 1rem;
+  position: absolute;
+  right: 0;
+  top: 1rem;
+
+  svg {
+    transition: var(--transition);
+    fill: var(--color-primary-1);
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &:hover {
+    svg {
+      fill: var(--color-accent-1);
+    }
+  }
+}
