@@ -20,6 +20,8 @@ interface CardMediaProps {
   id?: string;
 }
 
+let i = 0;
+
 export function CardMedia({ asBackground, media, className, width, title, id }: CardMediaProps) {
   const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
 
@@ -33,7 +35,7 @@ export function CardMedia({ asBackground, media, className, width, title, id }: 
 
   const [file, setFile] = useState('');
 
-  const { queueFileDownload } = useTelegram();
+  const { queueFileDownload, cancelFileDownload } = useTelegram();
 
   const progress = useMemo(
     () => path([fileId], downloadProgress),
@@ -48,7 +50,11 @@ export function CardMedia({ asBackground, media, className, width, title, id }: 
   useEffect(() => {
     const get = async () => queueFileDownload(fileId, mediaData.expected_size || 0, setFileToState);
 
+    console.log('start download for ' + fileId);
+
     get();
+
+    console.log(i++);
   }, [fileId, mediaData.expected_size, queueFileDownload, setFileToState]);
 
   function makeImageStyle(): CSSProperties {

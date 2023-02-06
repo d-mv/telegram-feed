@@ -97,10 +97,29 @@ export function useTelegram() {
     });
   }, [downloadFile, downloadQueue]);
 
-  function queueFileDownload(fileId: number, fileSize: number, callback: (arg0: Result<TFilePart, Error>) => void) {
-    if (!(fileId in downloadQueue))
-      setDownloadQueue(state => ({ [fileId]: { fileSize, status: 'new', callback }, ...state }));
-  }
+  const queueFileDownload = useCallback(
+    (fileId: number, fileSize: number, callback: (arg0: Result<TFilePart, Error>) => void) => {
+      if (!(fileId in downloadQueue))
+        setDownloadQueue(state => ({ [fileId]: { fileSize, status: 'new', callback }, ...state }));
+    },
+    [downloadQueue],
+  );
+
+  const cancelFileDownload = useCallback(
+    (fileId: number) => {
+      if (!(fileId in downloadQueue)) return;
+
+      if (downloadQueue[fileId].status === 'inprogress') {
+        TelegramService.send({
+          type: 'cancelDownloadFile',
+          file_id: fileId,
+        });
+      }
+
+      setDownloadQueue(({ [fileId]: _, ...o }) => o);
+    },
+    [downloadQueue],
+  );
 
   const fetchUserById = useCallback(
     async (myId: string | number, isMyself = false) => {
@@ -128,5 +147,5 @@ export function useTelegram() {
     [setMyself, setUser],
   );
 
-  return { submitPassword, downloadFile, fetchUserById, queueFileDownload };
+  return { submitPassword, downloadFile, fetchUserById, queueFileDownload, cancelFileDownload };
 }
