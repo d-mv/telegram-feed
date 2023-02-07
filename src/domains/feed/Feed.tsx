@@ -1,4 +1,4 @@
-import { ifTrue, logger } from '@mv-d/toolbelt';
+import { ifTrue, logger, Option, none, some, option } from '@mv-d/toolbelt';
 import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
@@ -6,6 +6,7 @@ import { useGetChats } from './useGetChats.hook';
 
 import {
   CONFIG,
+  getPhotoSize,
   GoToTop,
   isDebugLogging,
   List,
@@ -15,8 +16,12 @@ import {
   MessageDivider,
   messagesSelector,
   myselfSelector,
+  TPhoto,
+  TPhotoSize,
+  TVideo,
 } from '../../shared';
 import { FeedContext } from './feed.context';
+import { compose, path } from 'ramda';
 
 export default function Feed() {
   const messages = useRecoilValue(messagesSelector);
@@ -66,8 +71,24 @@ export default function Feed() {
       return null;
     }
 
+    // TODO: abstract into fn
+    const thumbnail =
+      type === 'messagePhoto'
+        ? message.content.photo.minithumbnail.data
+        : type === 'messageVideo'
+        ? message.content.video.minithumbnail.data
+        : '';
+
     return (
-      <FeedContext.Provider key={message.id} value={{ message }}>
+      <FeedContext.Provider
+        key={message.id}
+        value={{
+          message,
+          photo: compose(getPhotoSize, path(['content', 'photo']))(message),
+          video: compose(option, path(['content', 'video']))(message),
+          thumbnail,
+        }}
+      >
         <Component />
         <MessageDivider id={message.id} />
       </FeedContext.Provider>

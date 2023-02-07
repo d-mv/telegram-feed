@@ -10,6 +10,8 @@ export * from './event.store';
 
 export * from './notifications.store';
 
+export * from './ui.store';
+
 export * from './loadingMessage.store';
 
 export * from './auth.store';

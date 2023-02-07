@@ -15,3 +15,5 @@ export * from './useLogout.hook';
 export * from './useGlobal.hook';
 
 export * from './useFilter.hook';
+
+export * from './useQueue.hook';

@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { TWebPage } from '../../entities';
 import { getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
 import { CardDivider } from '../CardDivider';
-import { Image } from '../Image';
 import { WithTooltip } from '../Tooltip';
 import classes from './CardWebPage.module.scss';
 
@@ -29,7 +28,9 @@ export function CardWebPage({ className, webPage, width }: CardProps) {
 
     if (!photo) return null;
 
-    return <Image asBackground media={webPage.photo} className={classes.photo} alt='Web page photo' width={width} />;
+    // TODO: restore functional
+    return null;
+    // return <Image media={webPage.photo} className={classes.photo} alt='Web page photo' width={width} />;
   }
 
   function renderDescriptionContents() {

@@ -165,9 +165,9 @@ export function useConnect() {
           // updateNewChat: handleNewChat,
           updateFile,
         },
-        (event: TUpdates) =>
-          // isDebugLogging(CONFIG) &&
-          logger.warn(`Unmatched event: ${event['@type']}`),
+        (event: TUpdates) => {},
+        // isDebugLogging(CONFIG) &&
+        // logger.warn(`Unmatched event: ${event['@type']}`),
       ),
     [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage, updateSupergroup],
   );

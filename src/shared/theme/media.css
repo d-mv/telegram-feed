@@ -3,3 +3,19 @@
   width: 100%;
   fill: var(--color-primary-4);
 }
+
+.media-container {
+  width: 100%;
+  border-radius: 1rem 1rem 0 0;
+  background-size: contain;
+  position: relative;
+  overflow: hidden;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.mini {
+  filter: grayscale(1) blur(.5rem);
+}

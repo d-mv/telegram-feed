@@ -1,8 +1,10 @@
 import { ifTrue } from '@mv-d/toolbelt';
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { path } from 'ramda';
+import { useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { DownloadProgress } from '../../store';
+import { fileDownloadProgressSelector } from '../../store';
 import { Icon } from '../Icon';
 import { ProgressIndicator } from '../ProgressIndicator';
 import classes from './DownloadIndicator.module.scss';
@@ -12,12 +14,18 @@ const formatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0,
 }).format;
 
-interface DownloadProgressProps {
-  progress: DownloadProgress;
+interface DownloadIndicatorProps {
+  fileId: number;
 }
 
-export function DownloadIndicator({ progress }: DownloadProgressProps) {
+export function DownloadIndicator({ fileId }: DownloadIndicatorProps) {
+  const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
+
+  const progress = useMemo(() => path([fileId], downloadProgress), [downloadProgress, fileId]);
+
   const [renderAsValues, setRenderAsValues] = useState(true);
+
+  if (!progress) return null;
 
   const renderValue = (number: number) => `${formatter(number / 1024 / 1024)}MB`;
 

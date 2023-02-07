@@ -1,5 +1,6 @@
 import { atom, DefaultValue, selector } from 'recoil';
-import { FileDownloadProgress } from './types';
+
+import { FileDownloadProgress } from './data.types';
 
 export const fileDownloadProgressState = atom<FileDownloadProgress>({ key: 'file/download/progress', default: {} });
 

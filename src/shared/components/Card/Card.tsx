@@ -1,19 +1,19 @@
 import { clsx } from 'clsx';
-import { useNavigate } from 'react-router-dom';
-import { MutableRefObject, PropsWithChildren, MouseEvent } from 'react';
+import { PropsWithChildren, MouseEvent } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 import classes from './Card.module.scss';
-import { MaybeNull } from '../../types';
+import { containerWidthSelector } from '../../store';
 
 interface CardProps {
   id: string;
-
   className?: string;
-  containerRef?: MutableRefObject<MaybeNull<HTMLElement>>;
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
-export function Card({ children, id, className, containerRef, onClick }: PropsWithChildren<CardProps>) {
+export function Card({ children, id, className, onClick }: PropsWithChildren<CardProps>) {
+  const setContainerWidth = useSetRecoilState(containerWidthSelector);
+
   function handleClick(e: MouseEvent<HTMLDivElement>) {
     if (onClick) {
       e.persist();
@@ -22,7 +22,12 @@ export function Card({ children, id, className, containerRef, onClick }: PropsWi
   }
 
   return (
-    <article ref={containerRef} id={id} className={clsx(classes.container, className)} onClick={handleClick}>
+    <article
+      ref={r => setContainerWidth((r?.clientWidth || 0) / 10)}
+      id={id}
+      className={clsx(classes.container, className)}
+      onClick={handleClick}
+    >
       {children}
     </article>
   );

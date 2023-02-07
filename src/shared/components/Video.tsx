@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useContextSelector } from 'use-context-selector';
 
-import { FeedContext } from '../../domains/feed/feed.context';
+import { FeedContext } from '../../domains';
 import { TFilePart } from '../entities';
 import { useQueue } from '../hooks';
 import { containerWidthSelector } from '../store';
@@ -11,12 +11,12 @@ import { getMediaContainerStyle } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
-export function Image() {
-  const [media, thumbnail] = useContextSelector(FeedContext, c => [c.photo, c.thumbnail]);
+export function Video() {
+  const [media, thumbnail] = useContextSelector(FeedContext, c => [c.video, c.thumbnail]);
 
   const cardWidth = useRecoilValue(containerWidthSelector);
 
-  const fileId = useMemo(() => (media.isSome ? media.value.photo.id : 0), [media]);
+  const fileId = useMemo(() => (media.isSome ? media.value.video.id : 0), [media]);
 
   const [requestSent, setRequestSent] = useState(false);
 
@@ -48,33 +48,41 @@ export function Image() {
 
   if (media.isNone) return null;
 
-  const { height, width, photo } = media.value;
+  const { height, width, video, mime_type } = media.value;
 
   if (!requestSent) {
     setRequestSent(state => !state);
 
-    queueFileDownload(fileId, photo.expected_size, setFileToState);
+    queueFileDownload(fileId, video.expected_size, setFileToState);
   }
 
   const style = getMediaContainerStyle(height, width, { width: cardWidth });
 
-  const renderIcon = () => <Icon icon='image' className='media-stub-icon' />;
+  const renderIcon = () => <Icon icon='video' className='media-stub-icon' />;
 
   const renderThumbnail = () => <img src={`data:image/jpeg;base64,${thumbnail}`} alt='video' className='w-100 mini' />;
 
-  if (!file)
+  function renderPlaceholder() {
     return (
-      <div id={String(fileId)} ref={containerRef} className='center media-container' style={style}>
+      <>
         {ifTrue(thumbnail, renderThumbnail, renderIcon)}
         <DownloadIndicator fileId={fileId} />
-      </div>
+      </>
     );
+  }
+
+  function renderVideo() {
+    return (
+      <video id={String(fileId)} width={`${cardWidth}rem`} controls className='w-100'>
+        <source src={file} type={mime_type}></source>
+      </video>
+    );
+  }
 
   return (
-    <div
-      id={String(fileId)}
-      className='media-container'
-      style={{ backgroundImage: `url(${file})`, backgroundSize: 'cover', ...style }}
-    />
+    <div id={String(fileId)} ref={containerRef} className='center media-container' style={style}>
+      {ifTrue(file, renderVideo)}
+      {ifTrue(!file, renderPlaceholder)}
+    </div>
   );
 }
