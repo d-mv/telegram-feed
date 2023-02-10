@@ -7,7 +7,6 @@ import {
   optionsSelector,
   TelegramService,
   TUpdates,
-  isDebugLogging,
   CONFIG,
   JsLogVerbosityLevel,
   TELEGRAM_AUTH_TYPES,
@@ -20,8 +19,9 @@ import {
   chatIdsState,
   supergroupsSelector,
   authLinkState,
-} from '../shared';
-import { filterState } from '../shared/store/filter.store';
+  contextLogger,
+} from '..';
+import { filterState } from '../store/filter.store';
 
 let timer: Optional<NodeJS.Timeout> = undefined;
 
@@ -30,6 +30,8 @@ const NEED_AUTHORIZATION_STATES = [
   'authorizationStateWaitCode',
   'authorizationStateWaitPassword',
 ];
+
+const { verbose } = contextLogger('useConnect');
 
 export function useConnect() {
   const isInit = useRef(false);
@@ -165,9 +167,7 @@ export function useConnect() {
           // updateNewChat: handleNewChat,
           updateFile,
         },
-        (event: TUpdates) => {},
-        // isDebugLogging(CONFIG) &&
-        // logger.warn(`Unmatched event: ${event['@type']}`),
+        (event: TUpdates) => verbose(`Unmatched event: ${event['@type']}`),
       ),
     [handleAuthState, handleBackground, handleOption, updateFile, updateNewMessage, updateSupergroup],
   );
@@ -231,7 +231,7 @@ export function useConnect() {
 
     setLoadingMessage('Connecting to Telegram...');
 
-    if (isDebugLogging(CONFIG)) {
+    if (CONFIG.logging === 4) {
       logVerbosityLevel = 1;
       jsLogVerbosityLevel = 'debug';
     }

@@ -1,11 +1,10 @@
-import { AnyValue, ifTrue, Result } from '@mv-d/toolbelt';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ifTrue } from '@mv-d/toolbelt';
+import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useContextSelector } from 'use-context-selector';
 
 import { FeedContext } from '../../domains/feed/feed.context';
-import { TFilePart } from '../entities';
-import { useQueue } from '../hooks';
+import { useDownload } from '../hooks';
 import { containerWidthSelector } from '../store';
 import { getMediaContainerStyle } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
@@ -18,43 +17,13 @@ export function Image() {
 
   const fileId = useMemo(() => (media.isSome ? media.value.photo.id : 0), [media]);
 
-  const [requestSent, setRequestSent] = useState(false);
-
-  const { queueFileDownload } = useQueue();
-
-  const [file, setFile] = useState<AnyValue>();
-
-  const setFileToState = useCallback((file: Result<TFilePart, Error>) => {
-    if (file.isOK) setFile(URL.createObjectURL(file.payload.data));
-  }, []);
+  const { file } = useDownload(fileId, media.isSome ? media.value.photo.expected_size : 0);
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  function callback(e: AnyValue) {
-    // eslint-disable-next-line no-console
-    // console.log(
-    //   containerRef.current?.offsetTop,
-    //   containerRef.current?.offsetHeight,
-    //   containerRef.current?.offsetParent,
-    // );
-  }
-
-  useEffect(() => {
-    window.addEventListener('wheel', callback, { passive: false });
-    return () => {
-      window.removeEventListener('wheel', callback);
-    };
-  }, [fileId]);
 
   if (media.isNone) return null;
 
   const { height, width, photo } = media.value;
-
-  if (!requestSent) {
-    setRequestSent(state => !state);
-
-    queueFileDownload(fileId, photo.expected_size, setFileToState);
-  }
 
   const style = getMediaContainerStyle(height, width, { width: cardWidth });
 
@@ -64,7 +33,12 @@ export function Image() {
 
   if (!file)
     return (
-      <div id={String(fileId)} ref={containerRef} className='center media-container' style={style}>
+      <div
+        id={`id:${fileId};size:${photo.expected_size}`}
+        ref={containerRef}
+        className='center media-container'
+        style={style}
+      >
         {ifTrue(thumbnail, renderThumbnail, renderIcon)}
         <DownloadIndicator fileId={fileId} />
       </div>
@@ -72,9 +46,13 @@ export function Image() {
 
   return (
     <div
-      id={String(fileId)}
+      id={`id:${fileId};size:${photo.expected_size}`}
       className='media-container'
-      style={{ backgroundImage: `url(${file})`, backgroundSize: 'cover', ...style }}
+      style={{
+        backgroundImage: `url(${file})`,
+        backgroundSize: 'cover',
+        ...style,
+      }}
     />
   );
 }

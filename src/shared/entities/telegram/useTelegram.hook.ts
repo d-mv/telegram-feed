@@ -1,31 +1,26 @@
 import { useSetRecoilState } from 'recoil';
-import { compose, omit } from 'ramda';
-import { logger, toArray } from '@mv-d/toolbelt';
+import { omit } from 'ramda';
+import { logger } from '@mv-d/toolbelt';
 import { useCallback } from 'react';
 
-import { myselfSelector, notificationsSelector, StateUser, usersSelector } from '../../store';
-import { makeTErrorNotification } from './telegram.tools';
+import { myselfSelector, StateUser, usersSelector } from '../../store';
 import { TUser, TUserFullInfo } from './types';
-import { isDebugLogging } from '../../tools';
-import { CONFIG } from '../../config';
 import { TelegramService } from './telegram.service';
+import { contextLogger } from '../../tools';
+
+const { error } = contextLogger('useTelegram');
 
 export function useTelegram() {
   const setMyself = useSetRecoilState(myselfSelector);
 
   const setUser = useSetRecoilState(usersSelector);
 
-  const setNotification = useSetRecoilState(notificationsSelector);
-
   function submitPassword(password: string) {
     TelegramService.send({
       type: 'checkAuthenticationPassword',
       password,
-    }).catch((err: unknown) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-
-      if (isDebugLogging(CONFIG)) compose(setNotification, toArray, makeTErrorNotification)(err);
+    }).catch(err => {
+      error(err, 'submitPassword');
     });
   }
 

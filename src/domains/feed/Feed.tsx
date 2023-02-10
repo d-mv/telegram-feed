@@ -1,14 +1,12 @@
-import { ifTrue, logger, Option, none, some, option } from '@mv-d/toolbelt';
+import { ifTrue, option } from '@mv-d/toolbelt';
 import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { useGetChats } from './useGetChats.hook';
-
 import {
-  CONFIG,
+  contextLogger,
   getPhotoSize,
   GoToTop,
-  isDebugLogging,
   List,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
@@ -16,12 +14,11 @@ import {
   MessageDivider,
   messagesSelector,
   myselfSelector,
-  TPhoto,
-  TPhotoSize,
-  TVideo,
 } from '../../shared';
 import { FeedContext } from './feed.context';
 import { compose, path } from 'ramda';
+
+const { warn } = contextLogger('Feed');
 
 export default function Feed() {
   const messages = useRecoilValue(messagesSelector);
@@ -65,9 +62,9 @@ export default function Feed() {
     // eslint-disable-next-line security/detect-object-injection
     const Component = MATCH_MESSAGE_RENDERERS[type];
 
+    // TODO: add retrieve of 'messageForwardInfo' and 'messageReplyInfo'?
     if (!Component) {
-      if (isDebugLogging(CONFIG)) logger.warn(`Missing renderer for ${type}`);
-
+      warn(`Missing renderer for ${type}`);
       return null;
     }
 

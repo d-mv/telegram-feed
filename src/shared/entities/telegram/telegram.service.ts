@@ -1,7 +1,6 @@
-import { AnyValue, logger, none, Option, Optional, some } from '@mv-d/toolbelt';
+import { AnyValue, none, Option, Optional, some } from '@mv-d/toolbelt';
 import TdClient, { TdOptions } from 'tdweb';
 import { CONFIG } from '../../config';
-import { isDebugLogging } from '../../tools';
 
 const { id, hash } = CONFIG.api;
 

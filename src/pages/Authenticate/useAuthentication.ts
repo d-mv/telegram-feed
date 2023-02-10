@@ -4,17 +4,11 @@ import { path } from 'ramda';
 import { FormEvent, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import {
-  authEventSelector,
-  CONFIG,
-  isDebugLogging,
-  MaybeNull,
-  TELEGRAM_AUTH_TYPES,
-  TUpdates,
-  type,
-} from '../../shared';
+import { authEventSelector, CONFIG, contextLogger, MaybeNull, TELEGRAM_AUTH_TYPES, TUpdates, type } from '../../shared';
 import tg_logo from '../../shared/assets/tg_logo.png';
 import { TelegramService } from '../../shared/entities/telegram/telegram.service';
+
+const { error } = contextLogger('useAuthentication');
 
 type Container = MaybeNull<HTMLDivElement>;
 
@@ -39,7 +33,7 @@ const MATCH_AUTH_STATE = makeMatch<(event: TUpdates, container?: Container) => P
         return none();
 
       if (!container) {
-        if (isDebugLogging(CONFIG)) logger.error('Container is not defined');
+        error(new Error('container is null'), 'MATCH_AUTH_STATE.authorizationStateWaitOtherDeviceConfirmation');
 
         return none();
       }
