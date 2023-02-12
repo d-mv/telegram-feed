@@ -1,13 +1,12 @@
-import { ifTrue, logger } from '@mv-d/toolbelt';
+import { ifTrue, option } from '@mv-d/toolbelt';
 import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { useGetChats } from './useGetChats.hook';
-
 import {
-  CONFIG,
+  contextLogger,
+  getPhotoSize,
   GoToTop,
-  isDebugLogging,
   List,
   MainSection,
   MATCH_MESSAGE_RENDERERS,
@@ -17,6 +16,9 @@ import {
   myselfSelector,
 } from '../../shared';
 import { FeedContext } from './feed.context';
+import { compose, path } from 'ramda';
+
+const { warn } = contextLogger('Feed');
 
 export default function Feed() {
   const messages = useRecoilValue(messagesSelector);
@@ -60,14 +62,30 @@ export default function Feed() {
     // eslint-disable-next-line security/detect-object-injection
     const Component = MATCH_MESSAGE_RENDERERS[type];
 
+    // TODO: add retrieve of 'messageForwardInfo' and 'messageReplyInfo'?
     if (!Component) {
-      if (isDebugLogging(CONFIG)) logger.warn(`Missing renderer for ${type}`);
-
+      warn(`Missing renderer for ${type}`);
       return null;
     }
 
+    // TODO: abstract into fn
+    const thumbnail =
+      type === 'messagePhoto'
+        ? message.content.photo.minithumbnail.data
+        : type === 'messageVideo'
+        ? message.content.video.minithumbnail.data
+        : '';
+
     return (
-      <FeedContext.Provider key={message.id} value={{ message }}>
+      <FeedContext.Provider
+        key={message.id}
+        value={{
+          message,
+          photo: compose(getPhotoSize, path(['content', 'photo']))(message),
+          video: compose(option, path(['content', 'video']))(message),
+          thumbnail,
+        }}
+      >
         <Component />
         <MessageDivider id={message.id} />
       </FeedContext.Provider>

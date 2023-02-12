@@ -1,8 +1,6 @@
-import { Optional } from '@mv-d/toolbelt';
 import { atom, DefaultValue, selector } from 'recoil';
 
-import { isChannel, isPrivate, StorageService, TChat } from '../entities';
-import { SelectedChatId } from './types';
+import { isChannel, isPrivate, TChat } from '../entities';
 
 export const chatsLoadedState = atom({
   key: 'chats/loaded',
@@ -41,20 +39,6 @@ export const chatsSelector = selector({
     }
 
     set(chatsState, [...get(chatsState), ...v.filter(c => isPrivate(c) || isChannel(c))]);
-  },
-});
-
-export const selectedChatState = atom<Optional<SelectedChatId>>({
-  key: 'chats/selected',
-  default: undefined,
-});
-
-export const selectedChatSelector = selector({
-  key: 'chats/selected/selector',
-  get: ({ get }) => get(selectedChatState),
-  set: ({ set }, v) => {
-    set(selectedChatState, v);
-    StorageService.set('selectedChat', v);
   },
 });
 

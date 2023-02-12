@@ -1,8 +1,7 @@
-import { RecordObject, AnyValue, logger } from '@mv-d/toolbelt';
+import { RecordObject, AnyValue } from '@mv-d/toolbelt';
 import { compose } from 'ramda';
 
-import { CONFIG } from '../../config';
-import { isDebugLogging } from '../../tools';
+import { contextLogger } from '../../tools';
 import { MaybeNull } from '../../types';
 
 function toMap(obj: RecordObject<string>) {
@@ -23,6 +22,8 @@ function fromMap(map: Map<string, string>): RecordObject<string> {
   return newObj;
 }
 
+const { info } = contextLogger('StorageService');
+
 class Storage {
   #state: Map<string, string> = new Map();
 
@@ -35,8 +36,7 @@ class Storage {
 
     this.#state = compose(toMap, this.#decrypt)(data);
 
-    if (isDebugLogging(CONFIG))
-      compose(logger.info, (s: string) => `Restored state ${s}`, JSON.stringify, fromMap)(this.#state);
+    compose(info, (s: string) => `Restored state ${s}`, JSON.stringify, fromMap)(this.#state);
   }
 
   #decrypt(data: MaybeNull<string>): RecordObject<string> {

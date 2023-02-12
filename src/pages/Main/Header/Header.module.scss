@@ -11,19 +11,6 @@
   background-color: var(--color-primary-3);
 }
 
-.chat {
-  background-color: var(--color-info-1);
-  svg {
-    filter: none;
-    path {
-      fill: var(--color-back);
-    }
-  }
-  .name {
-    color: var(--color-back);
-    text-shadow: none;
-  }
-}
 
 .name {
   white-space: nowrap;
@@ -36,22 +23,4 @@
   height: fit-content;
   color: var(--color-text);
   text-shadow: 0.2rem 0.1rem 0.2rem var(--color-primary-2);
-}
-
-.chat-title {
-  display: flex;
-  align-items: center;
-  font-family: var(--font-family-sans);
-}
-
-.chat-title-icon {
-  display: flex;
-  stroke: var(--color-back);
-  height: 3rem;
-  width: 3rem;
-}
-
-.chat-title-button {
-  cursor: pointer;
-  padding: 0.8rem;
 }

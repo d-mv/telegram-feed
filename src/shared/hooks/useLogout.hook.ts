@@ -13,7 +13,6 @@ import {
   notificationsState,
   optionsState,
   passwordHintState,
-  selectedChatState,
   usersState,
 } from '../store';
 
@@ -40,8 +39,6 @@ export function useLogout() {
 
   const resetPasswordHint = useResetRecoilState(passwordHintState);
 
-  const resetSelectedChat = useResetRecoilState(selectedChatState);
-
   const resetUsers = useResetRecoilState(usersState);
 
   async function logOut() {
@@ -61,7 +58,6 @@ export function useLogout() {
       resetNotifications();
       resetOptions();
       resetPasswordHint();
-      resetSelectedChat();
       resetUsers();
       window.history.go(0);
     }

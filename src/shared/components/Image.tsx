@@ -1,71 +1,58 @@
-import { AnyValue, ifTrue, Result } from '@mv-d/toolbelt';
-import { clsx } from 'clsx';
-import { path } from 'ramda';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ifTrue } from '@mv-d/toolbelt';
+import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
+import { useContextSelector } from 'use-context-selector';
 
-import { TFilePart, TPhoto, useTelegram } from '../entities';
-import { fileDownloadProgressSelector } from '../store';
-import { getMediaContainerStyle, getPhotoSize } from '../tools';
+import { FeedContext } from '../../domains/feed/feed.context';
+import { useDownload } from '../hooks';
+import { containerWidthSelector } from '../store';
+import { getMediaContainerStyle } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
-interface PhotoProps {
-  media: TPhoto;
-  className?: string;
-  width: number;
-  alt: string;
-  asBackground?: boolean;
-}
+export function Image() {
+  const [media, thumbnail] = useContextSelector(FeedContext, c => [c.photo, c.thumbnail]);
 
-export function Image({ media, className, alt, width, asBackground }: PhotoProps) {
-  const photoSize = getPhotoSize(media);
+  const cardWidth = useRecoilValue(containerWidthSelector);
 
-  const photoId = photoSize?.photo.id || 0;
+  const fileId = useMemo(() => (media.isSome ? media.value.photo.id : 0), [media]);
 
-  const downloadProgress = useRecoilValue(fileDownloadProgressSelector);
+  const { file } = useDownload(fileId, media.isSome ? media.value.photo.expected_size : 0);
 
-  const [id, setId] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const { downloadFile, queueFileDownload } = useTelegram();
+  if (media.isNone) return null;
 
-  const [image, setImage] = useState<AnyValue>();
+  const { height, width, photo } = media.value;
 
-  const progress = useMemo(
-    () => path([photoId], downloadProgress),
+  const style = getMediaContainerStyle(height, width, { width: cardWidth });
 
-    [downloadProgress, photoId],
-  );
+  const renderIcon = () => <Icon icon='image' className='media-stub-icon' />;
 
-  const setImageToState = useCallback((file: Result<TFilePart, Error>) => {
-    if (file.isOK) setImage(URL.createObjectURL(file.payload.data));
-  }, []);
+  const renderThumbnail = () => <img src={`data:image/jpeg;base64,${thumbnail}`} alt='video' className='w-100 mini' />;
 
-  useEffect(() => {
-    const get = async () => queueFileDownload(photoId, photoSize?.photo.expected_size || 0, setImageToState);
-
-    if (photoId !== id) {
-      setId(photoId);
-      get();
-    }
-  }, [downloadFile, id, photoId, photoSize?.photo.expected_size, queueFileDownload, setImageToState]);
-
-  if (!photoSize) return null;
-
-  const style = getMediaContainerStyle(photoSize.height, photoSize.width, { width });
-
-  if (!image)
+  if (!file)
     return (
-      <div className={clsx('center', className)} style={style}>
-        <Icon icon='image' className='media-stub-icon' />
-        {ifTrue(progress, () => (
-          <DownloadIndicator progress={progress} />
-        ))}
+      <div
+        id={`id:${fileId};size:${photo.expected_size}`}
+        ref={containerRef}
+        className='center media-container'
+        style={style}
+      >
+        {ifTrue(thumbnail, renderThumbnail, renderIcon)}
+        <DownloadIndicator fileId={fileId} />
       </div>
     );
 
-  if (asBackground)
-    return <div id={alt} className={className} style={{ backgroundImage: `url(${image})`, ...style }} />;
-
-  return <img src={image} className={className} alt={alt} style={style} />;
+  return (
+    <div
+      id={`id:${fileId};size:${photo.expected_size}`}
+      className='media-container'
+      style={{
+        backgroundImage: `url(${file})`,
+        backgroundSize: 'cover',
+        ...style,
+      }}
+    />
+  );
 }

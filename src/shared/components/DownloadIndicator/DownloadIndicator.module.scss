@@ -4,12 +4,13 @@
   flex-flow: column;
   align-items: center;
 }
+
 .button {
   overflow: hidden;
   position: absolute;
   height: 4rem;
-  width: 70%;
-  bottom: 0.5rem;
+  width: 100%;
+  bottom: 0rem;
   border-radius: 0.1rem;
   user-select: none;
   cursor: pointer;
@@ -22,12 +23,12 @@
   height: 2rem;
   width: 2rem;
   margin-inline-end: 1rem;
-  stroke: var(--color-accent-1);
+  stroke: var(--color-white);
 }
 
 .text {
   font-size: 1.6rem;
   font-weight: 400;
   overflow: hidden;
-  color: var(--color-accent-1);
+  color: var(--color-white)
 }

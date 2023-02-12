@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { useRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useContextSelector } from 'use-context-selector';
 
@@ -14,14 +14,14 @@ import {
   CardInteractionInfo,
   useTextProcessor,
   CardFooterSection,
-  MaybeNull,
   getSenderFromMessage,
   useChats,
   useUsers,
   myselfSelector,
-  CardMedia,
+  Image,
 } from '../..';
-import { FeedContext } from '../../../domains/feed/feed.context';
+import { FeedContext } from '../../../domains';
+import { Video } from '../Video';
 import classes from './MessageText.module.scss';
 
 const VALID_MESSAGE_TYPES = ['messagePhoto', 'messageText', 'messageVideo'];
@@ -50,11 +50,7 @@ export function MessageText() {
 
   const text = useTextProcessor(message.content);
 
-  const containerRef = useRef<MaybeNull<HTMLDivElement | HTMLImageElement>>(null);
-
-  const currentContainerRef = containerRef?.current;
-
-  const containerWidth = useMemo(() => (currentContainerRef?.clientWidth || 0) / 10, [currentContainerRef]);
+  const containerWidth = 0;
 
   const type = message.content['@type'];
 
@@ -66,22 +62,14 @@ export function MessageText() {
     return <CardWebPage webPage={message.content.web_page} width={containerWidth - 2} />;
   }
 
-  function renderMedia() {
-    if (type !== 'messagePhoto' && type !== 'messageVideo') return null;
-
-    const media = type === 'messageVideo' ? message.content.video : message.content.photo;
-
-    return <CardMedia asBackground media={media} width={containerWidth} />;
-  }
-
   return (
     <Card
-      containerRef={containerRef}
-      id={`${type}-${message.id}`}
+      id={String(message.id)}
       onClick={openMessage()}
       className={clsx(classes.container, 'animate__animated animate__fadeIn')}
     >
-      {renderMedia()}
+      <Image />
+      <Video />
       <CardHeader>{sender}</CardHeader>
       <CardText>
         <span

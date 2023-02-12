@@ -1,6 +1,6 @@
-import { Optional } from '@mv-d/toolbelt';
+import { none, option, Option, Optional } from '@mv-d/toolbelt';
 
-import { TChat, TMessage, TPhoto, TUser } from '../entities';
+import { TChat, TMessage, TPhoto, TPhotoSize, TUser } from '../entities';
 import { StateUser } from '../store';
 
 interface GetSendFromMessageProps {
@@ -35,10 +35,12 @@ export function getSenderFromMessage({ message, getChat, getUser, myself }: GetS
   return getChat(s.chat_id)?.title;
 }
 
-export function getPhotoSize(photo: TPhoto, size = 'x') {
+export function getPhotoSize(photo: Optional<TPhoto>, size = 'x'): Option<TPhotoSize> {
+  if (!photo) return none();
+
   const { sizes } = photo;
 
-  return sizes.find(p => p.type === size || p.type === 'm' || p.type === 's');
+  return option(sizes.find(p => p.type === size || p.type === 'm' || p.type === 's'));
 }
 
 interface GetPhotoContainerStyleOptions {
@@ -65,7 +67,7 @@ export function getMediaContainerStyle(
 
   const widthArg = `${options.width}rem`;
 
-  if (isVertical) return { width: widthArg, height: height / r };
+  if (isVertical) return { width: widthArg, height: `${height / r / 10}rem` };
 
   return { width: widthArg, height: `${options.width * ratio}rem` };
 }
