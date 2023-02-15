@@ -7,6 +7,8 @@ import { TMessage, TPhotoSize, TVideo } from '../../shared';
 export interface FeedContextType {
   message: TMessage;
   photo: Option<TPhotoSize>;
+  webPagePhoto: Option<TPhotoSize>;
+  webPageThumbnail: string;
   video: Option<TVideo>;
   thumbnail: string;
 }

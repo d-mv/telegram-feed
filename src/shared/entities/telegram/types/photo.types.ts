@@ -7,7 +7,7 @@ export interface TMiniThumbnail {
   width: number;
 }
 
-export interface TPhoto {
+export interface TProfilePhoto {
   big: TFile;
   has_animation: boolean;
   id: string;

@@ -1,6 +1,6 @@
 import { none, option, Option, Optional } from '@mv-d/toolbelt';
 
-import { TChat, TMessage, TPhoto, TPhotoSize, TUser } from '../entities';
+import { TChat, TMessage, TPhotoSize, TUser, TPhoto } from '../entities';
 import { StateUser } from '../store';
 
 interface GetSendFromMessageProps {

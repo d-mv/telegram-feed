@@ -14,9 +14,11 @@ import {
   MessageDivider,
   messagesSelector,
   myselfSelector,
+  TMessage,
+  TVideo,
 } from '../../shared';
 import { FeedContext } from './feed.context';
-import { compose, path } from 'ramda';
+import { compose } from 'ramda';
 
 const { warn } = contextLogger('Feed');
 
@@ -71,19 +73,33 @@ export default function Feed() {
     // TODO: abstract into fn
     const thumbnail =
       type === 'messagePhoto'
-        ? message.content.photo.minithumbnail.data
+        ? message.content.photo.minithumbnail?.data
         : type === 'messageVideo'
         ? message.content.video.minithumbnail.data
         : '';
+
+    const getWebPagePhoto = (e: TMessage) => {
+      return e.content['@type'] === 'messageText' ? e.content.web_page?.photo : null;
+    };
+
+    const getWebPageThumbnail = (e: TMessage) => {
+      return e.content['@type'] === 'messageText' ? e.content.web_page?.photo?.minithumbnail?.data : null;
+    };
+
+    const getPhoto = (e: TMessage) => (e.content['@type'] === 'messagePhoto' ? e.content.photo : null);
+
+    const getVideo = (e: TMessage) => (e.content['@type'] === 'messageVideo' ? e.content.video : null);
 
     return (
       <FeedContext.Provider
         key={message.id}
         value={{
           message,
-          photo: compose(getPhotoSize, path(['content', 'photo']))(message),
-          video: compose(option, path(['content', 'video']))(message),
-          thumbnail,
+          photo: compose(getPhotoSize, getPhoto)(message),
+          webPagePhoto: compose(getPhotoSize, getWebPagePhoto)(message),
+          webPageThumbnail: getWebPageThumbnail(message) || '',
+          video: compose(option<TVideo>, getVideo)(message),
+          thumbnail: thumbnail || '',
         }}
       >
         <Component />

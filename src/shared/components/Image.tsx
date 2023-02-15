@@ -1,4 +1,5 @@
 import { ifTrue } from '@mv-d/toolbelt';
+import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useContextSelector } from 'use-context-selector';
@@ -10,8 +11,15 @@ import { getMediaContainerStyle } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
-export function Image() {
-  const [media, thumbnail] = useContextSelector(FeedContext, c => [c.photo, c.thumbnail]);
+interface ImageProps {
+  isWebPage?: boolean;
+  className?: string;
+}
+
+export function Image({ isWebPage, className }: ImageProps) {
+  const [media, thumbnail] = useContextSelector(FeedContext, c =>
+    isWebPage ? [c.webPagePhoto, c.webPageThumbnail] : [c.photo, c.thumbnail],
+  );
 
   const cardWidth = useRecoilValue(containerWidthSelector);
 
@@ -36,7 +44,7 @@ export function Image() {
       <div
         id={`id:${fileId};size:${photo.expected_size}`}
         ref={containerRef}
-        className='center media-container'
+        className={clsx(' center media-container', className)}
         style={style}
       >
         {ifTrue(thumbnail, renderThumbnail, renderIcon)}
@@ -47,7 +55,7 @@ export function Image() {
   return (
     <div
       id={`id:${fileId};size:${photo.expected_size}`}
-      className='media-container'
+      className={clsx('media-container', className)}
       style={{
         backgroundImage: `url(${file})`,
         backgroundSize: 'cover',

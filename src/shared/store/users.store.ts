@@ -1,7 +1,7 @@
 import { Optional } from '@mv-d/toolbelt';
 import { atom, DefaultValue, selector } from 'recoil';
 
-import { StateUser } from './types';
+import { StateUser } from './data.types';
 
 export const usersState = atom<StateUser[]>({
   key: 'users',

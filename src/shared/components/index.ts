@@ -10,8 +10,6 @@ export * from './CardHeader';
 
 export * from './CardFooter';
 
-// export * from './Buttons';
-
 export * from './MainSection';
 
 export * from './CardDivider';
@@ -43,3 +41,5 @@ export * from './ErrorMessage';
 export * from './Input';
 
 export * from './Button';
+
+export * from './Buttons';

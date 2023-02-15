@@ -1,7 +1,7 @@
 import { TData, TUpdate } from './event.types';
 import { TMessage } from './message.types';
 import { TChatNotificationSettings } from './notifications.types';
-import { TMiniThumbnail, TPhoto, TPhotoSize } from './photo.types';
+import { TMiniThumbnail, TProfilePhoto, TPhotoSize } from './photo.types';
 
 export interface TChatFilter {
   '@type': 'chatFilterInfo';
@@ -33,7 +33,7 @@ export interface TChatTypePrivate {
   user_id: number;
 }
 
-export interface TChatPhotoInfo extends TPhoto {
+export interface TChatPhotoInfo extends TProfilePhoto {
   '@type': 'chatPhotoInfo';
 }
 
