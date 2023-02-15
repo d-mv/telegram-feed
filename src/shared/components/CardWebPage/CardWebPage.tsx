@@ -29,7 +29,7 @@ export function CardWebPage({ className, webPage }: CardProps) {
 
     if (!photo) return null;
 
-    return <Image isWebPage />;
+    return <Image isWebPage className={classes.photo} />;
   }
 
   function renderDescriptionContents() {

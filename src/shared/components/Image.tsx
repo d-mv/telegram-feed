@@ -1,4 +1,5 @@
 import { ifTrue } from '@mv-d/toolbelt';
+import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useContextSelector } from 'use-context-selector';
@@ -12,9 +13,10 @@ import { Icon } from './Icon';
 
 interface ImageProps {
   isWebPage?: boolean;
+  className?: string;
 }
 
-export function Image({ isWebPage }: ImageProps) {
+export function Image({ isWebPage, className }: ImageProps) {
   const [media, thumbnail] = useContextSelector(FeedContext, c =>
     isWebPage ? [c.webPagePhoto, c.webPageThumbnail] : [c.photo, c.thumbnail],
   );
@@ -42,7 +44,7 @@ export function Image({ isWebPage }: ImageProps) {
       <div
         id={`id:${fileId};size:${photo.expected_size}`}
         ref={containerRef}
-        className='center media-container'
+        className={clsx(' center media-container', className)}
         style={style}
       >
         {ifTrue(thumbnail, renderThumbnail, renderIcon)}
@@ -53,7 +55,7 @@ export function Image({ isWebPage }: ImageProps) {
   return (
     <div
       id={`id:${fileId};size:${photo.expected_size}`}
-      className='media-container'
+      className={clsx('media-container', className)}
       style={{
         backgroundImage: `url(${file})`,
         backgroundSize: 'cover',
