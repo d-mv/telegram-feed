@@ -6,6 +6,7 @@ import { TWebPage } from '../../entities';
 import { getPhotoSize, processUrl, shouldRenderLinkTooltip } from '../../tools';
 import { CardDivider } from '../CardDivider';
 import { WithTooltip } from '../Tooltip';
+import { Image } from '../Image';
 import classes from './CardWebPage.module.scss';
 
 interface CardProps {
@@ -14,7 +15,7 @@ interface CardProps {
   width: number;
 }
 
-export function CardWebPage({ className, webPage, width }: CardProps) {
+export function CardWebPage({ className, webPage }: CardProps) {
   const description = useMemo(() => webPage?.description.text || '', [webPage]);
 
   const url = useMemo(() => (webPage?.display_url ?? webPage?.url) || '', [webPage]);
@@ -28,9 +29,7 @@ export function CardWebPage({ className, webPage, width }: CardProps) {
 
     if (!photo) return null;
 
-    // TODO: restore functional
-    return null;
-    // return <Image media={webPage.photo} className={classes.photo} alt='Web page photo' width={width} />;
+    return <Image isWebPage />;
   }
 
   function renderDescriptionContents() {

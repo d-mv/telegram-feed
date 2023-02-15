@@ -14,6 +14,8 @@ import {
   MessageDivider,
   messagesSelector,
   myselfSelector,
+  TMessage,
+  TVideo,
 } from '../../shared';
 import { FeedContext } from './feed.context';
 import { compose, path } from 'ramda';
@@ -76,13 +78,24 @@ export default function Feed() {
         ? message.content.video.minithumbnail.data
         : '';
 
+    const getWebPagePhoto = (e: TMessage) => (e.content['@type'] === 'messageText' ? e.content.web_page?.photo : null);
+
+    const getWebPageThumbnail = (e: TMessage) =>
+      e.content['@type'] === 'messageText' ? e.content.web_page?.photo?.minithumbnail?.data : null;
+
+    const getPhoto = (e: TMessage) => (e.content['@type'] === 'messagePhoto' ? e.content.photo : null);
+
+    const getVideo = (e: TMessage) => (e.content['@type'] === 'messageVideo' ? e.content.video : null);
+
     return (
       <FeedContext.Provider
         key={message.id}
         value={{
           message,
-          photo: compose(getPhotoSize, path(['content', 'photo']))(message),
-          video: compose(option, path(['content', 'video']))(message),
+          photo: compose(getPhotoSize, getPhoto)(message),
+          webPagePhoto: compose(getPhotoSize, getWebPagePhoto)(message),
+          webPageThumbnail: getWebPageThumbnail(message) || '',
+          video: compose(option<TVideo>, getVideo)(message),
           thumbnail,
         }}
       >

@@ -90,7 +90,7 @@ export interface TFormattedText {
 export interface TPhoto {
   '@type': 'photo';
   has_stickers: boolean;
-  minithumbnail: TMiniThumbnail;
+  minithumbnail?: TMiniThumbnail;
   sizes: TPhotoSize[];
 }
 
@@ -105,7 +105,7 @@ export interface TWebPage {
   embed_url: string;
   embed_width: number;
   instant_view_version: number;
-  photo: TPhoto;
+  photo?: TPhoto;
   site_name: string;
   title: string;
   type: 'video';

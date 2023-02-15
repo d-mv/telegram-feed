@@ -10,8 +10,14 @@ import { getMediaContainerStyle } from '../tools';
 import { DownloadIndicator } from './DownloadIndicator';
 import { Icon } from './Icon';
 
-export function Image() {
-  const [media, thumbnail] = useContextSelector(FeedContext, c => [c.photo, c.thumbnail]);
+interface ImageProps {
+  isWebPage?: boolean;
+}
+
+export function Image({ isWebPage }: ImageProps) {
+  const [media, thumbnail] = useContextSelector(FeedContext, c =>
+    isWebPage ? [c.webPagePhoto, c.webPageThumbnail] : [c.photo, c.thumbnail],
+  );
 
   const cardWidth = useRecoilValue(containerWidthSelector);
 
