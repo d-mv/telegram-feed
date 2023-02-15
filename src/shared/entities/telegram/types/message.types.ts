@@ -1,4 +1,4 @@
-import { TData, TExtra, TUpdate } from './event.types';
+import { TData, TUpdate } from './event.types';
 import { TFile } from './file.types';
 import { TMiniThumbnail, TPhotoSize, TThumbnail } from './photo.types';
 

@@ -18,7 +18,7 @@ import {
   TVideo,
 } from '../../shared';
 import { FeedContext } from './feed.context';
-import { compose, path } from 'ramda';
+import { compose } from 'ramda';
 
 const { warn } = contextLogger('Feed');
 
@@ -73,15 +73,18 @@ export default function Feed() {
     // TODO: abstract into fn
     const thumbnail =
       type === 'messagePhoto'
-        ? message.content.photo.minithumbnail.data
+        ? message.content.photo.minithumbnail?.data
         : type === 'messageVideo'
         ? message.content.video.minithumbnail.data
         : '';
 
-    const getWebPagePhoto = (e: TMessage) => (e.content['@type'] === 'messageText' ? e.content.web_page?.photo : null);
+    const getWebPagePhoto = (e: TMessage) => {
+      return e.content['@type'] === 'messageText' ? e.content.web_page?.photo : null;
+    };
 
-    const getWebPageThumbnail = (e: TMessage) =>
-      e.content['@type'] === 'messageText' ? e.content.web_page?.photo?.minithumbnail?.data : null;
+    const getWebPageThumbnail = (e: TMessage) => {
+      return e.content['@type'] === 'messageText' ? e.content.web_page?.photo?.minithumbnail?.data : null;
+    };
 
     const getPhoto = (e: TMessage) => (e.content['@type'] === 'messagePhoto' ? e.content.photo : null);
 
@@ -96,7 +99,7 @@ export default function Feed() {
           webPagePhoto: compose(getPhotoSize, getWebPagePhoto)(message),
           webPageThumbnail: getWebPageThumbnail(message) || '',
           video: compose(option<TVideo>, getVideo)(message),
-          thumbnail,
+          thumbnail: thumbnail || '',
         }}
       >
         <Component />

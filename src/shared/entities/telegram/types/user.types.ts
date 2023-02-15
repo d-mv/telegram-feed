@@ -1,7 +1,7 @@
 import { TUpdate } from './event.types';
-import { TPhoto } from './photo.types';
+import { TProfilePhoto } from './photo.types';
 
-export interface TProfilePhoto extends TPhoto {
+export interface TUserProfilePhoto extends TProfilePhoto {
   '@type': 'profilePhoto';
 }
 
@@ -35,7 +35,7 @@ export interface TUser {
   language_code: string;
   last_name: string;
   phone_number: string;
-  profile_photo: TProfilePhoto;
+  profile_photo: TUserProfilePhoto;
   restriction_reason: string;
   status: TUserStatus;
   type: TUserType;

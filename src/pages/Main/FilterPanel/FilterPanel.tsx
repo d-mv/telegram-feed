@@ -1,4 +1,5 @@
-import { ButtonSize, Icon, SecondaryButton } from '../../../shared';
+import { Icon, SecondaryButton } from '../../../shared';
+import { ButtonSize } from '../../../shared/components/Buttons/Button';
 import classes from './FilterPanel.module.scss';
 
 export function FilterPanel() {
